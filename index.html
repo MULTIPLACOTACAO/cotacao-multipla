@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multipla Cotação</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e30613">
+
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#111;color:white;}
+header{background:#000;padding:20px;text-align:center;color:#e30613;font-size:22px;font-weight:bold;}
+.container{padding:20px;max-width:1000px;margin:auto;}
+input{width:100%;padding:10px;margin:6px 0;border:none;border-radius:5px;}
+button{background:#e30613;color:white;border:none;padding:8px;margin-top:5px;border-radius:5px;cursor:pointer;width:100%;}
+button:hover{background:#b0000d;}
+.category{background:#1c1c1c;padding:15px;margin-top:15px;border-radius:6px;}
+.product{background:#2a2a2a;padding:10px;margin-top:10px;border-radius:6px;}
+#cart{background:#000;padding:15px;margin-top:20px;border-radius:6px;}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<header>MULTIPLA COTAÇÃO</header>
+
+<div class="container">
+
+<div id="cliente">
+<input id="nome" placeholder="Nome">
+<input id="cidade" placeholder="Cidade">
+<input id="telefone" placeholder="Telefone">
+<button onclick="iniciar()">INICIAR COTAÇÃO</button>
+</div>
+
+<div id="sistema" class="hidden">
+<h2>Produtos</h2>
+<div id="produtos"></div>
+
+<div id="cart">
+<h3>Resumo</h3>
+<ul id="lista"></ul>
+<button onclick="enviar()">ENVIAR VIA WHATSAPP</button>
+</div>
+</div>
+
+</div>
+
+<script>
+
+if('serviceWorker' in navigator){
+navigator.serviceWorker.register('service-worker.js');
+}
+
+const WHATSAPP="5531986580180";
+
+const catalogo = {
+"Estribos":[
+"Estribo 7x17 4.2mm",
+"Estribo 7x17 5.0mm",
+"Estribo 8x20 4.2mm",
+"Estribo 8x20 5.0mm"
+],
+"Argamassas Precon":[
+"ACI","ACII","ACIII","Porcelanato","Refratária","Projetada","Branca ACIII"
+],
+"Pregos Gerdau":[
+"Ardox 17x21","Ardox 18x27","CCAB 17x21","Grampo"
+],
+"Treliças Multipla":[
+"TR8-633 12M","TR8-633 6M","TR8-533","TR12-644","TR8-644"
+],
+"Arames":[
+"Arame BWG 12","Arame BWG 14","Arame BWG 16","Arame BWG 18"
+],
+"Malhas POP":[
+"Malha 15x15 4.2mm","Malha 20x20 4.2mm"
+],
+"Colunas":[
+"Coluna Leve","Coluna Média","Coluna Pesada"
+],
+"Feixes CA50/CA60":[
+"CA50 4.2mm","CA50 5mm","CA50 6.3mm","CA50 8mm","CA50 10mm","CA50 12.5mm","CA50 16mm","CA50 20mm"
+]
+};
+
+let carrinho=[];
+
+function iniciar(){
+let nome=document.getElementById("nome").value;
+let cidade=document.getElementById("cidade").value;
+let telefone=document.getElementById("telefone").value;
+
+if(!nome||!cidade||!telefone){
+alert("Preencha todos os campos.");
+return;
+}
+
+document.getElementById("cliente").classList.add("hidden");
+document.getElementById("sistema").classList.remove("hidden");
+
+renderizar();
+}
+
+function renderizar(){
+let area=document.getElementById("produtos");
+area.innerHTML="";
+
+for(let categoria in catalogo){
+let div=document.createElement("div");
+div.className="category";
+div.innerHTML="<h3>"+categoria+"</h3>";
+
+catalogo[categoria].forEach(prod=>{
+let p=document.createElement("div");
+p.className="product";
+p.innerHTML=`${prod}
+<input type="number" placeholder="Quantidade" id="${prod}">
+<button onclick="add('${prod}')">Adicionar</button>`;
+div.appendChild(p);
+});
+
+area.appendChild(div);
+}
+}
+
+function add(produto){
+let qtd=document.getElementById(produto).value;
+if(!qtd||qtd<=0){alert("Quantidade inválida");return;}
+carrinho.push({produto,qtd});
+atualizar();
+}
+
+function atualizar(){
+let lista=document.getElementById("lista");
+lista.innerHTML="";
+carrinho.forEach((item,i)=>{
+let li=document.createElement("li");
+li.innerHTML=`${item.produto} - ${item.qtd} <button onclick="remover(${i})">X</button>`;
+lista.appendChild(li);
+});
+}
+
+function remover(i){
+carrinho.splice(i,1);
+atualizar();
+}
+
+function enviar(){
+let nome=document.getElementById("nome").value;
+let cidade=document.getElementById("cidade").value;
+let telefone=document.getElementById("telefone").value;
+
+let msg="MULTIPLA COTAÇÃO%0A%0A";
+msg+="Cliente: "+nome+"%0A";
+msg+="Cidade: "+cidade+"%0A";
+msg+="Telefone: "+telefone+"%0A%0AItens:%0A";
+
+carrinho.forEach(i=>{
+msg+="• "+i.produto+" - "+i.qtd+"%0A";
+});
+
+window.open("https://wa.me/"+WHATSAPP+"?text="+msg);
+}
+
+</script>
+
+</body>
+</html>
