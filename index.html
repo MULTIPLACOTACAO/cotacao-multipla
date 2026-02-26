@@ -55,116 +55,98 @@ navigator.serviceWorker.register('service-worker.js');
 
 const WHATSAPP="5531986580180";
 
-const catalogo = {
+const catalogo ={
 "Estribos":[
+"Estribo 11x17 4.2mm",
+"Estribo 12x27 4.2mm",
 "Estribo 7x17 4.2mm",
-"Estribo 7x17 5.0mm",
-"Estribo 8x20 4.2mm",
-"Estribo 8x20 5.0mm"
+"Estribo 17x17 4.2mm",
+"Estribo 27x27 4.2mm",
+"Estribo 7x14 4.2mm",
+"Estribo 12x27 5mm",
+"Estribo 7x14 5mm",
+"Estribo 11x17 5mm",
+"Estribo 7x17 5mm"
 ],
+
 "Argamassas Precon":[
-"ACI","ACII","ACIII","Porcelanato","Refratária","Projetada","Branca ACIII"
+"ACI Cinza",
+"ACII Cinza",
+"ACIII Cinza",
+"Porcelanato Interno",
+"Refratária 20kg",
+"Projetada 40kg",
+"ACIII Branca"
 ],
+
 "Pregos Gerdau":[
-"Ardox 17x21","Ardox 18x27","CCAB 17x21","Grampo"
+"Ardox SC 17x21 2x11",
+"CCAB 12x12",
+"CCAB 15x15 1.1/4x13",
+"CCAB 17x21 2x11",
+"CCAB 18x30 2.3/4x10",
+"CCAB 19x36",
+"CCAB 20x48",
+"CCAB 22x48",
+"Grampo 19x11"
 ],
+
 "Treliças Multipla":[
-"TR8-633 12M","TR8-633 6M","TR8-533","TR12-644","TR8-644"
+"TR8-633 12M",
+"TR8-633 6M",
+"TR8-533 6M (Leve)",
+"TR12-644 12M",
+"TR8-644 6M (Pesada)"
 ],
-"Arames":[
-"Arame BWG 12","Arame BWG 14","Arame BWG 16","Arame BWG 18"
+
+"Arames (Bobina)":[
+"3,40mm Liso BWG10",
+"2,77mm Liso BWG12",
+"2,10mm Liso BWG14",
+"1,65mm Liso BWG16",
+"1,24mm Torcido BWG18",
+"1,24mm Liso BWG18"
 ],
+
+"Kit Arame (10x)":[
+"Kit 10x 1,24mm Torcido",
+"Kit 10x 1,24mm Liso",
+"Kit 10x 1,65mm Liso",
+"Kit 10x 2,10mm Liso",
+"Kit 10x 2,77mm Liso",
+"Kit 10x 3,40mm Liso"
+],
+
 "Malhas POP":[
-"Malha 15x15 4.2mm","Malha 20x20 4.2mm"
+"EQ138 10x10 4.2mm 2x3m",
+"EQ45 20x20 3.4mm 2x3m",
+"EQ61 15x15 3.4mm 2x3m",
+"EQ92 15x15 4.2mm 2x3m",
+"Q92 10x10 4.2mm 2,45x6m"
 ],
+
 "Colunas":[
-"Coluna Leve","Coluna Média","Coluna Pesada"
+"Leve 6mm 12x17x25cm 6m",
+"Leve 6mm 7x14x25cm 6m",
+"Leve 6mm 7x17x25cm 6m",
+"Média 8mm 12x12x25cm 6m",
+"Média 8mm 11x17x25cm 6m",
+"Média 8mm 7x14x25cm 6m",
+"Média 8mm 7x17x25cm 6m",
+"Pesada 10mm 11x17x25cm 6m",
+"Pesada 10mm 7x14x25cm 6m",
+"Pesada 10mm 7x17x25cm 6m"
 ],
+
 "Feixes CA50/CA60":[
-"CA50 4.2mm","CA50 5mm","CA50 6.3mm","CA50 8mm","CA50 10mm","CA50 12.5mm","CA50 16mm","CA50 20mm"
+"50x CA60 4.2mm 6m",
+"35x CA60 5mm 6m",
+"10x CA50 10mm 6m",
+"15x CA50 8mm 6m",
+"6x CA50 12.5mm 6m",
+"25x CA50 6.3mm 6m",
+"3x CA50 20mm 6m",
+"3x CA50 16mm 6m"
 ]
+
 };
-
-let carrinho=[];
-
-function iniciar(){
-let nome=document.getElementById("nome").value;
-let cidade=document.getElementById("cidade").value;
-let telefone=document.getElementById("telefone").value;
-
-if(!nome||!cidade||!telefone){
-alert("Preencha todos os campos.");
-return;
-}
-
-document.getElementById("cliente").classList.add("hidden");
-document.getElementById("sistema").classList.remove("hidden");
-
-renderizar();
-}
-
-function renderizar(){
-let area=document.getElementById("produtos");
-area.innerHTML="";
-
-for(let categoria in catalogo){
-let div=document.createElement("div");
-div.className="category";
-div.innerHTML="<h3>"+categoria+"</h3>";
-
-catalogo[categoria].forEach(prod=>{
-let p=document.createElement("div");
-p.className="product";
-p.innerHTML=`${prod}
-<input type="number" placeholder="Quantidade" id="${prod}">
-<button onclick="add('${prod}')">Adicionar</button>`;
-div.appendChild(p);
-});
-
-area.appendChild(div);
-}
-}
-
-function add(produto){
-let qtd=document.getElementById(produto).value;
-if(!qtd||qtd<=0){alert("Quantidade inválida");return;}
-carrinho.push({produto,qtd});
-atualizar();
-}
-
-function atualizar(){
-let lista=document.getElementById("lista");
-lista.innerHTML="";
-carrinho.forEach((item,i)=>{
-let li=document.createElement("li");
-li.innerHTML=`${item.produto} - ${item.qtd} <button onclick="remover(${i})">X</button>`;
-lista.appendChild(li);
-});
-}
-
-function remover(i){
-carrinho.splice(i,1);
-atualizar();
-}
-
-function enviar(){
-let nome=document.getElementById("nome").value;
-let cidade=document.getElementById("cidade").value;
-let telefone=document.getElementById("telefone").value;
-
-let msg="MULTIPLA COTAÇÃO%0A%0A";
-msg+="Cliente: "+nome+"%0A";
-msg+="Cidade: "+cidade+"%0A";
-msg+="Telefone: "+telefone+"%0A%0AItens:%0A";
-
-carrinho.forEach(i=>{
-msg+="• "+i.produto+" - "+i.qtd+"%0A";
-});
-
-window.open("https://wa.me/"+WHATSAPP+"?text="+msg);
-}
-
-</script>
-
-</body>
-</html>
