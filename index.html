@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Multipla Cotação</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#e30613">
-
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#111;color:white;}
 header{background:#000;padding:20px;text-align:center;color:#e30613;font-size:22px;font-weight:bold;}
@@ -34,28 +31,20 @@ button:hover{background:#b0000d;}
 <button onclick="iniciar()">INICIAR COTAÇÃO</button>
 </div>
 
-<div id="sistema" class="hidden">
-<h2>Produtos</h2>
-<div id="produtos"></div>
+<div id="produtos" class="hidden"></div>
 
-<div id="cart">
-<h3>Resumo</h3>
-<ul id="lista"></ul>
-<button onclick="enviar()">ENVIAR VIA WHATSAPP</button>
-</div>
+<div id="cart" class="hidden">
+<h3>Resumo da Cotação</h3>
+<div id="resumo"></div>
+<button onclick="enviarWhats()">ENVIAR NO WHATSAPP</button>
 </div>
 
 </div>
 
 <script>
 
-if('serviceWorker' in navigator){
-navigator.serviceWorker.register('service-worker.js');
-}
+const catalogo = {
 
-const WHATSAPP="5531986580180";
-
-const catalogo ={
 "Estribos":[
 "Estribo 11x17 4.2mm",
 "Estribo 12x27 4.2mm",
@@ -151,4 +140,72 @@ const catalogo ={
 
 };
 
-  
+let carrinho = [];
+
+function iniciar(){
+document.getElementById("cliente").style.display="none";
+document.getElementById("produtos").classList.remove("hidden");
+gerarProdutos();
+}
+
+function gerarProdutos(){
+const container=document.getElementById("produtos");
+container.innerHTML="";
+for(let categoria in catalogo){
+let div=document.createElement("div");
+div.className="category";
+div.innerHTML="<h3>"+categoria+"</h3>";
+catalogo[categoria].forEach(prod=>{
+let p=document.createElement("div");
+p.className="product";
+p.innerHTML=`
+<label>${prod}</label>
+<input type="number" min="0" placeholder="Quantidade" onchange="addCarrinho('${prod}',this.value)">
+`;
+div.appendChild(p);
+});
+container.appendChild(div);
+}
+}
+
+function addCarrinho(prod, qtd){
+qtd=parseInt(qtd);
+if(qtd>0){
+carrinho.push({produto:prod,quantidade:qtd});
+}
+atualizarResumo();
+}
+
+function atualizarResumo(){
+const resumo=document.getElementById("resumo");
+resumo.innerHTML="";
+if(carrinho.length>0){
+document.getElementById("cart").classList.remove("hidden");
+carrinho.forEach(item=>{
+resumo.innerHTML+=`<p>${item.produto} - ${item.quantidade}</p>`;
+});
+}
+}
+
+function enviarWhats(){
+let nome=document.getElementById("nome").value;
+let cidade=document.getElementById("cidade").value;
+let telefone=document.getElementById("telefone").value;
+
+let mensagem=`Olá, sou ${nome} de ${cidade}.\n\nSegue minha cotação:\n\n`;
+
+carrinho.forEach(item=>{
+mensagem+=`${item.produto} - ${item.quantidade}\n`;
+});
+
+mensagem+="\nAguardo retorno. 😊";
+
+let numero="55SEUNUMEROAQUI";
+let url=`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+window.open(url,"_blank");
+}
+
+</script>
+
+</body>
+</html>
