@@ -190,7 +190,6 @@ resumo.innerHTML+=`<p>${item.produto} - ${item.quantidade}</p>`;
 function enviarWhats(){
 let nome=document.getElementById("nome").value;
 let cidade=document.getElementById("cidade").value;
-let telefone=document.getElementById("telefone").value;
 
 let mensagem=`Olá, sou ${nome} de ${cidade}.\n\nSegue minha cotação:\n\n`;
 
@@ -198,9 +197,10 @@ carrinho.forEach(item=>{
 mensagem+=`${item.produto} - ${item.quantidade}\n`;
 });
 
-mensagem+="\nAguardo retorno. 😊";
+mensagem+="\nAguardo retorno.";
 
-let numero="55SEUNUMEROAQUI";
+let numero="5531986580180";
+
 let url=`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 window.open(url,"_blank");
 }
