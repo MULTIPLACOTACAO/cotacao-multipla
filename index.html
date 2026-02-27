@@ -6,21 +6,135 @@
 <title>Multipla Cotação</title>
 
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#111;color:white;}
-header{background:#000;padding:20px;text-align:center;color:#e30613;font-size:22px;font-weight:bold;}
-.container{padding:20px;max-width:1000px;margin:auto;}
-input{width:100%;padding:10px;margin:6px 0;border:none;border-radius:5px;}
-button{background:#e30613;color:white;border:none;padding:8px;margin-top:5px;border-radius:5px;cursor:pointer;width:100%;}
-button:hover{background:#b0000d;}
-.category{background:#1c1c1c;padding:15px;margin-top:15px;border-radius:6px;}
-.product{background:#2a2a2a;padding:10px;margin-top:10px;border-radius:6px;}
-#cart{background:#000;padding:15px;margin-top:20px;border-radius:6px;}
-.hidden{display:none;}
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#0f0f0f,#1b1b1b);
+color:#fff;
+}
+
+header{
+background:#000;
+padding:25px;
+text-align:center;
+color:#e30613;
+font-size:28px;
+font-weight:700;
+letter-spacing:1px;
+box-shadow:0 4px 15px rgba(0,0,0,0.6);
+}
+
+.container{
+padding:20px;
+max-width:1100px;
+margin:auto;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:8px 0;
+border:none;
+border-radius:10px;
+background:#2b2b2b;
+color:#fff;
+font-size:14px;
+}
+
+input:focus{
+outline:none;
+box-shadow:0 0 0 2px #e30613;
+}
+
+button{
+background:#e30613;
+color:white;
+border:none;
+padding:14px;
+margin-top:10px;
+border-radius:10px;
+cursor:pointer;
+width:100%;
+font-weight:bold;
+font-size:15px;
+transition:0.3s;
+}
+
+button:hover{
+background:#ff1a1a;
+transform:scale(1.03);
+}
+
+.category{
+background:#1c1c1c;
+padding:20px;
+margin-top:25px;
+border-radius:14px;
+box-shadow:0 8px 20px rgba(0,0,0,0.4);
+animation:fadeIn 0.4s ease-in-out;
+}
+
+.category h3{
+margin-top:0;
+color:#e30613;
+border-bottom:1px solid #333;
+padding-bottom:10px;
+}
+
+.product{
+background:#2a2a2a;
+padding:15px;
+margin-top:12px;
+border-radius:12px;
+display:flex;
+flex-direction:column;
+gap:8px;
+transition:0.2s;
+}
+
+.product:hover{
+background:#333;
+}
+
+#cart{
+background:#111;
+padding:20px;
+margin-top:35px;
+border-radius:14px;
+box-shadow:0 8px 25px rgba(0,0,0,0.6);
+}
+
+#cart h3{
+color:#e30613;
+margin-top:0;
+}
+
+.badge{
+background:#e30613;
+padding:4px 8px;
+border-radius:20px;
+font-size:12px;
+margin-left:8px;
+}
+
+.hidden{
+display:none;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
 </style>
 </head>
 <body>
 
-<header>MULTIPLA COTAÇÃO</header>
+<header>
+MULTIPLA COTAÇÃO
+<span id="contador" class="badge hidden">0 itens</span>
+</header>
 
 <div class="container">
 
@@ -44,100 +158,15 @@ button:hover{background:#b0000d;}
 <script>
 
 const catalogo = {
-
-"Estribos":[
-"Estribo 11x17 4.2mm",
-"Estribo 12x27 4.2mm",
-"Estribo 7x17 4.2mm",
-"Estribo 17x17 4.2mm",
-"Estribo 27x27 4.2mm",
-"Estribo 7x14 4.2mm",
-"Estribo 12x27 5mm",
-"Estribo 7x14 5mm",
-"Estribo 11x17 5mm",
-"Estribo 7x17 5mm"
-],
-
-"Argamassas Precon":[
-"ACI Cinza",
-"ACII Cinza",
-"ACIII Cinza",
-"Porcelanato Interno",
-"Refratária 20kg",
-"Projetada 40kg",
-"ACIII Branca"
-],
-
-"Pregos Gerdau":[
-"Ardox SC 17x21 2x11",
-"CCAB 12x12",
-"CCAB 15x15 1.1/4x13",
-"CCAB 17x21 2x11",
-"CCAB 18x30 2.3/4x10",
-"CCAB 19x36",
-"CCAB 20x48",
-"CCAB 22x48",
-"Grampo 19x11"
-],
-
-"Treliças Multipla":[
-"TR8-633 12M",
-"TR8-633 6M",
-"TR8-533 6M (Leve)",
-"TR12-644 12M",
-"TR8-644 6M (Pesada)"
-],
-
-"Arames (Bobina)":[
-"3,40mm Liso BWG10",
-"2,77mm Liso BWG12",
-"2,10mm Liso BWG14",
-"1,65mm Liso BWG16",
-"1,24mm Torcido BWG18",
-"1,24mm Liso BWG18"
-],
-
-"Kit Arame (10x)":[
-"Kit 10x 1,24mm Torcido",
-"Kit 10x 1,24mm Liso",
-"Kit 10x 1,65mm Liso",
-"Kit 10x 2,10mm Liso",
-"Kit 10x 2,77mm Liso",
-"Kit 10x 3,40mm Liso"
-],
-
-"Malhas POP":[
-"EQ138 10x10 4.2mm 2x3m",
-"EQ45 20x20 3.4mm 2x3m",
-"EQ61 15x15 3.4mm 2x3m",
-"EQ92 15x15 4.2mm 2x3m",
-"Q92 10x10 4.2mm 2,45x6m"
-],
-
-"Colunas":[
-"Leve 6mm 12x17x25cm 6m",
-"Leve 6mm 7x14x25cm 6m",
-"Leve 6mm 7x17x25cm 6m",
-"Média 8mm 12x12x25cm 6m",
-"Média 8mm 11x17x25cm 6m",
-"Média 8mm 7x14x25cm 6m",
-"Média 8mm 7x17x25cm 6m",
-"Pesada 10mm 11x17x25cm 6m",
-"Pesada 10mm 7x14x25cm 6m",
-"Pesada 10mm 7x17x25cm 6m"
-],
-
-"Feixes CA50/CA60":[
-"50x CA60 4.2mm 6m",
-"35x CA60 5mm 6m",
-"10x CA50 10mm 6m",
-"15x CA50 8mm 6m",
-"6x CA50 12.5mm 6m",
-"25x CA50 6.3mm 6m",
-"3x CA50 20mm 6m",
-"3x CA50 16mm 6m"
-]
-
+"Estribos":["Estribo 11x17 4.2mm","Estribo 12x27 4.2mm","Estribo 7x17 4.2mm","Estribo 17x17 4.2mm","Estribo 27x27 4.2mm","Estribo 7x14 4.2mm","Estribo 12x27 5mm","Estribo 7x14 5mm","Estribo 11x17 5mm","Estribo 7x17 5mm"],
+"Argamassas Precon":["ACI Cinza","ACII Cinza","ACIII Cinza","Porcelanato Interno","Refratária 20kg","Projetada 40kg","ACIII Branca"],
+"Pregos Gerdau":["Ardox 17x21","CCAB 12x12","CCAB 15x15","CCAB 17x21","CCAB 18x30","CCAB 19x36","CCAB 20x48","CCAB 22x48","Grampo 19x11"],
+"Treliças Multipla":["TR8-633 12M","TR8-633 6M","TR8-533 6M","TR12-644 12M","TR8-644 6M"],
+"Arames":["3,40mm Liso","2,77mm Liso","2,10mm Liso","1,65mm Liso","1,24mm Torcido","1,24mm Liso"],
+"Kit Arame":["Kit 10x 1,24mm Torcido","Kit 10x 1,24mm Liso","Kit 10x 1,65mm Liso","Kit 10x 2,10mm Liso","Kit 10x 2,77mm Liso","Kit 10x 3,40mm Liso"],
+"Malhas":["EQ138 10x10","EQ45 20x20","EQ61 15x15","EQ92 15x15","Q92 10x10"],
+"Colunas":["Leve 6mm 12x17","Leve 6mm 7x14","Leve 6mm 7x17","Média 8mm 12x12","Média 8mm 11x17","Média 8mm 7x14","Média 8mm 7x17","Pesada 10mm 11x17","Pesada 10mm 7x14","Pesada 10mm 7x17"],
+"Feixes":["50x CA60 4.2mm","35x CA60 5mm","10x CA50 10mm","15x CA50 8mm","6x CA50 12.5mm","25x CA50 6.3mm","3x CA50 20mm","3x CA50 16mm"]
 };
 
 let carrinho = [];
@@ -168,9 +197,14 @@ container.appendChild(div);
 }
 }
 
-function addCarrinho(prod, qtd){
+function addCarrinho(prod,qtd){
 qtd=parseInt(qtd);
-if(qtd>0){
+if(!qtd || qtd<=0) return;
+
+let existente=carrinho.find(item=>item.produto===prod);
+if(existente){
+existente.quantidade=qtd;
+}else{
 carrinho.push({produto:prod,quantidade:qtd});
 }
 atualizarResumo();
@@ -178,9 +212,12 @@ atualizarResumo();
 
 function atualizarResumo(){
 const resumo=document.getElementById("resumo");
+const contador=document.getElementById("contador");
 resumo.innerHTML="";
 if(carrinho.length>0){
 document.getElementById("cart").classList.remove("hidden");
+contador.classList.remove("hidden");
+contador.innerText=carrinho.length+" itens";
 carrinho.forEach(item=>{
 resumo.innerHTML+=`<p>${item.produto} - ${item.quantidade}</p>`;
 });
@@ -192,15 +229,12 @@ let nome=document.getElementById("nome").value;
 let cidade=document.getElementById("cidade").value;
 
 let mensagem=`Olá, sou ${nome} de ${cidade}.\n\nSegue minha cotação:\n\n`;
-
 carrinho.forEach(item=>{
 mensagem+=`${item.produto} - ${item.quantidade}\n`;
 });
-
 mensagem+="\nAguardo retorno.";
 
 let numero="5531986580180";
-
 let url=`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 window.open(url,"_blank");
 }
