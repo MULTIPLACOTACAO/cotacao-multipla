@@ -161,15 +161,91 @@ MULTIPLA COTAÇÃO
 <script>
 
 const catalogo = {
-"Estribos":["Estribo 11x17 4.2mm","Estribo 12x27 4.2mm","Estribo 7x17 4.2mm","Estribo 17x17 4.2mm","Estribo 27x27 4.2mm","Estribo 7x14 4.2mm","Estribo 12x27 5mm","Estribo 7x14 5mm","Estribo 11x17 5mm","Estribo 7x17 5mm"],
-"Argamassas Precon":["ACI Cinza","ACII Cinza","ACIII Cinza","Porcelanato Interno","Refratária 20kg","Projetada 40kg","ACIII Branca"],
-"Pregos Gerdau":["Ardox 17x21","CCAB 12x12","CCAB 15x15","CCAB 17x21","CCAB 18x30","CCAB 19x36","CCAB 20x48","CCAB 22x48","Grampo 19x11"],
-"Treliças Multipla":["TR8-633 12M","TR8-633 6M","TR8-533 6M","TR12-644 12M","TR8-644 6M"],
-"Arames":["3,40mm Liso","2,77mm Liso","2,10mm Liso","1,65mm Liso","1,24mm Torcido","1,24mm Liso"],
-"Kit Arame":["Kit 10x 1,24mm Torcido","Kit 10x 1,24mm Liso","Kit 10x 1,65mm Liso","Kit 10x 2,10mm Liso","Kit 10x 2,77mm Liso","Kit 10x 3,40mm Liso"],
-"Malhas":["EQ138 10x10","EQ45 20x20","EQ61 15x15","EQ92 15x15","Q92 10x10"],
-"Colunas":["Leve 6mm 12x17","Leve 6mm 7x14","Leve 6mm 7x17","Média 8mm 12x12","Média 8mm 11x17","Média 8mm 7x14","Média 8mm 7x17","Pesada 10mm 11x17","Pesada 10mm 7x14","Pesada 10mm 7x17"],
-"Feixes":["50x CA60 4.2mm","35x CA60 5mm","10x CA50 10mm","15x CA50 8mm","6x CA50 12.5mm","25x CA50 6.3mm","3x CA50 20mm","3x CA50 16mm"]
+"Estribos":[
+"EST001 - Estribo 11x17 4.2mm",
+"EST002 - Estribo 12x27 4.2mm",
+"EST003 - Estribo 7x17 4.2mm",
+"EST004 - Estribo 17x17 4.2mm",
+"EST005 - Estribo 27x27 4.2mm",
+"EST006 - Estribo 7x14 4.2mm",
+"EST007 - Estribo 12x27 5mm",
+"EST008 - Estribo 7x14 5mm",
+"EST009 - Estribo 11x17 5mm",
+"EST010 - Estribo 7x17 5mm"
+],
+
+"Argamassas":[
+"ARG001 - Argamassa Precon ACI Cinza",
+"ARG002 - Argamassa Precon ACII Cinza",
+"ARG003 - Argamassa Precon ACIII Cinza",
+"ARG004 - Argamassa Porcelanato Interno",
+"ARG005 - Argamassa Refratária 20kg",
+"ARG006 - Argamassa Projetada 40kg",
+"ARG007 - Argamassa Precon ACIII Branca"
+],
+
+"Pregos":[
+"PRG001 - Prego Ardox 17x21",
+"PRG002 - Prego CCAB 12x12 Gerdau",
+"PRG003 - Prego CCAB 15x15 Gerdau",
+"PRG004 - Prego CCAB 17x21 Gerdau",
+"PRG005 - Prego CCAB 18x30 Gerdau",
+"PRG006 - Prego CCAB 19x36 Gerdau",
+"PRG007 - Prego 20x48 Gerdau",
+"PRG008 - Prego 22x48 Gerdau",
+"PRG009 - Prego 19x11 Gerdau"
+],
+
+"Treliças":[
+"TRL001 - Treliça TR8-633 12m",
+"TRL002 - Treliça TR8-633 6m",
+"TRL003 - Treliça TR8-533 6m",
+"TRL004 - Treliça TR12-644 12m",
+"TRL005 - Treliça TR8-644 6m"
+],
+
+"Arames":[
+"ARM001 - BOB ARAME REC 3,40MM LISO BWG10 (PG18)",
+"ARM002 - BOB ARAME REC 2,77MM LISO BWG12 (PG16)",
+"ARM003 - BOB ARAME REC 2,10MM LISO BWG14 (PG14)",
+"ARM004 - BOB ARAME REC 1,65MM LISO BWG16 (PG12)",
+"ARM005 - BOB ARAME REC 1,24 REC TORC BWG18 (PG7)",
+"ARM006 - BOB ARAME REC LISO BWG18 (PG7)"
+],
+
+"Kit Arame":[
+"KIT001 - Kit 10x Arame Rec 1,24mm Torcido",
+"KIT002 - Kit 10x Arame Rec 1,24mm Liso",
+"KIT003 - Kit 10x Arame Rec 1,65mm Liso",
+"KIT004 - Kit 10x Arame Rec 2,10mm Liso"
+],
+
+"Malhas":[
+"MLP001 - Malha Pop 10x10 4.2mm 2x3m",
+"MLP002 - Malha Pop 20x20 3.4mm 2x3m",
+"MLP003 - Malha Pop 15x15 3.4mm 2x3m",
+"MLP004 - Malha Pop 15x15 4.2mm 2x3m",
+"MLP005 - Malha Pop 10x10 4.2mm 2,45x6m"
+],
+
+"Colunas":[
+"COL001 - Coluna Leve 6mm 12x17 6m",
+"COL002 - Coluna Leve 6mm 7x14 6m",
+"COL003 - Coluna Leve 6mm 7x17 6m",
+"COL004 - Coluna Média 8mm 12x12 6m",
+"COL005 - Coluna Média 8mm 11x17 6m"
+],
+
+"Vergalhoes":[
+"VRG001 - Vergalhão CA60 4.2mm Feixe 50 Barras",
+"VRG002 - Vergalhão CA60 5.0mm Feixe 35 Barras",
+"VRG003 - Vergalhão CA50 6.3mm Feixe 25 Barras",
+"VRG004 - Vergalhão CA50 8mm Feixe 15 Barras",
+"VRG005 - Vergalhão CA50 10mm Feixe 10 Barras",
+"VRG006 - Vergalhão CA50 12.5mm Feixe 6 Barras",
+"VRG007 - Vergalhão CA50 16mm Feixe 3 Barras",
+"VRG008 - Vergalhão CA50 20mm Feixe 3 Barras"
+]
 };
 
 let carrinho = [];
