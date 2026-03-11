@@ -333,6 +333,79 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
 </script>
+<!-- OBSERVAÇÕES DO PEDIDO -->
 
+<h3>Observações do Pedido</h3>
+
+<textarea id="observacoes" placeholder="Digite aqui se precisar de:
+
+• Produto que não está na lista
+• Produto para fabricação especial
+• Informações sobre a obra
+• Pedido conforme projeto estrutural
+
+" style="width:100%;height:120px;padding:10px;border-radius:8px;border:1px solid #ccc;"></textarea>
+
+<br><br>
+
+<label style="font-weight:bold;">
+<input type="checkbox" id="projeto">
+ Tenho projeto estrutural
+</label>
+
+<br><br>
+
+<label style="font-weight:bold;">
+📎 Enviar projeto estrutural (PDF ou Foto):
+</label>
+
+<br><br>
+
+<input type="file" id="arquivoProjeto" accept=".pdf,image/*" style="width:100%;">
+
+<br><br>
+
+<button onclick="enviarCotacao()" style="
+background:#e30613;
+color:white;
+border:none;
+padding:15px;
+width:100%;
+font-size:18px;
+border-radius:8px;
+cursor:pointer;
+">
+ENVIAR COTAÇÃO
+</button>
+
+<script>
+
+function enviarCotacao(){
+
+let observacoes = document.getElementById("observacoes").value;
+
+let projeto = document.getElementById("projeto").checked ? "Sim" : "Não";
+
+let arquivo = document.getElementById("arquivoProjeto").files.length > 0 ? "Cliente possui projeto estrutural" : "Não informado";
+
+let mensagem = "COTAÇÃO – APP MÚLTIPLA\n\n";
+
+mensagem += "Observações do cliente:\n";
+mensagem += observacoes + "\n\n";
+
+mensagem += "Projeto estrutural: " + projeto + "\n";
+mensagem += "Arquivo de projeto: " + arquivo + "\n\n";
+
+mensagem += "O cliente poderá enviar o PDF ou foto do projeto na conversa.";
+
+let numero = "5531986580180";
+
+let url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
+
+window.open(url);
+
+}
+
+</script>
 </body>
 </html>
