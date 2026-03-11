@@ -152,8 +152,33 @@ MULTIPLA COTAÇÃO
 <div id="produtos" class="hidden"></div>
 
 <div id="cart" class="hidden">
+
 <h3>Resumo da Cotação</h3>
+
 <div id="resumo"></div>
+
+<h3>Observações do Pedido</h3>
+
+<textarea id="observacoes"
+placeholder="Digite observações sobre o pedido ou informações da obra"
+style="width:100%;height:120px;padding:10px;border-radius:8px;"></textarea>
+
+<br><br>
+
+<label>
+<input type="checkbox" id="projeto">
+Tenho projeto estrutural
+</label>
+
+<br><br>
+
+<input type="file" id="arquivoProjeto" accept=".pdf,image/*">
+
+<br><br>
+
+<button onclick="enviarWhats()">ENVIAR NO WHATSAPP</button>
+
+</div>
   <h3>Observações do Pedido</h3>
 
 <textarea id="observacoes" placeholder="Digite observações do pedido"
