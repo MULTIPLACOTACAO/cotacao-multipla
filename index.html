@@ -154,16 +154,18 @@ MULTIPLA COTAÇÃO
 
 const catalogo = {
 "Estribos":[
-"EST001 - Estribo 11x17 4.2mm","EST002 - Estribo 12x27 4.2mm","EST003 - Estribo 7x17 4.2mm"
+"EST001 - Estribo 11x17 4.2mm","EST002 - Estribo 12x27 4.2mm","EST003 - Estribo 7x17 4.2mm",
+"EST004 - Estribo 17x17 4.2mm","EST005 - Estribo 27x27 4.2mm","EST006 - Estribo 7x14 4.2mm",
+"EST007 - Estribo 12x27 5mm","EST008 - Estribo 7x14 5mm","EST009 - Estribo 11x17 5mm","EST010 - Estribo 7x17 5mm"
 ],
-"Argamassas":[
-"ARG001 - Argamassa Precon ACI Cinza",
-"ARG002 - Argamassa Precon ACII Cinza"
-],
-"Pregos":[
-"PRG001 - Prego Ardox SC 17x21 2x11",
-"PRG002 - Prego CCAB 12x12 Gerdau"
-]
+"Argamassas":["ARG001 - Argamassa Precon ACI Cinza","ARG002 - Argamassa Precon ACII Cinza","ARG003 - Argamassa Precon ACIII Cinza","ARG004 - Argamassa Porcelanato Interno","ARG005 - Argamassa Refratária 20kg","ARG006 - Argamassa Projetada 40kg","ARG007 - Argamassa Precon ACIII Branca"],
+"Pregos":["PRG001 - Prego Ardox SC 17x21 2x11","PRG002 - Prego CCAB 12x12 Gerdau","PRG003 - Prego CCAB 15x15 1.1/4x13 Gerdau","PRG004 - Prego CCAB 17x21 2x11 Gerdau","PRG005 - Prego CCAB 18x30 2.3/4x10 Gerdau","PRG006 - Prego CCAB 19x36 Gerdau","PRG007 - Prego 20x48 Gerdau","PRG008 - Prego 22x48 Gerdau","PRG009 - Prego 19x11 Gerdau"],
+"Treliças":["TRL001 - Treliça Média TR8-633 12M","TRL002 - Treliça Média TR8-633 6M","TRL003 - Treliça Pesada TR12-644 6M","TRL004 - Treliça Leve TR8-533 6M","TRL005 - Treliça Média TR12-644 12M","TRL006 - Treliça Pesada TR8-644 6M"],
+"Arames":["ARM001 - BOB ARAME REC 3,40MM LISO BWG10 (PG18)","ARM002 - BOB ARAME REC 2,77MM LISO BWG12 (PG16)","ARM003 - BOB ARAME REC 2,10MM LISO BWG14 (PG14)","ARM004 - BOB ARAME REC 1,65MM LISO BWG16 (PG12)","ARM005 - BOB ARAME REC 1,24 REC TORC BWG18 (PG7)","ARM006 - BOB ARAME REC LISO BWG18 (PG7)"],
+"Kit Arame":["KIT001 - KIT 10X ARAME REC 1,24MM TORC BWG18 (PG7)","KIT002 - KIT 10X ARAME REC 1,24 LISO BWG18 (PG7)","KIT003 - KIT 10X ARAME REC 1,65 LISO BWG16 (PG12)","KIT004 - KIT 10X ARAME REC 2,10MM LISO BWG14 (PG14)","KIT005 - KIT 10X ARAME REC 2,77MM LISO BWG12 (PG16)","KIT006 - KIT 10X ARAME REC 3,40MM LISO BWG10 (PG18)"],
+"Malhas":["MLP001 - MALHA POP 10X10 4.2MM 2X3M","MLP002 - MALHA POP 20X20 3.4MM 2X3M","MLP003 - MALHA POP 15X15 3.4MM 2X3M","MLP004 - MALHA POP 15X15 4.2MM 2X3M","MLP005 - MALHA POP 10X10 4.2MM 2,45X6M"],
+"Colunas":["COL001 - COLUNA LEVE 6MM 12X17X25CM 6M","COL002 - COLUNA LEVE 6MM 7X14X25CM 6M","COL003 - COLUNA LEVE 6MM 7X17X25CM 6M","COL004 - COLUNA MEDIA 8MM 12X12X25CM 6M","COL005 - COLUNA MEDIA 8MM 11X17X25CM 6M","COL006 - COLUNA MEDIA 8MM 7X14X25CM 6M","COL007 - COLUNA MEDIA 8MM 7X17X25CM 6M","COL008 - COLUNA PESADA 10MM 11X17X25CM 6M","COL009 - COLUNA PESADA 10MM 7X14X25CM 6M","COL010 - COLUNA PESADA 10MM 7X17X25CM 6M"],
+"Vergalhoes":["VRG001 - Vergalhão CA60 4.2MM Feixe 50 Barras","VRG002 - Vergalhão CA60 5MM Feixe 35 Barras","VRG003 - Vergalhão CA50 6.3MM Feixe 25 Barras","VRG004 - Vergalhão CA50 8MM Feixe 15 Barras","VRG005 - Vergalhão CA50 10MM Feixe 10 Barras","VRG006 - Vergalhão CA50 12.5MM Feixe 6 Barras","VRG007 - Vergalhão CA50 16MM Feixe 3 Barras","VRG008 - Vergalhão CA50 20MM Feixe 3 Barras"]
 };
 
 let carrinho = [];
@@ -177,116 +179,70 @@ gerarProdutos();
 function gerarProdutos(){
 const container=document.getElementById("produtos");
 container.innerHTML="";
-
 for(let categoria in catalogo){
-
 let div=document.createElement("div");
 div.className="category";
-
 div.innerHTML="<h3>"+categoria+"</h3>";
-
 catalogo[categoria].forEach(prod=>{
-
 let p=document.createElement("div");
 p.className="product";
-
-p.innerHTML=`
-<label>${prod}</label>
-<input type="number" min="0" placeholder="Quantidade"
-onchange="addCarrinho('${prod}',this.value)">
-`;
-
+p.innerHTML=`<label>${prod}</label>
+<input type="number" min="0" placeholder="Quantidade" oninput="addCarrinho('${prod}',this.value)">`;
 div.appendChild(p);
-
 });
-
 container.appendChild(div);
-
 }
 }
 
 function addCarrinho(prod,qtd){
-
-qtd=parseInt(qtd);
-
-if(!qtd || qtd<=0) return;
-
-let existente=carrinho.find(item=>item.produto===prod);
-
-if(existente){
-
-existente.quantidade=qtd;
-
+qtd = Number(qtd);
+if(isNaN(qtd) || qtd <= 0){
+carrinho = carrinho.filter(item => item.produto !== prod);
 }else{
-
-carrinho.push({produto:prod,quantidade:qtd});
-
+let existente=carrinho.find(item=>item.produto===prod);
+if(existente){existente.quantidade=qtd;}else{carrinho.push({produto:prod,quantidade:qtd});}
 }
-
 atualizarResumo();
-
 }
 
 function atualizarResumo(){
-
 const resumo=document.getElementById("resumo");
 const contador=document.getElementById("contador");
-
 resumo.innerHTML="";
-
 if(carrinho.length>0){
-
 document.getElementById("cart").classList.remove("hidden");
 contador.classList.remove("hidden");
-
-contador.innerText=carrinho.length;
-
-carrinho.forEach(item=>{
-
-resumo.innerHTML+=`<p>${item.produto} - ${item.quantidade}</p>`;
-
-});
-
+contador.innerText=carrinho.length+" itens";
+carrinho.forEach(item=>{resumo.innerHTML+=`<p>${item.produto} - ${item.quantidade}</p>`;});
+}else{
+document.getElementById("cart").classList.add("hidden");
+contador.classList.add("hidden");
 }
-
 }
 
 function enviarWhats(){
-
 let nome=document.getElementById("nome").value;
 let cidade=document.getElementById("cidade").value;
 let observacoes=document.getElementById("observacoes").value;
 let projeto=document.getElementById("projeto").checked ? "Sim" : "Não";
-
 let mensagem=`Olá, sou ${nome} de ${cidade}.\n\nSegue minha cotação:\n\n`;
-
-carrinho.forEach(item=>{
-mensagem+=`${item.produto} - ${item.quantidade}\n`;
-});
-
+carrinho.forEach(item=>{mensagem+=`${item.produto} - ${item.quantidade}\n`;});
 mensagem+=`\nObservações:\n${observacoes}\nProjeto estrutural: ${projeto}`;
-
 let numero="5531986580180";
-
 let url=`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
-
 window.open(url,"_blank");
-
 }
 
 function voltarInicio(){
-
 document.getElementById("cliente").style.display="block";
 document.getElementById("produtos").classList.add("hidden");
 document.getElementById("cart").classList.add("hidden");
-
 carrinho=[];
-
 document.getElementById("contador").classList.add("hidden");
 document.getElementById("resumo").innerHTML="";
 document.getElementById("observacoes").value="";
 document.getElementById("projeto").checked=false;
-
+document.getElementById("arquivoProjeto").value="";
 }
 
 </script>
