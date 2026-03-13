@@ -2,6 +2,7 @@
 <html lang="pt-br">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -13,7 +14,7 @@
 
 body{
 margin:0;
-font-family:Arial,Helvetica,sans-serif;
+font-family:Arial;
 background:#111;
 color:white;
 }
@@ -25,22 +26,22 @@ padding:30px;
 }
 
 header img{
-width:120px;
+width:180px;
 border-radius:20px;
 }
 
 header h1{
-margin-top:10px;
 color:#e30613;
+margin-top:10px;
 }
 
 .container{
-padding:20px;
-max-width:900px;
+max-width:1000px;
 margin:auto;
+padding:20px;
 }
 
-input{
+input,textarea{
 width:100%;
 padding:10px;
 margin:5px 0;
@@ -50,18 +51,17 @@ border:none;
 
 button{
 background:#e30613;
-border:none;
 color:white;
+border:none;
 padding:12px;
 border-radius:8px;
-cursor:pointer;
 margin-top:5px;
-width:100%;
+cursor:pointer;
 font-weight:bold;
 }
 
 button:hover{
-background:#ff1f1f;
+background:#ff1a1a;
 }
 
 .categoria{
@@ -80,8 +80,8 @@ border-radius:8px;
 
 #resumo{
 background:#000;
-margin-top:30px;
 padding:20px;
+margin-top:30px;
 border-radius:10px;
 }
 
@@ -108,9 +108,7 @@ display:none;
 <div id="cliente">
 
 <input id="nome" placeholder="Nome">
-
 <input id="cidade" placeholder="Cidade">
-
 <input id="telefone" placeholder="Telefone">
 
 <button onclick="iniciar()">INICIAR COTAÇÃO</button>
@@ -125,6 +123,10 @@ display:none;
 
 <div id="listaResumo"></div>
 
+<h3>Observações</h3>
+
+<textarea id="obs" placeholder="Observações sobre o pedido"></textarea>
+
 <br>
 
 <button onclick="enviar()">ENVIAR NO WHATSAPP</button>
@@ -137,7 +139,7 @@ display:none;
 
 <script>
 
-const produtos={
+const catalogo={
 
 "Estribos":[
 "EST001 Estribo 11x17 4.2mm",
@@ -153,12 +155,32 @@ const produtos={
 
 "Pregos":[
 "PRG001 Prego Ardox 17x21",
-"PRG002 Prego 12x12 Gerdau"
+"PRG002 Prego CCAB 12x12 Gerdau"
 ],
 
 "Treliças":[
 "TRL001 Treliça TR8 12M",
 "TRL002 Treliça TR8 6M"
+],
+
+"Arames":[
+"ARM001 Arame recozido 3.40mm",
+"ARM002 Arame recozido 2.77mm"
+],
+
+"Malhas":[
+"MLP001 Malha POP 10x10 4.2mm",
+"MLP002 Malha POP 20x20 3.4mm"
+],
+
+"Colunas":[
+"COL001 Coluna leve 6mm 12x17",
+"COL002 Coluna leve 6mm 7x14"
+],
+
+"Vergalhões":[
+"VRG001 Vergalhão CA60 4.2mm",
+"VRG002 Vergalhão CA60 5mm"
 ]
 
 };
@@ -181,7 +203,7 @@ const area=document.getElementById("produtos");
 
 area.innerHTML="";
 
-for(let categoria in produtos){
+for(let categoria in catalogo){
 
 let bloco=document.createElement("div");
 
@@ -189,7 +211,7 @@ bloco.className="categoria";
 
 bloco.innerHTML="<h3>"+categoria+"</h3>";
 
-produtos[categoria].forEach(prod=>{
+catalogo[categoria].forEach(prod=>{
 
 let item=document.createElement("div");
 
@@ -229,8 +251,6 @@ atualizarResumo();
 
 function atualizarResumo(){
 
-const resumo=document.getElementById("resumo");
-
 const lista=document.getElementById("listaResumo");
 
 lista.innerHTML="";
@@ -241,7 +261,7 @@ lista.innerHTML+=`<p>${item.produto} - ${item.quantidade}</p>`;
 
 });
 
-resumo.classList.remove("hidden");
+document.getElementById("resumo").classList.remove("hidden");
 
 }
 
@@ -251,6 +271,8 @@ let nome=document.getElementById("nome").value;
 
 let cidade=document.getElementById("cidade").value;
 
+let obs=document.getElementById("obs").value;
+
 let mensagem="Cotação de "+nome+" ("+cidade+")%0A%0A";
 
 carrinho.forEach(item=>{
@@ -258,6 +280,8 @@ carrinho.forEach(item=>{
 mensagem+=item.produto+" - "+item.quantidade+"%0A";
 
 });
+
+mensagem+="%0AObservações:%0A"+obs;
 
 window.open("https://wa.me/5531986580180?text="+mensagem);
 
@@ -272,5 +296,4 @@ location.reload();
 </script>
 
 </body>
-
 </html>
