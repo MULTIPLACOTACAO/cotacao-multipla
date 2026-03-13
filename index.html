@@ -17,13 +17,22 @@ color:#fff;
 }
 header{
 background:#000;
-padding:25px;
+padding:25px 20px 10px 20px;
 text-align:center;
-color:#e30613;
-font-size:28px;
-font-weight:700;
-letter-spacing:1px;
 box-shadow:0 4px 15px rgba(0,0,0,0.6);
+}
+header img{
+width:120px;
+height:auto;
+display:block;
+margin:0 auto 10px auto;
+}
+header .badge{
+background:#e30613;
+padding:4px 8px;
+border-radius:20px;
+font-size:12px;
+display:inline-block;
 }
 .container{
 padding:20px;
@@ -94,13 +103,6 @@ box-shadow:0 8px 25px rgba(0,0,0,0.6);
 color:#e30613;
 margin-top:0;
 }
-.badge{
-background:#e30613;
-padding:4px 8px;
-border-radius:20px;
-font-size:12px;
-margin-left:8px;
-}
 .hidden{display:none;}
 </style>
 </head>
@@ -108,8 +110,8 @@ margin-left:8px;
 <body>
 
 <header>
-MULTIPLA COTAÇÃO
-<span id="contador" class="badge hidden">0</span>
+  <img src="logo_192.png" alt="Multipla Cotação">
+  <span id="contador" class="badge hidden">0 itens</span>
 </header>
 
 <div class="container">
@@ -151,7 +153,6 @@ MULTIPLA COTAÇÃO
 </div>
 
 <script>
-
 const catalogo = {
 "Estribos":[
 "EST001 - Estribo 11x17 4.2mm","EST002 - Estribo 12x27 4.2mm","EST003 - Estribo 7x17 4.2mm",
@@ -244,7 +245,6 @@ document.getElementById("observacoes").value="";
 document.getElementById("projeto").checked=false;
 document.getElementById("arquivoProjeto").value="";
 }
-
 </script>
 
 <script>
