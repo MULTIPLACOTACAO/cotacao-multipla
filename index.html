@@ -2,10 +2,8 @@
 <html lang="pt-br">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Multipla Cotação</title>
 
 <link rel="manifest" href="manifest.json">
@@ -15,7 +13,7 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0f0f0f;
+background:#121212;
 color:white;
 }
 
@@ -26,41 +24,39 @@ padding:20px;
 }
 
 header img{
-width:260px;
-max-width:80%;
+width:220px;
 }
 
 header h1{
 color:#e30613;
 margin:5px 0;
-font-size:28px;
 }
 
 .container{
-max-width:1100px;
+max-width:1000px;
 margin:auto;
-padding:20px;
+padding:15px;
 }
 
-input,textarea{
+.search{
 width:100%;
 padding:12px;
-margin:6px 0;
-border-radius:8px;
+border-radius:10px;
 border:none;
+margin-bottom:15px;
 font-size:16px;
 }
 
 button{
+width:100%;
+padding:12px;
+margin-top:8px;
+border:none;
+border-radius:10px;
 background:#e30613;
 color:white;
-border:none;
-padding:12px;
-border-radius:8px;
-margin-top:6px;
+font-size:16px;
 cursor:pointer;
-font-weight:bold;
-font-size:15px;
 }
 
 button:hover{
@@ -68,24 +64,49 @@ background:#ff2c2c;
 }
 
 .categoria{
-background:#1c1c1c;
-margin-top:20px;
-padding:15px;
-border-radius:10px;
+background:#1f1f1f;
+margin-top:10px;
 }
 
 .produto{
-background:#2a2a2a;
+background:#222;
 padding:10px;
+border-radius:10px;
 margin-top:10px;
-border-radius:8px;
 }
 
-#resumo{
+input{
+width:100%;
+padding:8px;
+border-radius:8px;
+border:none;
+margin-top:5px;
+}
+
+#carrinho{
 background:black;
-padding:20px;
-margin-top:30px;
+padding:15px;
+border-radius:12px;
+margin-top:20px;
+}
+
+.carrinhoItem{
+background:#1c1c1c;
+padding:8px;
+border-radius:8px;
+margin-top:5px;
+}
+
+.whatsapp{
+background:#25D366;
+font-weight:bold;
+}
+
+.contador{
+background:#e30613;
+padding:4px 8px;
 border-radius:10px;
+margin-left:5px;
 }
 
 .hidden{
@@ -101,38 +122,29 @@ display:none;
 <header>
 
 <img src="logo_512.png">
-
 <h1>MULTIPLA COTAÇÃO</h1>
 
 </header>
 
 <div class="container">
 
-<div id="cliente">
+<input class="search" id="busca" placeholder="🔎 Buscar produto..." onkeyup="buscarProduto()">
 
-<input id="nome" placeholder="Nome do cliente">
-<input id="cidade" placeholder="Cidade">
-<input id="telefone" placeholder="Telefone">
-
-<button onclick="iniciar()">INICIAR COTAÇÃO</button>
-
-</div>
+<div id="categorias"></div>
 
 <div id="produtos" class="hidden"></div>
 
-<div id="resumo" class="hidden">
+<div id="carrinho">
 
-<h2>Resumo da Cotação</h2>
+<h3>Carrinho <span id="contador" class="contador">0</span></h3>
 
-<div id="listaResumo"></div>
+<div id="listaCarrinho"></div>
 
 <h3>Observações</h3>
 
-<textarea id="observacao" placeholder="Digite observações do pedido aqui"></textarea>
+<textarea id="obs"></textarea>
 
-<button onclick="enviar()">ENVIAR NO WHATSAPP</button>
-
-<button onclick="voltar()">VOLTAR</button>
+<button class="whatsapp" onclick="enviar()">📲 Enviar para WhatsApp</button>
 
 </div>
 
@@ -140,159 +152,137 @@ display:none;
 
 <script>
 
-const catalogo={
-
+const catalogo = {
 "Estribos":[
-"EST001 Estribo 11x17 4.2",
-"EST002 Estribo 12x27 4.2",
-"EST003 Estribo 7x17 4.2",
-"EST004 Estribo 10x20 4.2",
-"EST005 Estribo 15x30 4.2"
-],
-
-"Treliças":[
-"TR001 Treliça TR8 6m",
-"TR002 Treliça TR8 12m",
-"TR003 Treliça H8",
-"TR004 Treliça H12"
-],
-
-"Pregos":[
-"PR001 Prego Ardox 17x21",
-"PR002 Prego Ardox 18x27",
-"PR003 Prego 12x12",
-"PR004 Prego 15x15"
+"EST001 - Estribo 11x17 4.2mm","EST002 - Estribo 12x27 4.2mm","EST003 - Estribo 7x17 4.2mm",
+"EST004 - Estribo 17x17 4.2mm","EST005 - Estribo 27x27 4.2mm","EST006 - Estribo 7x14 4.2mm",
+"EST007 - Estribo 12x27 5mm","EST008 - Estribo 7x14 5mm","EST009 - Estribo 11x17 5mm","EST010 - Estribo 7x17 5mm"
 ],
 
 "Argamassas":[
-"AR001 Argamassa AC1",
-"AR002 Argamassa AC2",
-"AR003 Argamassa AC3",
-"AR004 Argamassa Piso sobre Piso"
+"ARG001 - Argamassa Precon ACI Cinza","ARG002 - Argamassa Precon ACII Cinza","ARG003 - Argamassa Precon ACIII Cinza",
+"ARG004 - Argamassa Porcelanato Interno","ARG005 - Argamassa Refratária 20kg","ARG006 - Argamassa Projetada 40kg","ARG007 - Argamassa Precon ACIII Branca"
+],
+
+"Pregos":[
+"PRG001 - Prego Ardox SC 17x21 2x11","PRG002 - Prego CCAB 12x12 Gerdau","PRG003 - Prego CCAB 15x15 1.1/4x13 Gerdau",
+"PRG004 - Prego CCAB 17x21 2x11 Gerdau","PRG005 - Prego CCAB 18x30 2.3/4x10 Gerdau","PRG006 - Prego CCAB 19x36 Gerdau",
+"PRG007 - Prego 20x48 Gerdau","PRG008 - Prego 22x48 Gerdau","PRG009 - Prego 19x11 Gerdau"
+],
+
+"Treliças":[
+"TRL001 - Treliça Média TR8-633 12M","TRL002 - Treliça Média TR8-633 6M","TRL003 - Treliça Pesada TR12-644 6M",
+"TRL004 - Treliça Leve TR8-533 6M","TRL005 - Treliça Média TR12-644 12M","TRL006 - Treliça Pesada TR8-644 6M"
 ],
 
 "Arames":[
-"ARM001 Arame recozido 1kg",
-"ARM002 Arame recozido 25kg",
-"ARM003 Arame galvanizado"
+"ARM001 - BOB ARAME REC 3,40MM LISO BWG10 (PG18)","ARM002 - BOB ARAME REC 2,77MM LISO BWG12 (PG16)",
+"ARM003 - BOB ARAME REC 2,10MM LISO BWG14 (PG14)","ARM004 - BOB ARAME REC 1,65MM LISO BWG16 (PG12)",
+"ARM005 - BOB ARAME REC 1,24 REC TORC BWG18 (PG7)","ARM006 - BOB ARAME REC LISO BWG18 (PG7)"
 ],
 
-"Vergalhões":[
-"VR001 Vergalhão CA60 4.2",
-"VR002 Vergalhão CA60 5mm",
-"VR003 Vergalhão CA50 8mm",
-"VR004 Vergalhão CA50 10mm"
-]
+"Kit Arame":[
+"KIT001 - KIT 10X ARAME REC 1,24MM TORC BWG18 (PG7)","KIT002 - KIT 10X ARAME REC 1,24 LISO BWG18 (PG7)",
+"KIT003 - KIT 10X ARAME REC 1,65 LISO BWG16 (PG12)","KIT004 - KIT 10X ARAME REC 2,10MM LISO BWG14 (PG14)",
+"KIT005 - KIT 10X ARAME REC 2,77MM LISO BWG12 (PG16)","KIT006 - KIT 10X ARAME REC 3,40MM LISO BWG10 (PG18)"
+],
 
+"Malhas":[
+"MLP001 - MALHA POP 10X10 4.2MM 2X3M","MLP002 - MALHA POP 20X20 3.4MM 2X3M",
+"MLP003 - MALHA POP 15X15 3.4MM 2X3M","MLP004 - MALHA POP 15X15 4.2MM 2X3M","MLP005 - MALHA POP 10X10 4.2MM 2,45X6M"
+],
+
+"Colunas":[
+"COL001 - COLUNA LEVE 6MM 12X17X25CM 6M","COL002 - COLUNA LEVE 6MM 7X14X25CM 6M",
+"COL003 - COLUNA LEVE 6MM 7X17X25CM 6M","COL004 - COLUNA MEDIA 8MM 12X12X25CM 6M",
+"COL005 - COLUNA MEDIA 8MM 11X17X25CM 6M","COL006 - COLUNA MEDIA 8MM 7X14X25CM 6M",
+"COL007 - COLUNA MEDIA 8MM 7X17X25CM 6M","COL008 - COLUNA PESADA 10MM 11X17X25CM 6M",
+"COL009 - COLUNA PESADA 10MM 7X14X25CM 6M","COL010 - COLUNA PESADA 10MM 7X17X25CM 6M"
+],
+
+"Vergalhoes":[
+"VRG001 - Vergalhão CA60 4.2MM Feixe 50 Barras","VRG002 - Vergalhão CA60 5MM Feixe 35 Barras",
+"VRG003 - Vergalhão CA50 6.3MM Feixe 25 Barras","VRG004 - Vergalhão CA50 8MM Feixe 15 Barras",
+"VRG005 - Vergalhão CA50 10MM Feixe 10 Barras","VRG006 - Vergalhão CA50 12.5MM Feixe 6 Barras",
+"VRG007 - Vergalhão CA50 16MM Feixe 3 Barras","VRG008 - Vergalhão CA50 20MM Feixe 3 Barras"
+]
 };
 
 let carrinho=[];
 
-function iniciar(){
-
-document.getElementById("cliente").style.display="none";
-
-document.getElementById("produtos").classList.remove("hidden");
-
-mostrarProdutos();
-
-}
-
-function mostrarProdutos(){
-
-const area=document.getElementById("produtos");
-
+function carregarCategorias(){
+let area=document.getElementById("categorias");
 area.innerHTML="";
+for(let c in catalogo){
+area.innerHTML+=`<button class="categoria" onclick="abrirCategoria('${c}')">${c}</button>`;
+}
+}
 
-for(let categoria in catalogo){
-
-let bloco=document.createElement("div");
-
-bloco.className="categoria";
-
-bloco.innerHTML="<h3>"+categoria+"</h3>";
-
-catalogo[categoria].forEach(prod=>{
-
-let item=document.createElement("div");
-
-item.className="produto";
-
-item.innerHTML=`
-
-<label>${prod}</label>
-
-<input type="number" min="1" placeholder="Quantidade" id="${prod}">
-
-<button onclick="adicionar('${prod}')">ADICIONAR</button>
-
-`;
-
-bloco.appendChild(item);
-
+function abrirCategoria(cat){
+let area=document.getElementById("produtos");
+area.classList.remove("hidden");
+area.innerHTML=`<button onclick="fechar()">⬅ Voltar</button><h2>${cat}</h2>`;
+catalogo[cat].forEach(p=>{
+area.innerHTML+=`
+<div class="produto">
+${p}
+<input type="number" placeholder="Quantidade" id="${p}">
+<button onclick="add('${p}')">Adicionar</button>
+</div>`;
 });
-
-area.appendChild(bloco);
-
 }
 
+function fechar(){
+document.getElementById("produtos").classList.add("hidden");
 }
 
-function adicionar(prod){
-
-let qtd=document.getElementById(prod).value;
-
-if(!qtd) return;
-
-carrinho.push({produto:prod,quantidade:qtd});
-
-atualizarResumo();
-
+function add(prod){
+let q=document.getElementById(prod).value;
+if(!q)return;
+carrinho.push(prod+" - "+q);
+mostrarCarrinho();
 }
 
-function atualizarResumo(){
-
-const lista=document.getElementById("listaResumo");
-
+function mostrarCarrinho(){
+let lista=document.getElementById("listaCarrinho");
 lista.innerHTML="";
-
-carrinho.forEach(item=>{
-
-lista.innerHTML+=`<p>${item.produto} - ${item.quantidade}</p>`;
-
+carrinho.forEach(i=>{
+lista.innerHTML+=`<div class="carrinhoItem">${i}</div>`;
 });
-
-document.getElementById("resumo").classList.remove("hidden");
-
+document.getElementById("contador").innerText=carrinho.length;
 }
 
 function enviar(){
-
-let nome=document.getElementById("nome").value;
-
-let cidade=document.getElementById("cidade").value;
-
-let obs=document.getElementById("observacao").value;
-
-let mensagem="Cotação - "+nome+" ("+cidade+")%0A%0A";
-
-carrinho.forEach(item=>{
-
-mensagem+=item.produto+" - "+item.quantidade+"%0A";
-
+let obs=document.getElementById("obs").value;
+let msg="Cotação:%0A%0A";
+carrinho.forEach(i=>{
+msg+=i+"%0A";
 });
-
-mensagem+="%0AObservação:%0A"+obs;
-
-window.open("https://wa.me/?text="+mensagem);
-
+msg+="%0AObservação:%0A"+obs;
+window.open("https://wa.me/?text="+msg);
 }
 
-function voltar(){
-
-location.reload();
-
+function buscarProduto(){
+let termo=document.getElementById("busca").value.toLowerCase();
+if(termo==="") return;
+let area=document.getElementById("produtos");
+area.classList.remove("hidden");
+area.innerHTML="<h2>Resultados</h2>";
+for(let cat in catalogo){
+catalogo[cat].forEach(p=>{
+if(p.toLowerCase().includes(termo)){
+area.innerHTML+=`
+<div class="produto">
+${p}
+<input type="number" placeholder="Quantidade" id="${p}">
+<button onclick="add('${p}')">Adicionar</button>
+</div>`;
 }
+});
+}
+}
+
+carregarCategorias();
 
 </script>
 
