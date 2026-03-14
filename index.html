@@ -15,38 +15,40 @@
 body{
 margin:0;
 font-family:Arial;
-background:#111;
+background:#0f0f0f;
 color:white;
 }
 
 header{
 background:black;
 text-align:center;
-padding:30px;
+padding:20px;
 }
 
 header img{
-width:180px;
-border-radius:20px;
+width:260px;
+max-width:80%;
 }
 
 header h1{
 color:#e30613;
-margin-top:10px;
+margin:5px 0;
+font-size:28px;
 }
 
 .container{
-max-width:1000px;
+max-width:1100px;
 margin:auto;
 padding:20px;
 }
 
 input,textarea{
 width:100%;
-padding:10px;
-margin:5px 0;
+padding:12px;
+margin:6px 0;
 border-radius:8px;
 border:none;
+font-size:16px;
 }
 
 button{
@@ -55,13 +57,14 @@ color:white;
 border:none;
 padding:12px;
 border-radius:8px;
-margin-top:5px;
+margin-top:6px;
 cursor:pointer;
 font-weight:bold;
+font-size:15px;
 }
 
 button:hover{
-background:#ff1a1a;
+background:#ff2c2c;
 }
 
 .categoria{
@@ -72,14 +75,14 @@ border-radius:10px;
 }
 
 .produto{
-background:#2b2b2b;
+background:#2a2a2a;
 padding:10px;
 margin-top:10px;
 border-radius:8px;
 }
 
 #resumo{
-background:#000;
+background:black;
 padding:20px;
 margin-top:30px;
 border-radius:10px;
@@ -107,7 +110,7 @@ display:none;
 
 <div id="cliente">
 
-<input id="nome" placeholder="Nome">
+<input id="nome" placeholder="Nome do cliente">
 <input id="cidade" placeholder="Cidade">
 <input id="telefone" placeholder="Telefone">
 
@@ -119,15 +122,13 @@ display:none;
 
 <div id="resumo" class="hidden">
 
-<h3>Resumo da Cotação</h3>
+<h2>Resumo da Cotação</h2>
 
 <div id="listaResumo"></div>
 
 <h3>Observações</h3>
 
-<textarea id="obs" placeholder="Observações sobre o pedido"></textarea>
-
-<br>
+<textarea id="observacao" placeholder="Digite observações do pedido aqui"></textarea>
 
 <button onclick="enviar()">ENVIAR NO WHATSAPP</button>
 
@@ -142,45 +143,45 @@ display:none;
 const catalogo={
 
 "Estribos":[
-"EST001 Estribo 11x17 4.2mm",
-"EST002 Estribo 12x27 4.2mm",
-"EST003 Estribo 7x17 4.2mm"
-],
-
-"Argamassas":[
-"ARG001 Argamassa Precon ACI",
-"ARG002 Argamassa Precon ACII",
-"ARG003 Argamassa Precon ACIII"
-],
-
-"Pregos":[
-"PRG001 Prego Ardox 17x21",
-"PRG002 Prego CCAB 12x12 Gerdau"
+"EST001 Estribo 11x17 4.2",
+"EST002 Estribo 12x27 4.2",
+"EST003 Estribo 7x17 4.2",
+"EST004 Estribo 10x20 4.2",
+"EST005 Estribo 15x30 4.2"
 ],
 
 "Treliças":[
-"TRL001 Treliça TR8 12M",
-"TRL002 Treliça TR8 6M"
+"TR001 Treliça TR8 6m",
+"TR002 Treliça TR8 12m",
+"TR003 Treliça H8",
+"TR004 Treliça H12"
+],
+
+"Pregos":[
+"PR001 Prego Ardox 17x21",
+"PR002 Prego Ardox 18x27",
+"PR003 Prego 12x12",
+"PR004 Prego 15x15"
+],
+
+"Argamassas":[
+"AR001 Argamassa AC1",
+"AR002 Argamassa AC2",
+"AR003 Argamassa AC3",
+"AR004 Argamassa Piso sobre Piso"
 ],
 
 "Arames":[
-"ARM001 Arame recozido 3.40mm",
-"ARM002 Arame recozido 2.77mm"
-],
-
-"Malhas":[
-"MLP001 Malha POP 10x10 4.2mm",
-"MLP002 Malha POP 20x20 3.4mm"
-],
-
-"Colunas":[
-"COL001 Coluna leve 6mm 12x17",
-"COL002 Coluna leve 6mm 7x14"
+"ARM001 Arame recozido 1kg",
+"ARM002 Arame recozido 25kg",
+"ARM003 Arame galvanizado"
 ],
 
 "Vergalhões":[
-"VRG001 Vergalhão CA60 4.2mm",
-"VRG002 Vergalhão CA60 5mm"
+"VR001 Vergalhão CA60 4.2",
+"VR002 Vergalhão CA60 5mm",
+"VR003 Vergalhão CA50 8mm",
+"VR004 Vergalhão CA50 10mm"
 ]
 
 };
@@ -271,9 +272,9 @@ let nome=document.getElementById("nome").value;
 
 let cidade=document.getElementById("cidade").value;
 
-let obs=document.getElementById("obs").value;
+let obs=document.getElementById("observacao").value;
 
-let mensagem="Cotação de "+nome+" ("+cidade+")%0A%0A";
+let mensagem="Cotação - "+nome+" ("+cidade+")%0A%0A";
 
 carrinho.forEach(item=>{
 
@@ -281,9 +282,9 @@ mensagem+=item.produto+" - "+item.quantidade+"%0A";
 
 });
 
-mensagem+="%0AObservações:%0A"+obs;
+mensagem+="%0AObservação:%0A"+obs;
 
-window.open("https://wa.me/5531986580180?text="+mensagem);
+window.open("https://wa.me/?text="+mensagem);
 
 }
 
