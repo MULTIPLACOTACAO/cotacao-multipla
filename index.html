@@ -15,24 +15,25 @@
 body{
 margin:0;
 font-family:Arial;
-background:#121212;
+background:#111;
 color:white;
 }
 
 header{
 background:black;
 text-align:center;
-padding:20px;
+padding:25px;
 }
 
 header img{
 width:100%;
-max-width:420px;
+max-width:600px;
 }
 
 header h1{
-color:#e30613;
-margin:5px 0;
+color:#ff2c2c;
+margin-top:10px;
+font-size:28px;
 }
 
 .container{
@@ -41,13 +42,28 @@ margin:auto;
 padding:15px;
 }
 
+.searchBox{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
 .search{
-width:100%;
+flex:1;
 padding:12px;
 border-radius:10px;
 border:none;
-margin-bottom:15px;
 font-size:16px;
+}
+
+.buscarBtn{
+width:120px;
+background:#e30613;
+border:none;
+border-radius:10px;
+color:white;
+font-size:16px;
+cursor:pointer;
 }
 
 button{
@@ -69,6 +85,7 @@ background:#ff2c2c;
 .categoria{
 background:#1f1f1f;
 margin-top:10px;
+font-size:18px;
 }
 
 .produto{
@@ -84,6 +101,13 @@ padding:8px;
 border-radius:8px;
 border:none;
 margin-top:5px;
+}
+
+textarea{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:none;
 }
 
 #carrinho{
@@ -103,6 +127,7 @@ margin-top:5px;
 .whatsapp{
 background:#25D366;
 font-weight:bold;
+font-size:18px;
 }
 
 .contador{
@@ -132,7 +157,13 @@ display:none;
 
 <div class="container">
 
-<input class="search" id="busca" placeholder="🔎 Buscar produto..." onkeyup="buscarProduto()">
+<div class="searchBox">
+
+<input class="search" id="busca" placeholder="🔎 Buscar produto...">
+
+<button class="buscarBtn" onclick="buscarProduto()">Buscar</button>
+
+</div>
 
 <div id="categorias"></div>
 
@@ -218,38 +249,6 @@ const catalogo = {
 "KIT004 - KIT 10X ARAME REC 2,10MM LISO BWG14 (PG14)",
 "KIT005 - KIT 10X ARAME REC 2,77MM LISO BWG12 (PG16)",
 "KIT006 - KIT 10X ARAME REC 3,40MM LISO BWG10 (PG18)"
-],
-
-"Malhas":[
-"MLP001 - MALHA POP 10X10 4.2MM 2X3M",
-"MLP002 - MALHA POP 20X20 3.4MM 2X3M",
-"MLP003 - MALHA POP 15X15 3.4MM 2X3M",
-"MLP004 - MALHA POP 15X15 4.2MM 2X3M",
-"MLP005 - MALHA POP 10X10 4.2MM 2,45X6M"
-],
-
-"Colunas":[
-"COL001 - COLUNA LEVE 6MM 12X17X25CM 6M",
-"COL002 - COLUNA LEVE 6MM 7X14X25CM 6M",
-"COL003 - COLUNA LEVE 6MM 7X17X25CM 6M",
-"COL004 - COLUNA MEDIA 8MM 12X12X25CM 6M",
-"COL005 - COLUNA MEDIA 8MM 11X17X25CM 6M",
-"COL006 - COLUNA MEDIA 8MM 7X14X25CM 6M",
-"COL007 - COLUNA MEDIA 8MM 7X17X25CM 6M",
-"COL008 - COLUNA PESADA 10MM 11X17X25CM 6M",
-"COL009 - COLUNA PESADA 10MM 7X14X25CM 6M",
-"COL010 - COLUNA PESADA 10MM 7X17X25CM 6M"
-],
-
-"Vergalhoes":[
-"VRG001 - Vergalhão CA60 4.2MM Feixe 50 Barras",
-"VRG002 - Vergalhão CA60 5MM Feixe 35 Barras",
-"VRG003 - Vergalhão CA50 6.3MM Feixe 25 Barras",
-"VRG004 - Vergalhão CA50 8MM Feixe 15 Barras",
-"VRG005 - Vergalhão CA50 10MM Feixe 10 Barras",
-"VRG006 - Vergalhão CA50 12.5MM Feixe 6 Barras",
-"VRG007 - Vergalhão CA50 16MM Feixe 3 Barras",
-"VRG008 - Vergalhão CA50 20MM Feixe 3 Barras"
 ]
 
 };
@@ -353,8 +352,6 @@ window.open("https://wa.me/?text="+msg);
 function buscarProduto(){
 
 let termo=document.getElementById("busca").value.toLowerCase();
-
-if(termo==="") return;
 
 let area=document.getElementById("produtos");
 
