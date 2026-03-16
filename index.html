@@ -3,7 +3,7 @@
 <head>
 
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="logo_192.png">
+<link rel="icon" href="logo_512.png">
 <link rel="apple-touch-icon" href="logo_512.png">
 
 <meta charset="UTF-8">
@@ -16,78 +16,171 @@
 body{
 font-family:Arial;
 margin:0;
-background:#f2f4f8;
+background:#f4f6f9;
+color:#333;
 }
 
 header{
-background:#0a2a66;
+background:#2c3e50;
 color:white;
-padding:18px;
-text-align:center;
-font-size:22px;
+padding:20px;
+font-size:24px;
 font-weight:bold;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+header img{
+height:40px;
 }
 
 .container{
-padding:15px;
+max-width:1200px;
+margin:auto;
+padding:20px;
 }
 
-input{
-width:100%;
-padding:10px;
-margin-bottom:10px;
+.searchBox{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
+
+.searchBox input{
+flex:1;
+padding:12px;
 border-radius:6px;
 border:1px solid #ccc;
 }
 
-button{
-padding:10px;
+.searchBox button{
+padding:12px 20px;
+background:#3498db;
+color:white;
 border:none;
 border-radius:6px;
 cursor:pointer;
 }
 
-.buscar{
-background:#0a2a66;
-color:white;
-width:100%;
-margin-bottom:10px;
+.categorias{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-bottom:20px;
 }
 
-.card{
+.categoria{
 background:white;
-padding:10px;
+border:1px solid #ddd;
+padding:10px 15px;
 border-radius:6px;
-margin-bottom:10px;
-box-shadow:0 2px 4px rgba(0,0,0,0.1);
+cursor:pointer;
 }
 
-.add{
-background:#2e7d32;
-color:white;
-margin-top:5px;
+.tabelaProdutos{
+background:white;
+border-radius:6px;
+overflow:hidden;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+margin-bottom:20px;
 }
 
-.whats{
-background:#25d366;
-color:white;
+.tabelaProdutos table{
 width:100%;
+border-collapse:collapse;
+}
+
+.tabelaProdutos th{
+background:#34495e;
+color:white;
+padding:12px;
+text-align:left;
+}
+
+.tabelaProdutos td{
+padding:10px;
+border-bottom:1px solid #eee;
+}
+
+.tabelaProdutos input{
+width:80px;
+padding:5px;
+}
+
+.btnAdd{
+background:#27ae60;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:4px;
+cursor:pointer;
+}
+
+#carrinho{
+background:white;
+border-radius:6px;
+padding:15px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.itemCarrinho{
+display:flex;
+justify-content:space-between;
+border-bottom:1px solid #eee;
+padding:6px 0;
+}
+
+.remover{
+background:#e74c3c;
+color:white;
+border:none;
+border-radius:4px;
+padding:4px 8px;
+cursor:pointer;
+}
+
+.limpar{
 margin-top:10px;
-font-size:18px;
+background:#7f8c8d;
+color:white;
+border:none;
+padding:8px;
+border-radius:4px;
+width:100%;
+cursor:pointer;
+}
+
+.whatsapp{
+margin-top:10px;
+background:#25D366;
+color:white;
+border:none;
+padding:12px;
+border-radius:6px;
+width:100%;
+font-size:16px;
+cursor:pointer;
 }
 
 .install{
+margin-top:10px;
 background:#ff9800;
 color:white;
+border:none;
+padding:12px;
+border-radius:6px;
 width:100%;
-margin-top:10px;
+font-size:16px;
+cursor:pointer;
 }
 
-select{
+textarea{
 width:100%;
 padding:10px;
-margin-bottom:10px;
+margin-top:10px;
 border-radius:6px;
+border:1px solid #ccc;
 }
 
 </style>
@@ -96,37 +189,56 @@ border-radius:6px;
 
 <body>
 
-<header>Multipla Cotação</header>
+<header>
+<img src="logo_512.png">
+MULTIPLA COTAÇÃO
+</header>
 
 <div class="container">
 
+<div class="searchBox">
 <input id="busca" placeholder="Buscar produto">
+<button onclick="buscarProduto()">Buscar</button>
+</div>
 
-<button class="buscar" onclick="buscar()">Buscar</button>
+<div id="categorias" class="categorias"></div>
 
-<select id="categoria" onchange="listar()">
-<option value="">Escolher categoria</option>
-</select>
+<div class="tabelaProdutos">
+<table>
+<thead>
+<tr>
+<th>Produto</th>
+<th>Qtd</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="produtos"></tbody>
+</table>
+</div>
 
-<div id="produtos"></div>
+<div id="carrinho">
 
-<h3>Carrinho</h3>
+<h3>Carrinho (<span id="contador">0</span>)</h3>
 
-<div id="carrinho"></div>
+<div id="listaCarrinho"></div>
 
-<input id="obs" placeholder="Observações do pedido">
+<textarea id="obs" placeholder="Observações"></textarea>
 
-<button class="whats" onclick="enviar()">Enviar para WhatsApp</button>
+<button class="limpar" onclick="limparCarrinho()">Limpar Pedido</button>
+
+<button class="whatsapp" onclick="enviar()">Enviar Cotação no WhatsApp</button>
 
 <button id="installBtn" class="install" style="display:none">Baixar App</button>
 
 </div>
 
+</div>
+
 <script>
 
-let numero="5531986580180"
+const numero="5531986580180";
 
-let produtos={
+const catalogo = {
 
 "Estribos":[
 "EST001 - Estribo 11x17 4.2mm",
@@ -152,15 +264,15 @@ let produtos={
 ],
 
 "Pregos":[
-"PRG001 - Prego Ardox SC 17x21",
-"PRG002 - Prego CCAB 12x12",
-"PRG003 - Prego CCAB 15x15",
-"PRG004 - Prego CCAB 17x21",
-"PRG005 - Prego CCAB 18x30",
-"PRG006 - Prego CCAB 19x36",
-"PRG007 - Prego 20x48",
-"PRG008 - Prego 22x48",
-"PRG009 - Prego 19x11"
+"PRG001 - Prego Ardox SC 17x21 2x11",
+"PRG002 - Prego CCAB 12x12 Gerdau",
+"PRG003 - Prego CCAB 15x15 1.1/4x13 Gerdau",
+"PRG004 - Prego CCAB 17x21 2x11 Gerdau",
+"PRG005 - Prego CCAB 18x30 2.3/4x10 Gerdau",
+"PRG006 - Prego CCAB 19x36 Gerdau",
+"PRG007 - Prego 20x48 Gerdau",
+"PRG008 - Prego 22x48 Gerdau",
+"PRG009 - Prego 19x11 Gerdau"
 ],
 
 "Treliças":[
@@ -173,175 +285,178 @@ let produtos={
 ],
 
 "Arames":[
-"ARM001 - Arame 3,40mm",
-"ARM002 - Arame 2,77mm",
-"ARM003 - Arame 2,10mm",
-"ARM004 - Arame 1,65mm",
-"ARM005 - Arame 1,24 Torcido",
-"ARM006 - Arame 1,24 Liso"
+"ARM001 - BOB ARAME REC 3,40MM LISO BWG10 (PG18)",
+"ARM002 - BOB ARAME REC 2,77MM LISO BWG12 (PG16)",
+"ARM003 - BOB ARAME REC 2,10MM LISO BWG14 (PG14)",
+"ARM004 - BOB ARAME REC 1,65MM LISO BWG16 (PG12)",
+"ARM005 - BOB ARAME REC 1,24 REC TORC BWG18 (PG7)",
+"ARM006 - BOB ARAME REC LISO BWG18 (PG7)"
 ],
 
 "Kit Arame":[
-"KIT001 - Kit 10 Arame 1,24 Torcido",
-"KIT002 - Kit 10 Arame 1,24 Liso",
-"KIT003 - Kit 10 Arame 1,65",
-"KIT004 - Kit 10 Arame 2,10",
-"KIT005 - Kit 10 Arame 2,77",
-"KIT006 - Kit 10 Arame 3,40"
+"KIT001 - KIT 10X ARAME REC 1,24MM TORC BWG18 (PG7)",
+"KIT002 - KIT 10X ARAME REC 1,24 LISO BWG18 (PG7)",
+"KIT003 - KIT 10X ARAME REC 1,65 LISO BWG16 (PG12)",
+"KIT004 - KIT 10X ARAME REC 2,10MM LISO BWG14 (PG14)",
+"KIT005 - KIT 10X ARAME REC 2,77MM LISO BWG12 (PG16)",
+"KIT006 - KIT 10X ARAME REC 3,40MM LISO BWG10 (PG18)"
 ],
 
 "Malhas":[
-"MLP001 - Malha Pop 10x10 4.2",
-"MLP002 - Malha Pop 20x20 3.4",
-"MLP003 - Malha Pop 15x15 3.4",
-"MLP004 - Malha Pop 15x15 4.2",
-"MLP005 - Malha Pop 10x10 2,45x6"
+"MLP001 - MALHA POP 10X10 4.2MM 2X3M",
+"MLP002 - MALHA POP 20X20 3.4MM 2X3M",
+"MLP003 - MALHA POP 15X15 3.4MM 2X3M",
+"MLP004 - MALHA POP 15X15 4.2MM 2X3M",
+"MLP005 - MALHA POP 10X10 4.2MM 2,45X6M"
 ],
 
 "Colunas":[
-"COL001 - Coluna Leve 6mm 12x17",
-"COL002 - Coluna Leve 6mm 7x14",
-"COL003 - Coluna Leve 6mm 7x17",
-"COL004 - Coluna Média 8mm 12x12",
-"COL005 - Coluna Média 8mm 11x17",
-"COL006 - Coluna Média 8mm 7x14",
-"COL007 - Coluna Média 8mm 7x17",
-"COL008 - Coluna Pesada 10mm 11x17",
-"COL009 - Coluna Pesada 10mm 7x14",
-"COL010 - Coluna Pesada 10mm 7x17"
+"COL001 - COLUNA LEVE 6MM 12X17X25CM 6M",
+"COL002 - COLUNA LEVE 6MM 7X14X25CM 6M",
+"COL003 - COLUNA LEVE 6MM 7X17X25CM 6M",
+"COL004 - COLUNA MEDIA 8MM 12X12X25CM 6M",
+"COL005 - COLUNA MEDIA 8MM 11X17X25CM 6M",
+"COL006 - COLUNA MEDIA 8MM 7X14X25CM 6M",
+"COL007 - COLUNA MEDIA 8MM 7X17X25CM 6M",
+"COL008 - COLUNA PESADA 10MM 11X17X25CM 6M",
+"COL009 - COLUNA PESADA 10MM 7X14X25CM 6M",
+"COL010 - COLUNA PESADA 10MM 7X17X25CM 6M"
 ],
 
-"Vergalhões":[
-"VRG001 - CA60 4.2",
-"VRG002 - CA60 5mm",
-"VRG003 - CA50 6.3",
-"VRG004 - CA50 8mm",
-"VRG005 - CA50 10mm",
-"VRG006 - CA50 12.5mm",
-"VRG007 - CA50 16mm",
-"VRG008 - CA50 20mm"
+"Vergalhoes":[
+"VRG001 - Vergalhão CA60 4.2MM Feixe 50 Barras",
+"VRG002 - Vergalhão CA60 5MM Feixe 35 Barras",
+"VRG003 - Vergalhão CA50 6.3MM Feixe 25 Barras",
+"VRG004 - Vergalhão CA50 8MM Feixe 15 Barras",
+"VRG005 - Vergalhão CA50 10MM Feixe 10 Barras",
+"VRG006 - Vergalhão CA50 12.5MM Feixe 6 Barras",
+"VRG007 - Vergalhão CA50 16MM Feixe 3 Barras",
+"VRG008 - Vergalhão CA50 20MM Feixe 3 Barras"
 ]
 
-}
+};
 
-let carrinho=[]
+let carrinho=[];
 
-let select=document.getElementById("categoria")
+function carregarCategorias(){
 
-Object.keys(produtos).forEach(c=>{
-let o=document.createElement("option")
-o.value=c
-o.textContent=c
-select.appendChild(o)
-})
+let area=document.getElementById("categorias");
 
-function listar(){
+for(let c in catalogo){
 
-let cat=document.getElementById("categoria").value
-let area=document.getElementById("produtos")
-area.innerHTML=""
-
-produtos[cat].forEach(p=>{
-
-let d=document.createElement("div")
-
-d.className="card"
-
-d.innerHTML=`
-<b>${p}</b>
-<input type="number" id="${p}" placeholder="Quantidade">
-<button class="add" onclick="add('${p}')">Adicionar</button>
-`
-
-area.appendChild(d)
-
-})
+area.innerHTML+=`<div class="categoria" onclick="abrirCategoria('${c}')">${c}</div>`;
 
 }
 
-function add(p){
+}
 
-let q=document.getElementById(p).value
+function abrirCategoria(cat){
 
-if(!q)return
+let area=document.getElementById("produtos");
 
-carrinho.push(p+" - "+q)
+area.innerHTML="";
 
-render()
+catalogo[cat].forEach(p=>{
+
+area.innerHTML+=`
+
+<tr>
+
+<td>${p}</td>
+
+<td><input type="number" id="${p}"></td>
+
+<td><button class="btnAdd" onclick="add('${p}')">Adicionar</button></td>
+
+</tr>
+
+`;
+
+});
 
 }
 
-function render(){
+function add(prod){
 
-let c=document.getElementById("carrinho")
+let q=document.getElementById(prod).value;
 
-c.innerHTML=""
+if(!q)return;
 
-carrinho.forEach(i=>{
-let d=document.createElement("div")
-d.textContent=i
-c.appendChild(d)
-})
+carrinho.push(prod+" - "+q);
+
+mostrarCarrinho();
 
 }
 
-function buscar(){
+function mostrarCarrinho(){
 
-let b=document.getElementById("busca").value.toLowerCase()
+let lista=document.getElementById("listaCarrinho");
 
-let area=document.getElementById("produtos")
+lista.innerHTML="";
 
-area.innerHTML=""
+carrinho.forEach((i,index)=>{
 
-Object.values(produtos).flat().forEach(p=>{
+lista.innerHTML+=`<div class="itemCarrinho">${i}<button class="remover" onclick="remover(${index})">X</button></div>`;
 
-if(p.toLowerCase().includes(b)){
+});
 
-let d=document.createElement("div")
-
-d.className="card"
-
-d.innerHTML=`
-<b>${p}</b>
-<input type="number" id="${p}">
-<button class="add" onclick="add('${p}')">Adicionar</button>
-`
-
-area.appendChild(d)
+document.getElementById("contador").innerText=carrinho.length;
 
 }
 
-})
+function remover(i){
+
+carrinho.splice(i,1);
+
+mostrarCarrinho();
+
+}
+
+function limparCarrinho(){
+
+carrinho=[];
+
+mostrarCarrinho();
 
 }
 
 function enviar(){
 
-let obs=document.getElementById("obs").value
+let obs=document.getElementById("obs").value;
 
-let texto="Pedido:%0A"
+let msg="Cotação:%0A%0A";
 
 carrinho.forEach(i=>{
-texto+=i+"%0A"
-})
 
-texto+="%0AObs:"+obs
+msg+=i+"%0A";
 
-window.open(`https://wa.me/${numero}?text=${texto}`)
+});
+
+msg+="%0AObservação:%0A"+obs;
+
+window.open("https://wa.me/"+numero+"?text="+msg);
 
 }
 
-let promptInstall
+carregarCategorias();
+
+let promptInstall;
 
 window.addEventListener("beforeinstallprompt",e=>{
-e.preventDefault()
-promptInstall=e
-document.getElementById("installBtn").style.display="block"
-})
+
+e.preventDefault();
+
+promptInstall=e;
+
+document.getElementById("installBtn").style.display="block";
+
+});
 
 document.getElementById("installBtn").addEventListener("click",()=>{
-promptInstall.prompt()
-})
+
+promptInstall.prompt();
+
+});
 
 </script>
 
