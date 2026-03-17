@@ -1,20 +1,20 @@
 {
-"name": "Multipla Cotação",
-"short_name": "Cotação",
-"start_url": "/",
-"display": "standalone",
-"background_color": "#0f2a5c",
-"theme_color": "#0f2a5c",
-"icons": [
-{
-"src": "logo_192.png",
-"sizes": "192x192",
-"type": "image/png"
-},
-{
-"src": "logo_512.png",
-"sizes": "512x512",
-"type": "image/png"
-}
-]
+  "name": "Multipla Cotação",
+  "short_name": "Cotação",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f2a5c",
+  "theme_color": "#0f2a5c",
+  "icons": [
+    {
+      "src": "icons/logo_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/logo_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
