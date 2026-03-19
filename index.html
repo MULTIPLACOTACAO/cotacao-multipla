@@ -32,11 +32,6 @@ gap:15px;
 
 header img{
 height:70px;
-width:auto;
-}
-
-header img{
-height:70px;
 object-fit:contain;
 }
 
@@ -195,14 +190,14 @@ border:1px solid #ccc;
 <body>
 
 <header>
-<img src="/icons/logo_512.png">
+<img src="/logo_512.png">
 MULTIPLA COTAÇÃO
 </header>
 
 <div class="container">
 
 <div class="searchBox">
-<input id="busca" placeholder="Buscar produto">
+<input id="busca" placeholder="Buscar produto" oninput="buscarProduto()">
 <button onclick="buscarProduto()">Buscar</button>
 </div>
 
@@ -344,124 +339,81 @@ const catalogo = {
 let carrinho=[];
 
 function carregarCategorias(){
-
 let area=document.getElementById("categorias");
-
 for(let c in catalogo){
-
 area.innerHTML+=`<div class="categoria" onclick="abrirCategoria('${c}')">${c}</div>`;
-
 }
-
 }
 
 function abrirCategoria(cat){
-
 let area=document.getElementById("produtos");
+area.innerHTML="";
+catalogo[cat].forEach(p=>{
+area.innerHTML+=`
+<tr>
+<td>${p}</td>
+<td><input type="number" id="${p}"></td>
+<td><button class="btnAdd" onclick="add('${p}')">Adicionar</button></td>
+</tr>
+`;
+});
+}
 
+function buscarProduto(){
+let termo=document.getElementById("busca").value.toLowerCase();
+let area=document.getElementById("produtos");
 area.innerHTML="";
 
-catalogo[cat].forEach(p=>{
-
+for(let categoria in catalogo){
+catalogo[categoria].forEach(produto=>{
+if(produto.toLowerCase().includes(termo)){
 area.innerHTML+=`
-
 <tr>
-
-<td>${p}</td>
-
-<td><input type="number" id="${p}"></td>
-
-<td><button class="btnAdd" onclick="add('${p}')">Adicionar</button></td>
-
+<td>${produto}</td>
+<td><input type="number" id="${produto}"></td>
+<td><button class="btnAdd" onclick="add('${produto}')">Adicionar</button></td>
 </tr>
-
 `;
-
+}
 });
-
+}
 }
 
 function add(prod){
-
 let q=document.getElementById(prod).value;
-
 if(!q)return;
-
 carrinho.push(prod+" - "+q);
-
 mostrarCarrinho();
-
 }
 
 function mostrarCarrinho(){
-
 let lista=document.getElementById("listaCarrinho");
-
 lista.innerHTML="";
-
 carrinho.forEach((i,index)=>{
-
 lista.innerHTML+=`<div class="itemCarrinho">${i}<button class="remover" onclick="remover(${index})">X</button></div>`;
-
 });
-
 document.getElementById("contador").innerText=carrinho.length;
-
 }
 
 function remover(i){
-
 carrinho.splice(i,1);
-
 mostrarCarrinho();
-
 }
 
 function limparCarrinho(){
-
 carrinho=[];
-
 mostrarCarrinho();
-
 }
 
 function enviar(){
-
 let obs=document.getElementById("obs").value;
-
 let msg="Cotação:%0A%0A";
-
-carrinho.forEach(i=>{
-
-msg+=i+"%0A";
-
-});
-
+carrinho.forEach(i=>{ msg+=i+"%0A"; });
 msg+="%0AObservação:%0A"+obs;
-
 window.open("https://wa.me/"+numero+"?text="+msg);
-
 }
 
 carregarCategorias();
-
-let promptInstall;
-
-window.addEventListener("beforeinstallprompt",e=>{
-
-e.preventDefault();
-
-promptInstall=e;
-
-document.getElementById("installBtn").style.display="block";
-
-});
-
-document.getElementById("installBtn").addEventListener("click",()=>{
-
-promptInstall.prompt();
-
-});
 
 </script>
 
