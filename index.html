@@ -63,21 +63,41 @@ border-radius:6px;
 cursor:pointer;
 }
 
-.categorias{
-display:flex;
-flex-wrap:wrap;
+/* NOVO GRID COM IMAGENS */
+.grid-produtos{
+display:grid;
+grid-template-columns:repeat(3,1fr);
 gap:10px;
 margin-bottom:20px;
 }
 
-.categoria{
+.card-produto{
 background:white;
-border:1px solid #ddd;
-padding:10px 15px;
-border-radius:6px;
+border-radius:10px;
+padding:8px;
+text-align:center;
+box-shadow:0 3px 8px rgba(0,0,0,0.15);
 cursor:pointer;
+transition:0.2s;
 }
 
+.card-produto:hover{
+transform:scale(1.05);
+}
+
+.card-produto img{
+width:100%;
+height:70px;
+object-fit:contain;
+margin-bottom:5px;
+}
+
+.card-produto span{
+font-size:13px;
+font-weight:bold;
+}
+
+/* RESTO DO SISTEMA IGUAL */
 .tabelaProdutos{
 background:white;
 border-radius:6px;
@@ -201,7 +221,8 @@ MULTIPLA COTAÇÃO
 <button onclick="buscarProduto()">Buscar</button>
 </div>
 
-<div id="categorias" class="categorias"></div>
+<!-- NOVAS CATEGORIAS COM IMAGEM -->
+<div id="categorias" class="grid-produtos"></div>
 
 <div class="tabelaProdutos">
 <table>
@@ -340,8 +361,28 @@ let carrinho=[];
 
 function carregarCategorias(){
 let area=document.getElementById("categorias");
+
+const imagens={
+"Estribos":"https://i.imgur.com/8Km9tLL.png",
+"Argamassas":"https://i.imgur.com/9Xn4XhM.png",
+"Pregos":"https://i.imgur.com/VVQZ6Qv.png",
+"Treliças":"https://i.imgur.com/3ZQ3Z9H.png",
+"Arames":"https://i.imgur.com/5cX1ZbN.png",
+"Kit Arame":"https://i.imgur.com/Uw6pYhC.png",
+"Malhas":"https://i.imgur.com/7QZ8ZfV.png",
+"Colunas":"https://i.imgur.com/JX9QZpS.png",
+"Vergalhoes":"https://i.imgur.com/2VZQp3B.png"
+};
+
+area.innerHTML="";
+
 for(let c in catalogo){
-area.innerHTML+=`<div class="categoria" onclick="abrirCategoria('${c}')">${c}</div>`;
+area.innerHTML+=`
+<div class="card-produto" onclick="abrirCategoria('${c}')">
+<img src="${imagens[c]}" alt="${c}">
+<span>${c}</span>
+</div>
+`;
 }
 }
 
