@@ -63,7 +63,7 @@ border-radius:6px;
 cursor:pointer;
 }
 
-/* NOVO GRID COM IMAGENS */
+/* GRID COM IMAGENS */
 .grid-produtos{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -73,10 +73,10 @@ margin-bottom:20px;
 
 .card-produto{
 background:white;
-border-radius:10px;
-padding:8px;
+border-radius:12px;
+padding:10px;
 text-align:center;
-box-shadow:0 3px 8px rgba(0,0,0,0.15);
+box-shadow:0 4px 10px rgba(0,0,0,0.15);
 cursor:pointer;
 transition:0.2s;
 }
@@ -87,17 +87,17 @@ transform:scale(1.05);
 
 .card-produto img{
 width:100%;
-height:70px;
+height:80px;
 object-fit:contain;
 margin-bottom:5px;
 }
 
 .card-produto span{
-font-size:13px;
+font-size:14px;
 font-weight:bold;
 }
 
-/* RESTO DO SISTEMA IGUAL */
+/* RESTO IGUAL */
 .tabelaProdutos{
 background:white;
 border-radius:6px;
@@ -221,7 +221,6 @@ MULTIPLA COTAÇÃO
 <button onclick="buscarProduto()">Buscar</button>
 </div>
 
-<!-- NOVAS CATEGORIAS COM IMAGEM -->
 <div id="categorias" class="grid-produtos"></div>
 
 <div class="tabelaProdutos">
@@ -261,6 +260,7 @@ const numero="5531986580180";
 
 const catalogo = {
 
+// TODOS PRODUTOS IGUAL (NÃO ALTERADO)
 "Estribos":[
 "EST001 - Estribo 11x17 4.2mm",
 "EST002 - Estribo 12x27 4.2mm",
@@ -359,19 +359,20 @@ const catalogo = {
 
 let carrinho=[];
 
+/* IMAGENS IGUAIS AO EXEMPLO */
 function carregarCategorias(){
 let area=document.getElementById("categorias");
 
 const imagens={
-"Estribos":"https://i.imgur.com/8Km9tLL.png",
-"Argamassas":"https://i.imgur.com/9Xn4XhM.png",
-"Pregos":"https://i.imgur.com/VVQZ6Qv.png",
-"Treliças":"https://i.imgur.com/3ZQ3Z9H.png",
-"Arames":"https://i.imgur.com/5cX1ZbN.png",
-"Kit Arame":"https://i.imgur.com/Uw6pYhC.png",
-"Malhas":"https://i.imgur.com/7QZ8ZfV.png",
-"Colunas":"https://i.imgur.com/JX9QZpS.png",
-"Vergalhoes":"https://i.imgur.com/2VZQp3B.png"
+"Estribos":"https://images.unsplash.com/photo-1605559424843-9e4c228dfd7e",
+"Argamassas":"https://images.unsplash.com/photo-1581091215367-59ab6b1d0d4b",
+"Pregos":"https://images.unsplash.com/photo-1586864387789-628af9feed72",
+"Treliças":"https://images.unsplash.com/photo-1581092918056-0c4c3acd3789",
+"Arames":"https://images.unsplash.com/photo-1581093588401-12f4fd9e3b8b",
+"Kit Arame":"https://images.unsplash.com/photo-1581093588401-12f4fd9e3b8b",
+"Malhas":"https://images.unsplash.com/photo-1581093458791-9d09c94b6d06",
+"Colunas":"https://images.unsplash.com/photo-1581091012184-5c8b1b5b92b4",
+"Vergalhoes":"https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0"
 };
 
 area.innerHTML="";
