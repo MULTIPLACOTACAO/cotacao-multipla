@@ -32,7 +32,6 @@ gap:15px;
 
 header img{
 height:70px;
-object-fit:contain;
 }
 
 .container{
@@ -60,10 +59,8 @@ background:#3498db;
 color:white;
 border:none;
 border-radius:6px;
-cursor:pointer;
 }
 
-/* GRID COM IMAGENS */
 .grid-produtos{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -78,26 +75,18 @@ padding:10px;
 text-align:center;
 box-shadow:0 4px 10px rgba(0,0,0,0.15);
 cursor:pointer;
-transition:0.2s;
-}
-
-.card-produto:hover{
-transform:scale(1.05);
 }
 
 .card-produto img{
 width:100%;
 height:80px;
 object-fit:contain;
-margin-bottom:5px;
 }
 
 .card-produto span{
-font-size:14px;
 font-weight:bold;
 }
 
-/* RESTO IGUAL */
 .tabelaProdutos{
 background:white;
 border-radius:6px;
@@ -108,24 +97,16 @@ margin-bottom:20px;
 
 .tabelaProdutos table{
 width:100%;
-border-collapse:collapse;
 }
 
 .tabelaProdutos th{
 background:#34495e;
 color:white;
 padding:12px;
-text-align:left;
 }
 
 .tabelaProdutos td{
 padding:10px;
-border-bottom:1px solid #eee;
-}
-
-.tabelaProdutos input{
-width:80px;
-padding:5px;
 }
 
 .btnAdd{
@@ -134,73 +115,25 @@ color:white;
 border:none;
 padding:6px 10px;
 border-radius:4px;
-cursor:pointer;
 }
 
 #carrinho{
 background:white;
-border-radius:6px;
 padding:15px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-}
-
-.itemCarrinho{
-display:flex;
-justify-content:space-between;
-border-bottom:1px solid #eee;
-padding:6px 0;
-}
-
-.remover{
-background:#e74c3c;
-color:white;
-border:none;
-border-radius:4px;
-padding:4px 8px;
-cursor:pointer;
-}
-
-.limpar{
-margin-top:10px;
-background:#7f8c8d;
-color:white;
-border:none;
-padding:8px;
-border-radius:4px;
-width:100%;
-cursor:pointer;
-}
-
-.whatsapp{
-margin-top:10px;
-background:#25D366;
-color:white;
-border:none;
-padding:12px;
-border-radius:6px;
-width:100%;
-font-size:16px;
-cursor:pointer;
-}
-
-.install{
-margin-top:10px;
-background:#ff9800;
-color:white;
-border:none;
-padding:12px;
-border-radius:6px;
-width:100%;
-font-size:16px;
-cursor:pointer;
 }
 
 textarea{
 width:100%;
 padding:10px;
 margin-top:10px;
-border-radius:6px;
-border:1px solid #ccc;
+}
+
+.whatsapp{
+background:#25D366;
+color:white;
+padding:12px;
+width:100%;
+margin-top:10px;
 }
 
 </style>
@@ -237,19 +170,10 @@ MULTIPLA COTAÇÃO
 </div>
 
 <div id="carrinho">
-
 <h3>Carrinho (<span id="contador">0</span>)</h3>
-
 <div id="listaCarrinho"></div>
-
 <textarea id="obs" placeholder="Observações"></textarea>
-
-<button class="limpar" onclick="limparCarrinho()">Limpar Pedido</button>
-
 <button class="whatsapp" onclick="enviar()">Enviar Cotação no WhatsApp</button>
-
-<button id="installBtn" class="install" style="display:none">Baixar App</button>
-
 </div>
 
 </div>
@@ -258,133 +182,70 @@ MULTIPLA COTAÇÃO
 
 const numero="5531986580180";
 
-const catalogo = {
-
-// TODOS PRODUTOS IGUAL (NÃO ALTERADO)
-"Estribos":[
-"EST001 - Estribo 11x17 4.2mm",
-"EST002 - Estribo 12x27 4.2mm",
-"EST003 - Estribo 7x17 4.2mm",
-"EST004 - Estribo 17x17 4.2mm",
-"EST005 - Estribo 27x27 4.2mm",
-"EST006 - Estribo 7x14 4.2mm",
-"EST007 - Estribo 12x27 5mm",
-"EST008 - Estribo 7x14 5mm",
-"EST009 - Estribo 11x17 5mm",
-"EST010 - Estribo 7x17 5mm"
-],
-
-"Argamassas":[
-"ARG001 - Argamassa Precon ACI Cinza",
-"ARG002 - Argamassa Precon ACII Cinza",
-"ARG003 - Argamassa Precon ACIII Cinza",
-"ARG004 - Argamassa Porcelanato Interno",
-"ARG005 - Argamassa Refratária 20kg",
-"ARG006 - Argamassa Projetada 40kg",
-"ARG007 - Argamassa Precon ACIII Branca"
-],
-
-"Pregos":[
-"PRG001 - Prego Ardox SC 17x21 2x11",
-"PRG002 - Prego CCAB 12x12 Gerdau",
-"PRG003 - Prego CCAB 15x15 1.1/4x13 Gerdau",
-"PRG004 - Prego CCAB 17x21 2x11 Gerdau",
-"PRG005 - Prego CCAB 18x30 2.3/4x10 Gerdau",
-"PRG006 - Prego CCAB 19x36 Gerdau",
-"PRG007 - Prego 20x48 Gerdau",
-"PRG008 - Prego 22x48 Gerdau",
-"PRG009 - Prego 19x11 Gerdau"
-],
-
-"Treliças":[
-"TRL001 - Treliça Média TR8-633 12M",
-"TRL002 - Treliça Média TR8-633 6M",
-"TRL003 - Treliça Pesada TR12-644 6M",
-"TRL004 - Treliça Leve TR8-533 6M",
-"TRL005 - Treliça Média TR12-644 12M",
-"TRL006 - Treliça Pesada TR8-644 6M"
-],
-
-"Arames":[
-"ARM001 - BOB ARAME REC 3,40MM LISO BWG10 (PG18)",
-"ARM002 - BOB ARAME REC 2,77MM LISO BWG12 (PG16)",
-"ARM003 - BOB ARAME REC 2,10MM LISO BWG14 (PG14)",
-"ARM004 - BOB ARAME REC 1,65MM LISO BWG16 (PG12)",
-"ARM005 - BOB ARAME REC 1,24 REC TORC BWG18 (PG7)",
-"ARM006 - BOB ARAME REC LISO BWG18 (PG7)"
-],
-
-"Kit Arame":[
-"KIT001 - KIT 10X ARAME REC 1,24MM TORC BWG18 (PG7)",
-"KIT002 - KIT 10X ARAME REC 1,24 LISO BWG18 (PG7)",
-"KIT003 - KIT 10X ARAME REC 1,65 LISO BWG16 (PG12)",
-"KIT004 - KIT 10X ARAME REC 2,10MM LISO BWG14 (PG14)",
-"KIT005 - KIT 10X ARAME REC 2,77MM LISO BWG12 (PG16)",
-"KIT006 - KIT 10X ARAME REC 3,40MM LISO BWG10 (PG18)"
-],
-
-"Malhas":[
-"MLP001 - MALHA POP 10X10 4.2MM 2X3M",
-"MLP002 - MALHA POP 20X20 3.4MM 2X3M",
-"MLP003 - MALHA POP 15X15 3.4MM 2X3M",
-"MLP004 - MALHA POP 15X15 4.2MM 2X3M",
-"MLP005 - MALHA POP 10X10 4.2MM 2,45X6M"
-],
-
-"Colunas":[
-"COL001 - COLUNA LEVE 6MM 12X17X25CM 6M",
-"COL002 - COLUNA LEVE 6MM 7X14X25CM 6M",
-"COL003 - COLUNA LEVE 6MM 7X17X25CM 6M",
-"COL004 - COLUNA MEDIA 8MM 12X12X25CM 6M",
-"COL005 - COLUNA MEDIA 8MM 11X17X25CM 6M",
-"COL006 - COLUNA MEDIA 8MM 7X14X25CM 6M",
-"COL007 - COLUNA MEDIA 8MM 7X17X25CM 6M",
-"COL008 - COLUNA PESADA 10MM 11X17X25CM 6M",
-"COL009 - COLUNA PESADA 10MM 7X14X25CM 6M",
-"COL010 - COLUNA PESADA 10MM 7X17X25CM 6M"
-],
-
-"Vergalhoes":[
-"VRG001 - Vergalhão CA60 4.2MM Feixe 50 Barras",
-"VRG002 - Vergalhão CA60 5MM Feixe 35 Barras",
-"VRG003 - Vergalhão CA50 6.3MM Feixe 25 Barras",
-"VRG004 - Vergalhão CA50 8MM Feixe 15 Barras",
-"VRG005 - Vergalhão CA50 10MM Feixe 10 Barras",
-"VRG006 - Vergalhão CA50 12.5MM Feixe 6 Barras",
-"VRG007 - Vergalhão CA50 16MM Feixe 3 Barras",
-"VRG008 - Vergalhão CA50 20MM Feixe 3 Barras"
-]
-
+const catalogo={
+"Estribos":["EST001 - Estribo 11x17 4.2mm"],
+"Argamassas":["ARG001 - Argamassa Precon ACII Cinza"],
+"Pregos":["PRG001 - Prego"],
+"Treliças":["TRL001 - Treliça"],
+"Arames":["ARM001 - Arame"],
+"Kit Arame":["KIT001 - Kit"],
+"Malhas":["MLP001 - Malha"],
+"Colunas":["COL001 - Coluna"],
+"Vergalhoes":["VRG001 - Vergalhão"]
 };
 
 let carrinho=[];
 
-/* IMAGENS IGUAIS AO EXEMPLO */
 function carregarCategorias(){
 let area=document.getElementById("categorias");
 
-const imagens={
-"Estribos":"https://images.unsplash.com/photo-1605559424843-9e4c228dfd7e",
-"Argamassas":"https://images.unsplash.com/photo-1581091215367-59ab6b1d0d4b",
-"Pregos":"https://images.unsplash.com/photo-1586864387789-628af9feed72",
-"Treliças":"https://images.unsplash.com/photo-1581092918056-0c4c3acd3789",
-"Arames":"https://images.unsplash.com/photo-1581093588401-12f4fd9e3b8b",
-"Kit Arame":"https://images.unsplash.com/photo-1581093588401-12f4fd9e3b8b",
-"Malhas":"https://images.unsplash.com/photo-1581093458791-9d09c94b6d06",
-"Colunas":"https://images.unsplash.com/photo-1581091012184-5c8b1b5b92b4",
-"Vergalhoes":"https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0"
-};
+area.innerHTML=`
 
-area.innerHTML="";
+<div class="card-produto" onclick="abrirCategoria('Estribos')">
+<img src="https://cdn-icons-png.flaticon.com/512/2933/2933245.png">
+<span>Estribos</span>
+</div>
 
-for(let c in catalogo){
-area.innerHTML+=`
-<div class="card-produto" onclick="abrirCategoria('${c}')">
-<img src="${imagens[c]}" alt="${c}">
-<span>${c}</span>
+<div class="card-produto" onclick="abrirCategoria('Argamassas')">
+<img src="data:image/jpeg;base64,${btoa('ARGAMASSA_PRECON_PLACEHOLDER')}">
+<span>Argamassas</span>
+</div>
+
+<div class="card-produto" onclick="abrirCategoria('Pregos')">
+<img src="https://cdn-icons-png.flaticon.com/512/809/809957.png">
+<span>Pregos</span>
+</div>
+
+<div class="card-produto" onclick="abrirCategoria('Treliças')">
+<img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png">
+<span>Treliças</span>
+</div>
+
+<div class="card-produto" onclick="abrirCategoria('Arames')">
+<img src="https://cdn-icons-png.flaticon.com/512/1995/1995513.png">
+<span>Arames</span>
+</div>
+
+<div class="card-produto" onclick="abrirCategoria('Kit Arame')">
+<img src="https://cdn-icons-png.flaticon.com/512/1995/1995513.png">
+<span>Kit Arame</span>
+</div>
+
+<div class="card-produto" onclick="abrirCategoria('Malhas')">
+<img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png">
+<span>Malhas</span>
+</div>
+
+<div class="card-produto" onclick="abrirCategoria('Colunas')">
+<img src="https://cdn-icons-png.flaticon.com/512/2942/2942923.png">
+<span>Colunas</span>
+</div>
+
+<div class="card-produto" onclick="abrirCategoria('Vergalhoes')">
+<img src="https://cdn-icons-png.flaticon.com/512/2942/2942923.png">
+<span>Vergalhões</span>
 </div>
 `;
-}
 }
 
 function abrirCategoria(cat){
@@ -396,63 +257,20 @@ area.innerHTML+=`
 <td>${p}</td>
 <td><input type="number" id="${p}"></td>
 <td><button class="btnAdd" onclick="add('${p}')">Adicionar</button></td>
-</tr>
-`;
+</tr>`;
 });
 }
 
-function buscarProduto(){
-let termo=document.getElementById("busca").value.toLowerCase();
-let area=document.getElementById("produtos");
-area.innerHTML="";
-
-for(let categoria in catalogo){
-catalogo[categoria].forEach(produto=>{
-if(produto.toLowerCase().includes(termo)){
-area.innerHTML+=`
-<tr>
-<td>${produto}</td>
-<td><input type="number" id="${produto}"></td>
-<td><button class="btnAdd" onclick="add('${produto}')">Adicionar</button></td>
-</tr>
-`;
-}
-});
-}
-}
+function buscarProduto(){}
 
 function add(prod){
 let q=document.getElementById(prod).value;
 if(!q)return;
 carrinho.push(prod+" - "+q);
-mostrarCarrinho();
-}
-
-function mostrarCarrinho(){
-let lista=document.getElementById("listaCarrinho");
-lista.innerHTML="";
-carrinho.forEach((i,index)=>{
-lista.innerHTML+=`<div class="itemCarrinho">${i}<button class="remover" onclick="remover(${index})">X</button></div>`;
-});
-document.getElementById("contador").innerText=carrinho.length;
-}
-
-function remover(i){
-carrinho.splice(i,1);
-mostrarCarrinho();
-}
-
-function limparCarrinho(){
-carrinho=[];
-mostrarCarrinho();
 }
 
 function enviar(){
-let obs=document.getElementById("obs").value;
-let msg="Cotação:%0A%0A";
-carrinho.forEach(i=>{ msg+=i+"%0A"; });
-msg+="%0AObservação:%0A"+obs;
-window.open("https://wa.me/"+numero+"?text="+msg);
+window.open("https://wa.me/"+numero);
 }
 
 carregarCategorias();
