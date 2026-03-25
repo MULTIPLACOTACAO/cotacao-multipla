@@ -59,16 +59,17 @@ background:#3498db;
 color:white;
 border:none;
 border-radius:6px;
+cursor:pointer;
 }
 
-.grid-produtos{
+.grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
-gap:10px;
+gap:12px;
 margin-bottom:20px;
 }
 
-.card-produto{
+.card{
 background:white;
 border-radius:12px;
 padding:10px;
@@ -77,14 +78,16 @@ box-shadow:0 4px 10px rgba(0,0,0,0.15);
 cursor:pointer;
 }
 
-.card-produto img{
+.card img{
 width:100%;
-height:80px;
+height:90px;
 object-fit:contain;
 }
 
-.card-produto span{
+.card span{
 font-weight:bold;
+display:block;
+margin-top:5px;
 }
 
 .tabelaProdutos{
@@ -115,10 +118,12 @@ color:white;
 border:none;
 padding:6px 10px;
 border-radius:4px;
+cursor:pointer;
 }
 
 #carrinho{
 background:white;
+border-radius:6px;
 padding:15px;
 }
 
@@ -126,14 +131,29 @@ textarea{
 width:100%;
 padding:10px;
 margin-top:10px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+.limpar{
+margin-top:10px;
+background:#7f8c8d;
+color:white;
+border:none;
+padding:8px;
+border-radius:4px;
+width:100%;
 }
 
 .whatsapp{
+margin-top:10px;
 background:#25D366;
 color:white;
+border:none;
 padding:12px;
+border-radius:6px;
 width:100%;
-margin-top:10px;
+font-size:16px;
 }
 
 </style>
@@ -154,7 +174,7 @@ MULTIPLA COTAÇÃO
 <button onclick="buscarProduto()">Buscar</button>
 </div>
 
-<div id="categorias" class="grid-produtos"></div>
+<div id="categorias" class="grid"></div>
 
 <div class="tabelaProdutos">
 <table>
@@ -172,8 +192,12 @@ MULTIPLA COTAÇÃO
 <div id="carrinho">
 <h3>Carrinho (<span id="contador">0</span>)</h3>
 <div id="listaCarrinho"></div>
+
 <textarea id="obs" placeholder="Observações"></textarea>
+
+<button class="limpar" onclick="limparCarrinho()">Limpar Pedido</button>
 <button class="whatsapp" onclick="enviar()">Enviar Cotação no WhatsApp</button>
+
 </div>
 
 </div>
@@ -182,70 +206,43 @@ MULTIPLA COTAÇÃO
 
 const numero="5531986580180";
 
-const catalogo={
+const catalogo = {
 "Estribos":["EST001 - Estribo 11x17 4.2mm"],
-"Argamassas":["ARG001 - Argamassa Precon ACII Cinza"],
+"Argamassas":["ARG002 - Argamassa Precon ACII Cinza"],
 "Pregos":["PRG001 - Prego"],
 "Treliças":["TRL001 - Treliça"],
 "Arames":["ARM001 - Arame"],
-"Kit Arame":["KIT001 - Kit"],
+"Kit Arame":["KIT001 - Kit Arame"],
 "Malhas":["MLP001 - Malha"],
 "Colunas":["COL001 - Coluna"],
 "Vergalhoes":["VRG001 - Vergalhão"]
+};
+
+const imagens = {
+"Estribos":"https://i.imgur.com/2nCt3Sbl.jpg",
+"Argamassas":"https://i.imgur.com/3ZQ3Z6P.png",
+"Pregos":"https://i.imgur.com/Fw7QZbM.jpg",
+"Treliças":"https://i.imgur.com/TkG7p3A.jpg",
+"Arames":"https://i.imgur.com/BZk8R9R.jpg",
+"Kit Arame":"https://i.imgur.com/6vZzQ5H.jpg",
+"Malhas":"https://i.imgur.com/7L5nG1E.jpg",
+"Colunas":"https://i.imgur.com/Z8xF0pX.jpg",
+"Vergalhoes":"https://i.imgur.com/Hw7JvKQ.jpg"
 };
 
 let carrinho=[];
 
 function carregarCategorias(){
 let area=document.getElementById("categorias");
+area.innerHTML="";
 
-area.innerHTML=`
-
-<div class="card-produto" onclick="abrirCategoria('Estribos')">
-<img src="https://cdn-icons-png.flaticon.com/512/2933/2933245.png">
-<span>Estribos</span>
-</div>
-
-<div class="card-produto" onclick="abrirCategoria('Argamassas')">
-<img src="data:image/jpeg;base64,${btoa('ARGAMASSA_PRECON_PLACEHOLDER')}">
-<span>Argamassas</span>
-</div>
-
-<div class="card-produto" onclick="abrirCategoria('Pregos')">
-<img src="https://cdn-icons-png.flaticon.com/512/809/809957.png">
-<span>Pregos</span>
-</div>
-
-<div class="card-produto" onclick="abrirCategoria('Treliças')">
-<img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png">
-<span>Treliças</span>
-</div>
-
-<div class="card-produto" onclick="abrirCategoria('Arames')">
-<img src="https://cdn-icons-png.flaticon.com/512/1995/1995513.png">
-<span>Arames</span>
-</div>
-
-<div class="card-produto" onclick="abrirCategoria('Kit Arame')">
-<img src="https://cdn-icons-png.flaticon.com/512/1995/1995513.png">
-<span>Kit Arame</span>
-</div>
-
-<div class="card-produto" onclick="abrirCategoria('Malhas')">
-<img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png">
-<span>Malhas</span>
-</div>
-
-<div class="card-produto" onclick="abrirCategoria('Colunas')">
-<img src="https://cdn-icons-png.flaticon.com/512/2942/2942923.png">
-<span>Colunas</span>
-</div>
-
-<div class="card-produto" onclick="abrirCategoria('Vergalhoes')">
-<img src="https://cdn-icons-png.flaticon.com/512/2942/2942923.png">
-<span>Vergalhões</span>
-</div>
-`;
+for(let c in catalogo){
+area.innerHTML+=`
+<div class="card" onclick="abrirCategoria('${c}')">
+<img src="${imagens[c]}">
+<span>${c}</span>
+</div>`;
+}
 }
 
 function abrirCategoria(cat){
@@ -261,16 +258,52 @@ area.innerHTML+=`
 });
 }
 
-function buscarProduto(){}
+function buscarProduto(){
+let termo=document.getElementById("busca").value.toLowerCase();
+let area=document.getElementById("produtos");
+area.innerHTML="";
+
+for(let categoria in catalogo){
+catalogo[categoria].forEach(produto=>{
+if(produto.toLowerCase().includes(termo)){
+area.innerHTML+=`
+<tr>
+<td>${produto}</td>
+<td><input type="number" id="${produto}"></td>
+<td><button class="btnAdd" onclick="add('${produto}')">Adicionar</button></td>
+</tr>`;
+}
+});
+}
+}
 
 function add(prod){
 let q=document.getElementById(prod).value;
 if(!q)return;
 carrinho.push(prod+" - "+q);
+mostrarCarrinho();
+}
+
+function mostrarCarrinho(){
+let lista=document.getElementById("listaCarrinho");
+lista.innerHTML="";
+carrinho.forEach((i,index)=>{
+lista.innerHTML+=`<div>${i}</div>`;
+});
+document.getElementById("contador").innerText=carrinho.length;
+}
+
+function limparCarrinho(){
+carrinho=[];
+mostrarCarrinho();
 }
 
 function enviar(){
-window.open("https://wa.me/"+numero);
+let obs=document.getElementById("obs").value;
+let msg="Cotação:%0A%0A";
+carrinho.forEach(i=> msg+=i+"%0A");
+msg+="%0AObs:%20"+obs;
+window.open("https://wa.me/"+numero+"?text="+msg);
 }
 
 carregarCategorias();
