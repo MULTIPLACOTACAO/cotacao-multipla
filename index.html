@@ -63,28 +63,19 @@ border-radius:6px;
 cursor:pointer;
 }
 
-/* 🔥 ALTERAÇÃO AQUI (layout com imagem) */
 .categorias{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px;
+display:flex;
+flex-wrap:wrap;
+gap:10px;
 margin-bottom:20px;
 }
 
 .categoria{
 background:white;
-border-radius:10px;
-padding:10px;
-text-align:center;
+border:1px solid #ddd;
+padding:10px 15px;
+border-radius:6px;
 cursor:pointer;
-box-shadow:0 3px 8px rgba(0,0,0,0.15);
-}
-
-.categoria img{
-width:100%;
-height:80px;
-object-fit:contain;
-margin-bottom:5px;
 }
 
 .tabelaProdutos{
@@ -246,33 +237,8 @@ MULTIPLA COTAÇÃO
 <script>
 
 const numero="5531986580180";
-const imagens = {
-"Estribos":"https://cdn-icons-png.flaticon.com/512/809/809957.png",
-"Argamassas":"https://cdn-icons-png.flaticon.com/512/1046/1046857.png",
-"Pregos":"https://cdn-icons-png.flaticon.com/512/2921/2921822.png",
-"Treliças":"https://cdn-icons-png.flaticon.com/512/1995/1995574.png",
-"Arames":"https://cdn-icons-png.flaticon.com/512/2965/2965567.png",
-"Kit Arame":"https://cdn-icons-png.flaticon.com/512/1046/1046857.png",
-"Malhas":"https://cdn-icons-png.flaticon.com/512/3103/3103446.png",
-"Colunas":"https://cdn-icons-png.flaticon.com/512/609/609803.png",
-"Vergalhoes":"https://cdn-icons-png.flaticon.com/512/1995/1995574.png"
-};
-/* 🔥 SOMENTE ISSO FOI ADICIONADO */
-const imagens = {
-"Estribos":"https://via.placeholder.com/150?text=Estribos",
-"Argamassas":"https://via.placeholder.com/150?text=Argamassa+Precon",
-"Pregos":"https://via.placeholder.com/150?text=Pregos",
-"Treliças":"https://via.placeholder.com/150?text=Trelicas",
-"Arames":"https://via.placeholder.com/150?text=Arames",
-"Kit Arame":"https://via.placeholder.com/150?text=Kit+Arame",
-"Malhas":"https://via.placeholder.com/150?text=Malhas",
-"Colunas":"https://via.placeholder.com/150?text=Colunas",
-"Vergalhoes":"https://via.placeholder.com/150?text=Vergalhoes"
-};
 
 const catalogo = {
-
-/* 🔥 SEU CATÁLOGO ORIGINAL INTACTO (NÃO MEXI) */
 
 "Estribos":[
 "EST001 - Estribo 11x17 4.2mm",
@@ -374,17 +340,10 @@ let carrinho=[];
 
 function carregarCategorias(){
 let area=document.getElementById("categorias");
-area.innerHTML="";
 for(let c in catalogo){
-area.innerHTML+=`
-<div class="categoria" onclick="abrirCategoria('${c}')">
-<img src="${imagens[c]}">
-<div>${c}</div>
-</div>`;
+area.innerHTML+=`<div class="categoria" onclick="abrirCategoria('${c}')">${c}</div>`;
 }
 }
-
-/* 🔥 RESTO 100% IGUAL (NÃO MEXI) */
 
 function abrirCategoria(cat){
 let area=document.getElementById("produtos");
