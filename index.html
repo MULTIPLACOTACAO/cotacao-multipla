@@ -440,13 +440,32 @@ function adicionarPedido(){
 
 let cliente = document.getElementById("clienteCtrl").value.trim();
 let produtos = document.getElementById("produtoCtrl").value.trim();
-let data = new Date().toISOString().split("T")[0];
 let status = document.getElementById("statusCtrl").value;
 let valor = parseFloat(document.getElementById("valorCtrl").value) || 0;
+let data = new Date().toISOString().split("T")[0];
 
 if(!cliente || !produtos){
 alert("Preencha cliente e produtos");
 return;
+}
+
+pedidos.push({
+cliente,
+produtos,
+data,
+status,
+valor
+});
+
+salvarPedidos();
+renderPedidos();
+
+// limpa só produto e valor (para continuar lançando)
+document.getElementById("produtoCtrl").value = "";
+document.getElementById("valorCtrl").value = "";
+
+// mensagem de confirmação
+alert("Pedido adicionado com sucesso ✅");
 }
 
 pedidos.push({
