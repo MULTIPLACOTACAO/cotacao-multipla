@@ -416,6 +416,9 @@ window.open("https://wa.me/"+numero+"?text="+msg);
 carregarCategorias();
 // ===== CONTROLE INTERNO =====
 
+
+ // ===== CONTROLE INTERNO =====
+
 let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
 
 function salvarPedidos(){
@@ -437,7 +440,7 @@ function adicionarPedido(){
 
 let cliente = document.getElementById("clienteCtrl").value.trim();
 let produtos = document.getElementById("produtoCtrl").value.trim();
-let data = document.getElementById("dataCtrl").value;
+let data = new Date().toISOString().split("T")[0];
 let status = document.getElementById("statusCtrl").value;
 let valor = parseFloat(document.getElementById("valorCtrl").value) || 0;
 
@@ -451,8 +454,7 @@ cliente,
 produtos,
 data,
 status,
-valor,
-dataCadastro: new Date().toISOString()
+valor
 });
 
 salvarPedidos();
@@ -461,9 +463,7 @@ renderPedidos();
 // limpa campos
 document.getElementById("clienteCtrl").value = "";
 document.getElementById("produtoCtrl").value = "";
-document.getElementById("dataCtrl").value = "";
 document.getElementById("valorCtrl").value = "";
-
 }
 
 function renderPedidos(){
@@ -503,11 +503,12 @@ else if(pedidos[i].status=="FATURADO") pedidos[i].status="ENTREGUE";
 salvarPedidos();
 renderPedidos();
 }
+
 function removerPedido(i){
 pedidos.splice(i,1);
 salvarPedidos();
 renderPedidos();
-}  
+}
 </script>
 <hr>
 
