@@ -434,16 +434,36 @@ alert("Senha incorreta");
 }
 
 function adicionarPedido(){
-let cliente = document.getElementById("clienteCtrl").value;
-let produto = document.getElementById("produtoCtrl").value;
+
+let cliente = document.getElementById("clienteCtrl").value.trim();
+let produtos = document.getElementById("produtoCtrl").value.trim();
 let data = document.getElementById("dataCtrl").value;
 let status = document.getElementById("statusCtrl").value;
+let valor = parseFloat(document.getElementById("valorCtrl").value) || 0;
 
-if(!cliente || !produto) return;
+if(!cliente || !produtos){
+alert("Preencha cliente e produtos");
+return;
+}
 
-pedidos.push({cliente, produto, data, status});
+pedidos.push({
+cliente,
+produtos,
+data,
+status,
+valor,
+dataCadastro: new Date().toISOString()
+});
+
 salvarPedidos();
 renderPedidos();
+
+// limpa campos
+document.getElementById("clienteCtrl").value = "";
+document.getElementById("produtoCtrl").value = "";
+document.getElementById("dataCtrl").value = "";
+document.getElementById("valorCtrl").value = "";
+
 }
 
 function renderPedidos(){
@@ -462,8 +482,9 @@ atrasado = "style='background:#e74c3c;color:white'";
 area.innerHTML += `
 <tr ${atrasado}>
 <td>${p.cliente}</td>
-<td>${p.produto}</td>
+<td>${p.produtos}</td>
 <td>${p.status}</td>
+<td>R$ ${p.valor.toFixed(2)}</td>
 <td>${p.data}</td>
 <td>
 <button onclick="avancar(${i})">➡️</button>
@@ -504,6 +525,7 @@ renderPedidos();
 <th>Cliente</th>
 <th>Produto</th>
 <th>Status</th>
+<th>Valor</th>
 <th>Data</th>
 <th>Ação</th>
 </tr>
@@ -514,8 +536,8 @@ renderPedidos();
 <br>
 
 <input id="clienteCtrl" placeholder="Cliente">
-<input id="produtoCtrl" placeholder="Produto">
-<input id="dataCtrl" type="date">
+<textarea id="produtoCtrl" placeholder="Produtos (um por linha)"></textarea>
+<input id="valorCtrl" placeholder="Valor da venda (R$)">
 
 <select id="statusCtrl">
 <option>PENDENTE</option>
