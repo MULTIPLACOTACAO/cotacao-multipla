@@ -414,8 +414,110 @@ window.open("https://wa.me/"+numero+"?text="+msg);
 }
 
 carregarCategorias();
+// ===== CONTROLE INTERNO =====
 
+let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+
+function salvarPedidos(){
+localStorage.setItem("pedidos", JSON.stringify(pedidos));
+}
+
+function abrirControle(){
+let senha = prompt("Digite a senha:");
+
+if(senha === "1234"){
+document.getElementById("painelControle").style.display = "block";
+renderPedidos();
+}else{
+alert("Senha incorreta");
+}
+}
+
+function adicionarPedido(){
+let cliente = document.getElementById("clienteCtrl").value;
+let produto = document.getElementById("produtoCtrl").value;
+let data = document.getElementById("dataCtrl").value;
+let status = document.getElementById("statusCtrl").value;
+
+if(!cliente || !produto) return;
+
+pedidos.push({cliente, produto, data, status});
+salvarPedidos();
+renderPedidos();
+}
+
+function renderPedidos(){
+let area = document.getElementById("tabelaPedidos");
+area.innerHTML = "";
+
+let hoje = new Date();
+
+pedidos.forEach((p,i)=>{
+
+let atrasado = "";
+if(new Date(p.data) < hoje && p.status !== "ENTREGUE"){
+atrasado = "style='background:#e74c3c;color:white'";
+}
+
+area.innerHTML += `
+<tr ${atrasado}>
+<td>${p.cliente}</td>
+<td>${p.produto}</td>
+<td>${p.status}</td>
+<td>${p.data}</td>
+<td><button onclick="avancar(${i})">➡️</button></td>
+</tr>
+`;
+});
+}
+
+function avancar(i){
+if(pedidos[i].status=="PENDENTE") pedidos[i].status="SEPARANDO";
+else if(pedidos[i].status=="SEPARANDO") pedidos[i].status="FATURADO";
+else if(pedidos[i].status=="FATURADO") pedidos[i].status="ENTREGUE";
+
+salvarPedidos();
+renderPedidos();
+}
 </script>
+<hr>
 
+<button onclick="abrirControle()" style="margin:20px;background:#000;color:#fff;padding:10px;border:none;border-radius:6px;cursor:pointer;">
+🔒 Área Interna
+</button>
+
+<div id="painelControle" style="display:none; padding:20px; background:white; margin-top:20px; border-radius:8px;">
+
+<h2>Controle de Pedidos</h2>
+
+<table border="1" width="100%">
+<thead>
+<tr>
+<th>Cliente</th>
+<th>Produto</th>
+<th>Status</th>
+<th>Data</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody id="tabelaPedidos"></tbody>
+</table>
+
+<br>
+
+<input id="clienteCtrl" placeholder="Cliente">
+<input id="produtoCtrl" placeholder="Produto">
+<input id="dataCtrl" type="date">
+
+<select id="statusCtrl">
+<option>PENDENTE</option>
+<option>SEPARANDO</option>
+<option>FATURADO</option>
+<option>ENTREGUE</option>
+</select>
+
+<button onclick="adicionarPedido()">Adicionar Pedido</button>
+
+</div>
 </body>
 </html>
