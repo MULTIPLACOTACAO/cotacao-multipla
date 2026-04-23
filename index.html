@@ -384,7 +384,7 @@ let cliente = document.getElementById("clienteCtrl").value.trim();
 let produtos = document.getElementById("produtoCtrl").value.trim();
 let status = document.getElementById("statusCtrl").value;
 let valor = parseFloat(document.getElementById("valorCtrl").value) || 0;
-let data = new Date().toISOString().split("T")[0];
+let data = document.getElementById("dataCtrl").value;
 
 if(!cliente || !produtos){
 alert("Preencha cliente e produtos");
@@ -397,8 +397,10 @@ salvarPedidos();
 renderPedidos();
 
 // limpa campos
+document.getElementById("clienteCtrl").value="";
 document.getElementById("produtoCtrl").value="";
 document.getElementById("valorCtrl").value="";
+document.getElementById("dataCtrl").value="";
 
 alert("Pedido adicionado ✅");
 }
@@ -479,7 +481,7 @@ renderPedidos();
 <input id="clienteCtrl" placeholder="Cliente">
 <textarea id="produtoCtrl" placeholder="Produtos (um por linha)"></textarea>
 <input id="valorCtrl" placeholder="Valor da venda (R$)">
-
+<input type="date" id="dataCtrl">
 <select id="statusCtrl">
 <option>PENDENTE</option>
 <option>SEPARANDO</option>
