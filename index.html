@@ -465,7 +465,10 @@ area.innerHTML += `
 <td>${p.produto}</td>
 <td>${p.status}</td>
 <td>${p.data}</td>
-<td><button onclick="avancar(${i})">➡️</button></td>
+<td>
+<button onclick="avancar(${i})">➡️</button>
+<button onclick="removerPedido(${i})">❌</button>
+</td>
 </tr>
 `;
 });
@@ -479,6 +482,11 @@ else if(pedidos[i].status=="FATURADO") pedidos[i].status="ENTREGUE";
 salvarPedidos();
 renderPedidos();
 }
+function removerPedido(i){
+pedidos.splice(i,1);
+salvarPedidos();
+renderPedidos();
+}  
 </script>
 <hr>
 
