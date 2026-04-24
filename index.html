@@ -236,10 +236,10 @@ MULTIPLA COTAÇÃO
 
 <script>
 
-
 const numero="5531986580180";
 
 const catalogo = {
+
 "Estribos":[
 "EST001 - Estribo 11x17 4.2mm",
 "EST002 - Estribo 12x27 4.2mm",
@@ -252,6 +252,7 @@ const catalogo = {
 "EST009 - Estribo 11x17 5mm",
 "EST010 - Estribo 7x17 5mm"
 ],
+
 "Argamassas":[
 "ARG001 - Argamassa Precon ACI Cinza",
 "ARG002 - Argamassa Precon ACII Cinza",
@@ -261,49 +262,108 @@ const catalogo = {
 "ARG006 - Argamassa Projetada 40kg",
 "ARG007 - Argamassa Precon ACIII Branca"
 ],
+
 "Pregos":[
 "PRG001 - Prego Ardox SC 17x21 2x11",
 "PRG002 - Prego CCAB 12x12 Gerdau",
-"PRG003 - Prego CCAB 15x15 Gerdau",
-"PRG004 - Prego CCAB 17x21 Gerdau"
+"PRG003 - Prego CCAB 15x15 1.1/4x13 Gerdau",
+"PRG004 - Prego CCAB 17x21 2x11 Gerdau",
+"PRG005 - Prego CCAB 18x30 2.3/4x10 Gerdau",
+"PRG006 - Prego CCAB 19x36 Gerdau",
+"PRG007 - Prego 20x48 Gerdau",
+"PRG008 - Prego 22x48 Gerdau",
+"PRG009 - Prego 19x11 Gerdau"
 ],
+
+"Treliças":[
+"TRL001 - Treliça Média TR8-633 12M",
+"TRL002 - Treliça Média TR8-633 6M",
+"TRL003 - Treliça Pesada TR12-644 6M",
+"TRL004 - Treliça Leve TR8-533 6M",
+"TRL005 - Treliça Média TR12-644 12M",
+"TRL006 - Treliça Pesada TR8-644 6M"
+],
+
+"Arames":[
+"ARM001 - BOB ARAME REC 3,40MM LISO BWG10 (PG18)",
+"ARM002 - BOB ARAME REC 2,77MM LISO BWG12 (PG16)",
+"ARM003 - BOB ARAME REC 2,10MM LISO BWG14 (PG14)",
+"ARM004 - BOB ARAME REC 1,65MM LISO BWG16 (PG12)",
+"ARM005 - BOB ARAME REC 1,24 REC TORC BWG18 (PG7)",
+"ARM006 - BOB ARAME REC LISO BWG18 (PG7)"
+],
+
+"Kit Arame":[
+"KIT001 - KIT 10X ARAME REC 1,24MM TORC BWG18 (PG7)",
+"KIT002 - KIT 10X ARAME REC 1,24 LISO BWG18 (PG7)",
+"KIT003 - KIT 10X ARAME REC 1,65 LISO BWG16 (PG12)",
+"KIT004 - KIT 10X ARAME REC 2,10MM LISO BWG14 (PG14)",
+"KIT005 - KIT 10X ARAME REC 2,77MM LISO BWG12 (PG16)",
+"KIT006 - KIT 10X ARAME REC 3,40MM LISO BWG10 (PG18)"
+],
+
+"Malhas":[
+"MLP001 - MALHA POP 10X10 4.2MM 2X3M",
+"MLP002 - MALHA POP 20X20 3.4MM 2X3M",
+"MLP003 - MALHA POP 15X15 3.4MM 2X3M",
+"MLP004 - MALHA POP 15X15 4.2MM 2X3M",
+"MLP005 - MALHA POP 10X10 4.2MM 2,45X6M"
+],
+
+"Colunas":[
+"COL001 - COLUNA LEVE 6MM 12X17X25CM 6M",
+"COL002 - COLUNA LEVE 6MM 7X14X25CM 6M",
+"COL003 - COLUNA LEVE 6MM 7X17X25CM 6M",
+"COL004 - COLUNA MEDIA 8MM 12X12X25CM 6M",
+"COL005 - COLUNA MEDIA 8MM 11X17X25CM 6M",
+"COL006 - COLUNA MEDIA 8MM 7X14X25CM 6M",
+"COL007 - COLUNA MEDIA 8MM 7X17X25CM 6M",
+"COL008 - COLUNA PESADA 10MM 11X17X25CM 6M",
+"COL009 - COLUNA PESADA 10MM 7X14X25CM 6M",
+"COL010 - COLUNA PESADA 10MM 7X17X25CM 6M"
+],
+
 "Vergalhoes":[
-"VRG001 - Vergalhão CA60 4.2MM",
-"VRG002 - Vergalhão CA60 5MM",
-"VRG003 - Vergalhão CA50 6.3MM"
+"VRG001 - Vergalhão CA60 4.2MM Feixe 50 Barras",
+"VRG002 - Vergalhão CA60 5MM Feixe 35 Barras",
+"VRG003 - Vergalhão CA50 6.3MM Feixe 25 Barras",
+"VRG004 - Vergalhão CA50 8MM Feixe 15 Barras",
+"VRG005 - Vergalhão CA50 10MM Feixe 10 Barras",
+"VRG006 - Vergalhão CA50 12.5MM Feixe 6 Barras",
+"VRG007 - Vergalhão CA50 16MM Feixe 3 Barras",
+"VRG008 - Vergalhão CA50 20MM Feixe 3 Barras"
 ]
+
 };
 
 let carrinho=[];
 
-// CATEGORIAS
 function carregarCategorias(){
 let area=document.getElementById("categorias");
-area.innerHTML="";
 for(let c in catalogo){
 area.innerHTML+=`<div class="categoria" onclick="abrirCategoria('${c}')">${c}</div>`;
 }
 }
 
-// PRODUTOS
 function abrirCategoria(cat){
 let area=document.getElementById("produtos");
 area.innerHTML="";
-catalogo[cat].forEach((p,index)=>{
+catalogo[cat].forEach(p=>{
 area.innerHTML+=`
 <tr>
 <td>${p}</td>
-<td><input type="number" id="qtd_${index}"></td>
+<td><input type="number" id="${p}"></td>
 <td><button class="btnAdd" onclick="add('${p}')">Adicionar</button></td>
-</tr>`;
+</tr>
+`;
 });
 }
 
-// BUSCA
 function buscarProduto(){
 let termo=document.getElementById("busca").value.toLowerCase();
 let area=document.getElementById("produtos");
 area.innerHTML="";
+
 for(let categoria in catalogo){
 catalogo[categoria].forEach(produto=>{
 if(produto.toLowerCase().includes(termo)){
@@ -312,13 +372,13 @@ area.innerHTML+=`
 <td>${produto}</td>
 <td><input type="number" id="${produto}"></td>
 <td><button class="btnAdd" onclick="add('${produto}')">Adicionar</button></td>
-</tr>`;
+</tr>
+`;
 }
 });
 }
 }
 
-// ADD CARRINHO
 function add(prod){
 let q=document.getElementById(prod).value;
 if(!q)return;
@@ -326,7 +386,6 @@ carrinho.push(prod+" - "+q);
 mostrarCarrinho();
 }
 
-// MOSTRAR CARRINHO
 function mostrarCarrinho(){
 let lista=document.getElementById("listaCarrinho");
 lista.innerHTML="";
@@ -336,190 +395,27 @@ lista.innerHTML+=`<div class="itemCarrinho">${i}<button class="remover" onclick=
 document.getElementById("contador").innerText=carrinho.length;
 }
 
-// REMOVER ITEM
 function remover(i){
 carrinho.splice(i,1);
 mostrarCarrinho();
 }
 
-// LIMPAR
 function limparCarrinho(){
 carrinho=[];
 mostrarCarrinho();
 }
 
-// WHATSAPP
 function enviar(){
-
 let obs=document.getElementById("obs").value;
-
-let msg="COTAÇÃO – MÚLTIPLA%0A%0A";
-
+let msg="Cotação:%0A%0A";
 carrinho.forEach(i=>{ msg+=i+"%0A"; });
-
 msg+="%0AObservação:%0A"+obs;
-
-// SALVA NO CONTROLE INTERNO AUTOMATICO
-pedidos.push({
-cliente: "Cliente WhatsApp",
-produtos: carrinho.join(", "),
-data: new Date().toISOString().split('T')[0],
-status: "PENDENTE",
-valor: 0
-});
-
-salvarPedidos();
-
 window.open("https://wa.me/"+numero+"?text="+msg);
-
-limparCarrinho();
 }
 
-// INICIAR
 carregarCategorias();
 
-// ================= CONTROLE INTERNO =================
-
-let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
-
-function salvarPedidos(){
-localStorage.setItem("pedidos", JSON.stringify(pedidos));
-}
-
-function abrirControle(){
-let senha = prompt("Digite a senha:");
-if(senha === "1234"){
-document.getElementById("painelControle").style.display = "block";
-renderPedidos();
-}else{
-alert("Senha incorreta");
-}
-}
-
-function adicionarPedido(){
-
-let cliente = document.getElementById("clienteCtrl").value.trim();
-let produtos = document.getElementById("produtoCtrl").value.trim();
-let status = document.getElementById("statusCtrl").value;
-let valor = parseFloat(document.getElementById("valorCtrl").value) || 0;
-let data = document.getElementById("dataCtrl").value;
-
-if(!cliente || !produtos){
-alert("Preencha cliente e produtos");
-return;
-}
-
-pedidos.push({cliente, produtos, data, status, valor});
-
-salvarPedidos();
-renderPedidos();
-
-// limpa campos
-document.getElementById("clienteCtrl").value="";
-document.getElementById("produtoCtrl").value="";
-document.getElementById("valorCtrl").value="";
-document.getElementById("dataCtrl").value="";
-
-alert("Pedido adicionado ✅");
-}
-
-function renderPedidos(){
-let area = document.getElementById("tabelaPedidos");
-area.innerHTML="";
-
-let total = 0;
-
-pedidos.forEach((p,i)=>{
-total += p.valor;
-
-area.innerHTML += `
-<tr>
-<td>${p.cliente}</td>
-<td>${p.produtos}</td>
-<td style="
-color:white;
-padding:5px;
-border-radius:4px;
-background:${
-p.status=="PENDENTE"?"#e67e22":
-p.status=="SEPARANDO"?"#3498db":
-p.status=="FATURADO"?"#9b59b6":
-"#27ae60"
-}">
-${p.status}
-</td>
-<td>R$ ${p.valor.toFixed(2)}</td>
-<td>${p.data}</td>
-<td>
-<button onclick="avancar(${i})">➡️</button>
-<button onclick="removerPedido(${i})">❌</button>
-</td>
-</tr>`;
-});
-
-area.innerHTML += `
-<tr style="background:#2c3e50;color:white;font-weight:bold;">
-<td colspan="3">TOTAL</td>
-<td>R$ ${total.toFixed(2)}</td>
-<td colspan="2"></td>
-</tr>`;
-}
-
-function avancar(i){
-if(pedidos[i].status=="PENDENTE") pedidos[i].status="SEPARANDO";
-else if(pedidos[i].status=="SEPARANDO") pedidos[i].status="FATURADO";
-else if(pedidos[i].status=="FATURADO") pedidos[i].status="ENTREGUE";
-
-salvarPedidos();
-renderPedidos();
-}
-
-function removerPedido(i){
-pedidos.splice(i,1);
-salvarPedidos();
-renderPedidos();
-}
-
 </script>
-<hr>
 
-<button onclick="abrirControle()" style="margin:20px;background:#000;color:#fff;padding:10px;border:none;border-radius:6px;cursor:pointer;">
-🔒 Área Interna
-</button>
-
-<div id="painelControle" style="display:none; padding:20px; background:white; margin-top:20px; border-radius:8px;">
-
-<h2>Controle de Pedidos</h2>
-
-<table border="1" width="100%">
-<thead>
-<tr>
-<th>Cliente</th>
-<th>Produto</th>
-<th>Status</th>
-<th>Valor</th>
-<th>Data</th>
-<th>Ação</th>
-</tr>
-</thead>
-<tbody id="tabelaPedidos"></tbody>
-</table>
-
-<br>
-
-<input id="clienteCtrl" placeholder="Cliente">
-<textarea id="produtoCtrl" placeholder="Produtos (um por linha)"></textarea>
-<input id="valorCtrl" placeholder="Valor da venda (R$)">
-<input type="date" id="dataCtrl">
-<select id="statusCtrl">
-<option>PENDENTE</option>
-<option>SEPARANDO</option>
-<option>FATURADO</option>
-<option>ENTREGUE</option>
-</select>
-
-<button onclick="adicionarPedido()">Adicionar Pedido</button>
-
-</div>
 </body>
 </html>
