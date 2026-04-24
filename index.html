@@ -289,11 +289,11 @@ area.innerHTML+=`<div class="categoria" onclick="abrirCategoria('${c}')">${c}</d
 function abrirCategoria(cat){
 let area=document.getElementById("produtos");
 area.innerHTML="";
-catalogo[cat].forEach(p=>{
+catalogo[cat].forEach((p,index)=>{
 area.innerHTML+=`
 <tr>
 <td>${p}</td>
-<td><input type="number" id="${p}"></td>
+<td><input type="number" id="qtd_${index}"></td>
 <td><button class="btnAdd" onclick="add('${p}')">Adicionar</button></td>
 </tr>`;
 });
@@ -350,11 +350,29 @@ mostrarCarrinho();
 
 // WHATSAPP
 function enviar(){
+
 let obs=document.getElementById("obs").value;
-let msg="Cotação:%0A%0A";
+
+let msg="COTAÇÃO – MÚLTIPLA%0A%0A";
+
 carrinho.forEach(i=>{ msg+=i+"%0A"; });
+
 msg+="%0AObservação:%0A"+obs;
+
+// SALVA NO CONTROLE INTERNO AUTOMATICO
+pedidos.push({
+cliente: "Cliente WhatsApp",
+produtos: carrinho.join(", "),
+data: new Date().toISOString().split('T')[0],
+status: "PENDENTE",
+valor: 0
+});
+
+salvarPedidos();
+
 window.open("https://wa.me/"+numero+"?text="+msg);
+
+limparCarrinho();
 }
 
 // INICIAR
@@ -418,7 +436,18 @@ area.innerHTML += `
 <tr>
 <td>${p.cliente}</td>
 <td>${p.produtos}</td>
-<td>${p.status}</td>
+<td style="
+color:white;
+padding:5px;
+border-radius:4px;
+background:${
+p.status=="PENDENTE"?"#e67e22":
+p.status=="SEPARANDO"?"#3498db":
+p.status=="FATURADO"?"#9b59b6":
+"#27ae60"
+}">
+${p.status}
+</td>
 <td>R$ ${p.valor.toFixed(2)}</td>
 <td>${p.data}</td>
 <td>
