@@ -863,6 +863,172 @@ document.getElementById("compraDesde").value = "";
 document.getElementById("obsCliente").value = "";
 
 }
+```javascript
+function carregarCategorias(){
+
+let area=document.getElementById("categorias");
+
+area.innerHTML="";
+
+for(let c in catalogo){
+
+area.innerHTML += `
+<div class="categoria" onclick="abrirCategoria('${c}')">
+${c}
+</div>
+`;
+
+}
+
+}
+
+function abrirCategoria(cat){
+
+let area=document.getElementById("produtos");
+
+area.innerHTML="";
+
+catalogo[cat].forEach(p=>{
+
+area.innerHTML += `
+<tr>
+
+<td>${p}</td>
+
+<td>
+<input type="number" id="${p}">
+</td>
+
+<td>
+<button class="btnAdd" onclick="add('${p}')">
+Adicionar
+</button>
+</td>
+
+</tr>
+`;
+
+});
+
+}
+
+function buscarProduto(){
+
+let termo=document
+.getElementById("busca")
+.value
+.toLowerCase();
+
+let area=document.getElementById("produtos");
+
+area.innerHTML="";
+
+for(let categoria in catalogo){
+
+catalogo[categoria].forEach(produto=>{
+
+if(produto.toLowerCase().includes(termo)){
+
+area.innerHTML += `
+<tr>
+
+<td>${produto}</td>
+
+<td>
+<input type="number" id="${produto}">
+</td>
+
+<td>
+<button class="btnAdd" onclick="add('${produto}')">
+Adicionar
+</button>
+</td>
+
+</tr>
+`;
+
+}
+
+});
+
+}
+
+}
+
+function add(prod){
+
+let q=document.getElementById(prod).value;
+
+if(!q)return;
+
+carrinho.push(prod+" - "+q);
+
+mostrarCarrinho();
+
+}
+
+function mostrarCarrinho(){
+
+let lista=document.getElementById("listaCarrinho");
+
+lista.innerHTML="";
+
+carrinho.forEach((i,index)=>{
+
+lista.innerHTML += `
+<div class="itemCarrinho">
+
+${i}
+
+<button class="remover" onclick="remover(${index})">
+X
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("contador").innerText=carrinho.length;
+
+}
+
+function remover(i){
+
+carrinho.splice(i,1);
+
+mostrarCarrinho();
+
+}
+
+function limparCarrinho(){
+
+carrinho=[];
+
+mostrarCarrinho();
+
+}
+
+function enviar(){
+
+let obs=document.getElementById("obs").value;
+
+let msg="Cotação:%0A%0A";
+
+carrinho.forEach(i=>{
+
+msg += i+"%0A";
+
+});
+
+msg += "%0AObservação:%0A"+obs;
+
+window.open(
+"https://wa.me/"+numero+"?text="+msg
+);
+
+}
+```
 
 carregarCategorias();
 
