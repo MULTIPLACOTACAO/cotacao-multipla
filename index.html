@@ -255,30 +255,148 @@ border-radius:6px;
 margin-top:10px;
 ">
 
-<h3>Cadastro de Clientes</h3>
+<h3 style="
+margin-bottom:20px;
+color:#2c3e50;
+">
 
-<input id="empresa"
-placeholder="Empresa"
-style="width:100%;padding:10px;margin-bottom:10px">
+CRM COMERCIAL
+
+</h3>
+
+<input id="pesquisaCliente"
+placeholder="Pesquisar cliente..."
+oninput="mostrarClientes()"
+style="
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:8px;
+">
+
+<select id="tipoCliente"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<option>Pessoa Jurídica</option>
+<option>Pessoa Física</option>
+
+</select>
+
+<input id="nomeFantasia"
+placeholder="Nome Fantasia"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="razaoSocial"
+placeholder="Razão Social"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="cpfCnpj"
+placeholder="CPF ou CNPJ"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
 
 <input id="comprador"
 placeholder="Comprador"
-style="width:100%;padding:10px;margin-bottom:10px">
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
 
 <input id="telefoneCliente"
-placeholder="Telefone / WhatsApp"
-style="width:100%;padding:10px;margin-bottom:10px">
+placeholder="WhatsApp"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
 
 <input id="emailCliente"
 placeholder="E-mail"
-style="width:100%;padding:10px;margin-bottom:10px">
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="estadoCliente"
+placeholder="Estado"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
 
 <input id="cidadeCliente"
 placeholder="Cidade"
-style="width:100%;padding:10px;margin-bottom:10px">
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="grupoCliente"
+placeholder="Grupo de Cliente"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="compraDesde"
+placeholder="Compra desde"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
 
 <select id="classificacao"
-style="width:100%;padding:10px;margin-bottom:10px">
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
 
 <option>Ouro</option>
 <option>Prata</option>
@@ -288,25 +406,33 @@ style="width:100%;padding:10px;margin-bottom:10px">
 </select>
 
 <textarea id="obsCliente"
-placeholder="Observações internas"
-style="width:100%;padding:10px;margin-bottom:10px"></textarea>
+placeholder="Observações comerciais"
+style="
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border-radius:8px;
+border:1px solid #ccc;
+"></textarea>
 
 <button onclick="salvarCliente()" style="
 background:#27ae60;
 color:white;
-padding:12px;
+padding:14px;
 border:none;
-border-radius:6px;
+border-radius:8px;
 width:100%;
 font-size:16px;
 cursor:pointer;
+font-weight:bold;
 ">
 
-Salvar Cliente
+SALVAR CLIENTE
 
 </button>
 
-<div id="listaClientes" style="margin-top:20px"></div>
+<div id="listaClientes"
+style="margin-top:20px"></div>
 
 </div>
 </div>
@@ -416,7 +542,7 @@ const catalogo = {
 };
 
 let carrinho=[];
-let clientes = [];
+let clientes = JSON.parse(localStorage.getItem("clientesCRM")) || [];
 
 function abrirCRM(){
 
@@ -429,13 +555,21 @@ return;
 
 document.getElementById("crmArea").style.display = "block";
 
+mostrarClientes();
+
 }
 
 function salvarCliente(){
 
 let cliente = {
 
-empresa: document.getElementById("empresa").value,
+tipo: document.getElementById("tipoCliente").value,
+
+nomeFantasia: document.getElementById("nomeFantasia").value,
+
+razaoSocial: document.getElementById("razaoSocial").value,
+
+cpfCnpj: document.getElementById("cpfCnpj").value,
 
 comprador: document.getElementById("comprador").value,
 
@@ -443,9 +577,15 @@ telefone: document.getElementById("telefoneCliente").value,
 
 email: document.getElementById("emailCliente").value,
 
+estado: document.getElementById("estadoCliente").value,
+
 cidade: document.getElementById("cidadeCliente").value,
 
+grupo: document.getElementById("grupoCliente").value,
+
 classificacao: document.getElementById("classificacao").value,
+
+compraDesde: document.getElementById("compraDesde").value,
 
 obs: document.getElementById("obsCliente").value
 
@@ -468,42 +608,128 @@ function mostrarClientes(){
 
 let area = document.getElementById("listaClientes");
 
+let filtro = document
+.getElementById("pesquisaCliente")
+.value
+.toLowerCase();
+
 area.innerHTML = "";
 
 clientes.forEach((c,index)=>{
+
+let texto = `
+${c.nomeFantasia}
+${c.razaoSocial}
+${c.cpfCnpj}
+${c.cidade}
+${c.estado}
+${c.grupo}
+${c.telefone}
+`.toLowerCase();
+
+if(!texto.includes(filtro)) return;
 
 area.innerHTML += `
 
 <div style="
 border:1px solid #ddd;
-padding:10px;
-border-radius:6px;
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
+background:white;
+box-shadow:0 2px 5px rgba(0,0,0,0.08);
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
 margin-bottom:10px;
 ">
 
-<b>${c.empresa}</b><br>
+<div>
 
-Comprador: ${c.comprador}<br>
+<div style="
+font-size:18px;
+font-weight:bold;
+color:#2c3e50;
+">
 
-WhatsApp: ${c.telefone}<br>
+${c.nomeFantasia}
 
-Email: ${c.email}<br>
+</div>
 
-Cidade: ${c.cidade}<br>
+<div style="color:#777">
 
-Classificação: ${c.classificacao}<br>
+${c.razaoSocial}
 
-Obs: ${c.obs}<br>
+</div>
+
+</div>
+
+<div style="
+background:#3498db;
+color:white;
+padding:5px 10px;
+border-radius:20px;
+font-size:12px;
+">
+
+${c.classificacao}
+
+</div>
+
+</div>
+
+<b>Tipo:</b> ${c.tipo}<br>
+<b>CPF/CNPJ:</b> ${c.cpfCnpj}<br>
+<b>Comprador:</b> ${c.comprador}<br>
+
+<b>WhatsApp:</b>
+<a href="https://wa.me/${c.telefone}"
+target="_blank">
+
+${c.telefone}
+
+</a><br>
+
+<b>Email:</b> ${c.email}<br>
+
+<b>Estado:</b> ${c.estado}<br>
+
+<b>Cidade:</b> ${c.cidade}<br>
+
+<b>Grupo:</b> ${c.grupo}<br>
+
+<b>Compra desde:</b> ${c.compraDesde}<br>
+
+<b>Observações:</b><br>
+
+${c.obs}<br><br>
+
+<button onclick="editarCliente(${index})"
+style="
+background:#f39c12;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:6px;
+cursor:pointer;
+margin-right:5px;
+">
+
+Editar
+
+</button>
 
 <button onclick="removerCliente(${index})"
 style="
 background:#e74c3c;
 color:white;
 border:none;
-padding:6px 10px;
-border-radius:4px;
+padding:8px 12px;
+border-radius:6px;
 cursor:pointer;
-margin-top:10px;
 ">
 
 Remover
@@ -515,6 +741,47 @@ Remover
 `;
 
 });
+
+}
+
+function editarCliente(index){
+
+let c = clientes[index];
+
+document.getElementById("tipoCliente").value = c.tipo;
+
+document.getElementById("nomeFantasia").value = c.nomeFantasia;
+
+document.getElementById("razaoSocial").value = c.razaoSocial;
+
+document.getElementById("cpfCnpj").value = c.cpfCnpj;
+
+document.getElementById("comprador").value = c.comprador;
+
+document.getElementById("telefoneCliente").value = c.telefone;
+
+document.getElementById("emailCliente").value = c.email;
+
+document.getElementById("estadoCliente").value = c.estado;
+
+document.getElementById("cidadeCliente").value = c.cidade;
+
+document.getElementById("grupoCliente").value = c.grupo;
+
+document.getElementById("classificacao").value = c.classificacao;
+
+document.getElementById("compraDesde").value = c.compraDesde;
+
+document.getElementById("obsCliente").value = c.obs;
+
+clientes.splice(index,1);
+
+localStorage.setItem(
+"clientesCRM",
+JSON.stringify(clientes)
+);
+
+mostrarClientes();
 
 }
 
@@ -533,7 +800,11 @@ mostrarClientes();
 
 function limparCampos(){
 
-document.getElementById("empresa").value = "";
+document.getElementById("nomeFantasia").value = "";
+
+document.getElementById("razaoSocial").value = "";
+
+document.getElementById("cpfCnpj").value = "";
 
 document.getElementById("comprador").value = "";
 
@@ -541,94 +812,16 @@ document.getElementById("telefoneCliente").value = "";
 
 document.getElementById("emailCliente").value = "";
 
+document.getElementById("estadoCliente").value = "";
+
 document.getElementById("cidadeCliente").value = "";
+
+document.getElementById("grupoCliente").value = "";
+
+document.getElementById("compraDesde").value = "";
 
 document.getElementById("obsCliente").value = "";
 
-}
-
-let dadosSalvos = localStorage.getItem("clientesCRM");
-
-if(dadosSalvos){
-
-clientes = JSON.parse(dadosSalvos);
-
-mostrarClientes();
-
-}
-function carregarCategorias(){
-let area=document.getElementById("categorias");
-for(let c in catalogo){
-area.innerHTML+=`<div class="categoria" onclick="abrirCategoria('${c}')">${c}</div>`;
-}
-}
-
-function abrirCategoria(cat){
-let area=document.getElementById("produtos");
-area.innerHTML="";
-catalogo[cat].forEach(p=>{
-area.innerHTML+=`
-<tr>
-<td>${p}</td>
-<td><input type="number" id="${p}"></td>
-<td><button class="btnAdd" onclick="add('${p}')">Adicionar</button></td>
-</tr>
-`;
-});
-}
-
-function buscarProduto(){
-let termo=document.getElementById("busca").value.toLowerCase();
-let area=document.getElementById("produtos");
-area.innerHTML="";
-
-for(let categoria in catalogo){
-catalogo[categoria].forEach(produto=>{
-if(produto.toLowerCase().includes(termo)){
-area.innerHTML+=`
-<tr>
-<td>${produto}</td>
-<td><input type="number" id="${produto}"></td>
-<td><button class="btnAdd" onclick="add('${produto}')">Adicionar</button></td>
-</tr>
-`;
-}
-});
-}
-}
-
-function add(prod){
-let q=document.getElementById(prod).value;
-if(!q)return;
-carrinho.push(prod+" - "+q);
-mostrarCarrinho();
-}
-
-function mostrarCarrinho(){
-let lista=document.getElementById("listaCarrinho");
-lista.innerHTML="";
-carrinho.forEach((i,index)=>{
-lista.innerHTML+=`<div class="itemCarrinho">${i}<button class="remover" onclick="remover(${index})">X</button></div>`;
-});
-document.getElementById("contador").innerText=carrinho.length;
-}
-
-function remover(i){
-carrinho.splice(i,1);
-mostrarCarrinho();
-}
-
-function limparCarrinho(){
-carrinho=[];
-mostrarCarrinho();
-}
-
-function enviar(){
-let obs=document.getElementById("obs").value;
-let msg="Cotação:%0A%0A";
-carrinho.forEach(i=>{ msg+=i+"%0A"; });
-msg+="%0AObservação:%0A"+obs;
-window.open("https://wa.me/"+numero+"?text="+msg);
 }
 
 carregarCategorias();
