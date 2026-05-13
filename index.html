@@ -652,11 +652,9 @@ return textoBusca.includes(filtro);
 
 });
 
-area.innerHTML += `
+area.innerHTML = `
 
-<div style="
-overflow-x:auto;
-">
+<div style="overflow-x:auto;">
 
 <table style="
 width:100%;
@@ -675,17 +673,11 @@ color:white;
 ">
 
 <th style="padding:12px">Cliente</th>
-
 <th style="padding:12px">Cidade</th>
-
 <th style="padding:12px">WhatsApp</th>
-
 <th style="padding:12px">Grupo</th>
-
 <th style="padding:12px">Concorrente</th>
-
 <th style="padding:12px">Classificação</th>
-
 <th style="padding:12px">Ações</th>
 
 </tr>
@@ -716,8 +708,7 @@ ${c.cidade} - ${c.estado}
 
 <td style="padding:12px">
 
-<a href="https://wa.me/${c.telefone}"
-target="_blank">
+<a href="https://wa.me/${c.telefone}" target="_blank">
 
 ${c.telefone}
 
