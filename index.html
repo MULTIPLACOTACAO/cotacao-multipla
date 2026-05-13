@@ -229,7 +229,86 @@ MULTIPLA COTAÇÃO
 <button class="whatsapp" onclick="enviar()">Enviar Cotação no WhatsApp</button>
 
 <button id="installBtn" class="install" style="display:none">Baixar App</button>
+<hr style="margin:20px 0">
 
+<button onclick="abrirCRM()" style="
+background:#2c3e50;
+color:white;
+padding:12px;
+border:none;
+border-radius:6px;
+width:100%;
+font-size:16px;
+cursor:pointer;
+margin-bottom:10px;
+">
+
+Área Comercial Privada
+
+</button>
+
+<div id="crmArea" style="
+display:none;
+background:white;
+padding:15px;
+border-radius:6px;
+margin-top:10px;
+">
+
+<h3>Cadastro de Clientes</h3>
+
+<input id="empresa"
+placeholder="Empresa"
+style="width:100%;padding:10px;margin-bottom:10px">
+
+<input id="comprador"
+placeholder="Comprador"
+style="width:100%;padding:10px;margin-bottom:10px">
+
+<input id="telefoneCliente"
+placeholder="Telefone / WhatsApp"
+style="width:100%;padding:10px;margin-bottom:10px">
+
+<input id="emailCliente"
+placeholder="E-mail"
+style="width:100%;padding:10px;margin-bottom:10px">
+
+<input id="cidadeCliente"
+placeholder="Cidade"
+style="width:100%;padding:10px;margin-bottom:10px">
+
+<select id="classificacao"
+style="width:100%;padding:10px;margin-bottom:10px">
+
+<option>Ouro</option>
+<option>Prata</option>
+<option>Bronze</option>
+<option>Potencial</option>
+
+</select>
+
+<textarea id="obsCliente"
+placeholder="Observações internas"
+style="width:100%;padding:10px;margin-bottom:10px"></textarea>
+
+<button onclick="salvarCliente()" style="
+background:#27ae60;
+color:white;
+padding:12px;
+border:none;
+border-radius:6px;
+width:100%;
+font-size:16px;
+cursor:pointer;
+">
+
+Salvar Cliente
+
+</button>
+
+<div id="listaClientes" style="margin-top:20px"></div>
+
+</div>
 </div>
 
 </div>
@@ -337,7 +416,146 @@ const catalogo = {
 };
 
 let carrinho=[];
+let clientes = [];
 
+function abrirCRM(){
+
+let senha = prompt("Digite sua senha:");
+
+if(senha !== "1234"){
+alert("Senha incorreta");
+return;
+}
+
+document.getElementById("crmArea").style.display = "block";
+
+}
+
+function salvarCliente(){
+
+let cliente = {
+
+empresa: document.getElementById("empresa").value,
+
+comprador: document.getElementById("comprador").value,
+
+telefone: document.getElementById("telefoneCliente").value,
+
+email: document.getElementById("emailCliente").value,
+
+cidade: document.getElementById("cidadeCliente").value,
+
+classificacao: document.getElementById("classificacao").value,
+
+obs: document.getElementById("obsCliente").value
+
+};
+
+clientes.push(cliente);
+
+localStorage.setItem(
+"clientesCRM",
+JSON.stringify(clientes)
+);
+
+mostrarClientes();
+
+limparCampos();
+
+}
+
+function mostrarClientes(){
+
+let area = document.getElementById("listaClientes");
+
+area.innerHTML = "";
+
+clientes.forEach((c,index)=>{
+
+area.innerHTML += `
+
+<div style="
+border:1px solid #ddd;
+padding:10px;
+border-radius:6px;
+margin-bottom:10px;
+">
+
+<b>${c.empresa}</b><br>
+
+Comprador: ${c.comprador}<br>
+
+WhatsApp: ${c.telefone}<br>
+
+Email: ${c.email}<br>
+
+Cidade: ${c.cidade}<br>
+
+Classificação: ${c.classificacao}<br>
+
+Obs: ${c.obs}<br>
+
+<button onclick="removerCliente(${index})"
+style="
+background:#e74c3c;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:4px;
+cursor:pointer;
+margin-top:10px;
+">
+
+Remover
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function removerCliente(index){
+
+clientes.splice(index,1);
+
+localStorage.setItem(
+"clientesCRM",
+JSON.stringify(clientes)
+);
+
+mostrarClientes();
+
+}
+
+function limparCampos(){
+
+document.getElementById("empresa").value = "";
+
+document.getElementById("comprador").value = "";
+
+document.getElementById("telefoneCliente").value = "";
+
+document.getElementById("emailCliente").value = "";
+
+document.getElementById("cidadeCliente").value = "";
+
+document.getElementById("obsCliente").value = "";
+
+}
+
+let dadosSalvos = localStorage.getItem("clientesCRM");
+
+if(dadosSalvos){
+
+clientes = JSON.parse(dadosSalvos);
+
+mostrarClientes();
+
+}
 function carregarCategorias(){
 let area=document.getElementById("categorias");
 for(let c in catalogo){
