@@ -480,7 +480,59 @@ SALVAR CLIENTE
 
 <div id="listaClientes"
 style="margin-top:20px"></div>
+<hr style="margin:30px 0">
 
+<h3 style="
+color:#2c3e50;
+margin-bottom:20px;
+">
+ORÇAMENTO INTERNO
+</h3>
+
+<div id="orcamentoArea"></div>
+
+<div style="
+margin-top:20px;
+background:#f8f9fa;
+padding:15px;
+border-radius:10px;
+">
+
+<input id="freteValor"
+placeholder="Valor do Frete"
+type="number"
+style="
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<h2 id="totalGeral"
+style="
+color:#27ae60;
+margin-bottom:15px;
+">
+TOTAL: R$ 0,00
+</h2>
+
+<button onclick="gerarOrcamentoWhats()"
+style="
+background:#25D366;
+color:white;
+padding:14px;
+border:none;
+border-radius:8px;
+width:100%;
+font-size:16px;
+cursor:pointer;
+font-weight:bold;
+">
+GERAR ORÇAMENTO WHATSAPP
+</button>
+
+</div>
 </div>
 </div>
 
@@ -589,6 +641,7 @@ const catalogo = {
 };
 
 let carrinho=[];
+let orcamentoInterno = [];
 let clientes = JSON.parse(localStorage.getItem("clientesCRM")) || [];
 
 function abrirCRM(){
@@ -938,6 +991,20 @@ area.innerHTML += `
 <button class="btnAdd" onclick="add('${p}')">
 Adicionar
 </button>
+
+<button
+style="
+margin-left:5px;
+background:#2c3e50;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:4px;
+cursor:pointer;
+"
+onclick="adicionarOrcamento('${p}')">
+Orçamento
+</button>
 </td>
 
 </tr>
@@ -1063,7 +1130,165 @@ window.open(
 );
 
 }
+function adicionarOrcamento(produto){
 
+let qtd = prompt("Quantidade:");
+
+if(!qtd) return;
+
+let preco = prompt("Preço Unitário:");
+
+if(!preco) return;
+
+preco = parseFloat(preco);
+
+let total = qtd * preco;
+
+orcamentoInterno.push({
+produto,
+qtd,
+preco,
+total
+});
+
+mostrarOrcamento();
+
+}
+
+function mostrarOrcamento(){
+
+let area = document.getElementById("orcamentoArea");
+
+area.innerHTML = "";
+
+let totalGeral = 0;
+
+orcamentoInterno.forEach((item,index)=>{
+
+totalGeral += item.total;
+
+area.innerHTML += `
+
+<div style="
+background:white;
+padding:15px;
+margin-bottom:10px;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+">
+
+<b>${item.produto}</b><br><br>
+
+Qtd: ${item.qtd}<br>
+
+Preço: R$ ${item.preco.toFixed(2)}<br>
+
+Total: R$ ${item.total.toFixed(2)}
+
+<br><br>
+
+<button onclick="removerOrcamento(${index})"
+style="
+background:#e74c3c;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:6px;
+cursor:pointer;
+">
+Remover
+</button>
+
+</div>
+
+`;
+
+});
+
+let frete = parseFloat(
+document.getElementById("freteValor").value
+) || 0;
+
+totalGeral += frete;
+
+document.getElementById("totalGeral")
+.innerText =
+"TOTAL: R$ " + totalGeral.toFixed(2);
+
+}
+
+function removerOrcamento(index){
+
+orcamentoInterno.splice(index,1);
+
+mostrarOrcamento();
+
+}
+
+document.addEventListener("input", function(e){
+
+if(e.target.id === "freteValor"){
+mostrarOrcamento();
+}
+
+});
+
+function gerarOrcamentoWhats(){
+
+if(orcamentoInterno.length === 0){
+alert("Nenhum item no orçamento");
+return;
+}
+
+let msg = "ORÇAMENTO MULTIPLA COTAÇÃO%0A%0A";
+
+let total = 0;
+
+orcamentoInterno.forEach(item=>{
+
+msg +=
+item.qtd + "x " +
+item.produto +
+"%0A";
+
+msg +=
+"R$ " +
+item.preco.toFixed(2) +
+" cada%0A";
+
+msg +=
+"Subtotal: R$ " +
+item.total.toFixed(2) +
+"%0A%0A";
+
+total += item.total;
+
+});
+
+let frete = parseFloat(
+document.getElementById("freteValor").value
+) || 0;
+
+if(frete > 0){
+
+msg +=
+"Frete: R$ " +
+frete.toFixed(2) +
+"%0A%0A";
+
+total += frete;
+
+}
+
+msg +=
+"TOTAL GERAL: R$ " +
+total.toFixed(2);
+
+window.open(
+"https://wa.me/?text=" + msg
+);
+
+}
 carregarCategorias();
 
 </script>
