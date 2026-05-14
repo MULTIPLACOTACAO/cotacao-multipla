@@ -1291,22 +1291,54 @@ for(let categoria in catalogo){
 
 area.innerHTML += `
 
-<h3 style="
-margin-top:25px;
-color:#2c3e50;
-">
+<div class="categoria"
+onclick="abrirCategoriaOrcamento('${categoria}')">
+
 ${categoria}
-</h3>
+
+</div>
 
 `;
 
-catalogo[categoria].forEach(produto=>{
+}
+
+}
+}
+function abrirCategoriaOrcamento(cat){
+
+let area = document.getElementById("orcamentoArea");
+
+area.innerHTML = `
+
+<button onclick="carregarProdutosOrcamento()"
+style="
+background:#7f8c8d;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+margin-bottom:20px;
+">
+← Voltar Categorias
+</button>
+
+<h2 style="
+color:#2c3e50;
+margin-bottom:20px;
+">
+${cat}
+</h2>
+
+`;
+
+catalogo[cat].forEach(produto=>{
 
 area.innerHTML += `
 
 <div style="
 background:white;
-padding:12px;
+padding:15px;
 margin-bottom:10px;
 border-radius:10px;
 box-shadow:0 2px 6px rgba(0,0,0,0.1);
@@ -1334,9 +1366,7 @@ Adicionar ao Orçamento
 
 });
 
-}
-
-}
+}  
 function gerarOrcamentoWhats(){
 
 if(orcamentoInterno.length === 0){
