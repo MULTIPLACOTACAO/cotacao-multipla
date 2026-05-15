@@ -480,6 +480,7 @@ SALVAR CLIENTE
 
 <div id="listaClientes"
 style="margin-top:20px"></div>
+
 <hr style="margin:30px 0">
 
 <h3 style="
@@ -489,65 +490,9 @@ margin-bottom:20px;
 ORÇAMENTO INTERNO
 </h3>
 
-function carregarProdutosOrcamento(){
+<div id="listaOrcamentoProdutos"></div>
 
-let area = document.getElementById("listaOrcamentoProdutos");
-
-area.innerHTML = "";
-
-for(let categoria in catalogo){
-
-area.innerHTML += `
-
-<h3 style="
-margin-top:20px;
-color:#2c3e50;
-">
-${categoria}
-</h3>
-
-`;
-
-catalogo[categoria].forEach(produto=>{
-
-area.innerHTML += `
-
-<div style="
-background:white;
-padding:10px;
-margin-bottom:8px;
-border-radius:8px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:0 2px 4px rgba(0,0,0,0.1);
-">
-
-<span>${produto}</span>
-
-<button onclick="adicionarOrcamento('${produto}')"
-style="
-background:#27ae60;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:6px;
-cursor:pointer;
-">
-Adicionar
-</button>
-
-</div>
-
-`;
-
-});
-
-}
-
-}
-
-
+<div id="itensOrcamento"></div>
 
 <div style="
 margin-top:20px;
@@ -591,10 +536,56 @@ GERAR ORÇAMENTO WHATSAPP
 </button>
 
 </div>
-</div>
+
+<input id="freteValor"
+placeholder="Valor do Frete"
+type="number"
+style="
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<h2 id="totalGeral"
+style="
+color:#27ae60;
+margin-bottom:15px;
+">
+TOTAL: R$ 0,00
+</h2>
+
+<button onclick="gerarOrcamentoWhats()"
+style="
+background:#25D366;
+color:white;
+padding:14px;
+border:none;
+border-radius:8px;
+width:100%;
+font-size:16px;
+cursor:pointer;
+font-weight:bold;
+">
+GERAR ORÇAMENTO WHATSAPP
+</button>
+
 </div>
 
 </div>
+<h3 style="
+color:#2c3e50;
+margin-bottom:20px;
+">
+ORÇAMENTO INTERNO
+</h3>
+<div id="orcamentoArea">
+
+<div id="listaOrcamentoProdutos"></div>
+
+<div id="itensOrcamento"></div>
+
 
 <script>
 
@@ -1174,20 +1165,7 @@ window.open(
 );
 
 }
-<h3 style="
-color:#2c3e50;
-margin-bottom:20px;
-">
-ORÇAMENTO INTERNO
-</h3>
 
-<div id="orcamentoArea">
-
-<div id="listaOrcamentoProdutos"></div>
-
-<div id="itensOrcamento"></div>
-
-</div>
 
 }  
 function adicionarOrcamento(produto){
