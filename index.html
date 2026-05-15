@@ -1174,61 +1174,20 @@ window.open(
 );
 
 }
-function carregarProdutosOrcamento(){
-
-let area = document.getElementById("listaOrcamentoProdutos");
-
-area.innerHTML = "";
-
-for(let categoria in catalogo){
-
-area.innerHTML += `
-
 <h3 style="
-margin-top:20px;
 color:#2c3e50;
+margin-bottom:20px;
 ">
-${categoria}
+ORÇAMENTO INTERNO
 </h3>
 
-`;
+<div id="orcamentoArea">
 
-catalogo[categoria].forEach(produto=>{
+<div id="listaOrcamentoProdutos"></div>
 
-area.innerHTML += `
-
-<div style="
-background:white;
-padding:10px;
-margin-bottom:8px;
-border-radius:8px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:0 2px 4px rgba(0,0,0,0.1);
-">
-
-<span>${produto}</span>
-
-<button onclick="adicionarOrcamento('${produto}')"
-style="
-background:#27ae60;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:6px;
-cursor:pointer;
-">
-Adicionar
-</button>
+<div id="itensOrcamento"></div>
 
 </div>
-
-`;
-
-});
-
-}
 
 }  
 function adicionarOrcamento(produto){
@@ -1325,7 +1284,43 @@ orcamentoInterno.splice(index,1);
 mostrarOrcamento();
 
 }
+function gerarOrcamentoWhats(){
 
+let msg = "ORÇAMENTO:%0A%0A";
+
+orcamentoInterno.forEach(item=>{
+
+msg += item.produto + "%0A";
+
+msg += "Qtd: " + item.qtd + "%0A";
+
+msg += "Preço: R$ " + item.preco.toFixed(2) + "%0A";
+
+msg += "Total: R$ " + item.total.toFixed(2) + "%0A%0A";
+
+});
+
+let frete = parseFloat(
+document.getElementById("freteValor").value
+) || 0;
+
+let total = 0;
+
+orcamentoInterno.forEach(item=>{
+total += item.total;
+});
+
+total += frete;
+
+msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
+
+msg += "TOTAL GERAL: R$ " + total.toFixed(2);
+
+window.open(
+"https://wa.me/" + numero + "?text=" + msg
+);
+
+}
 document.addEventListener("input", function(e){
 
 if(e.target.id === "freteValor"){
