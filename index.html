@@ -678,7 +678,22 @@ mostrarClientes();
 }
 
 function salvarCliente(){
+<button onclick="resetarClientes()" style="
+background:#e74c3c;
+color:white;
+padding:14px;
+border:none;
+border-radius:8px;
+width:100%;
+font-size:16px;
+cursor:pointer;
+font-weight:bold;
+margin-top:10px;
+">
 
+RESETAR CLIENTES
+
+</button>
 let cliente = {
 codigo: "CLI-" + (clientes.length + 1),
 tipo: document.getElementById("tipoCliente").value,
@@ -1077,7 +1092,21 @@ document.getElementById("compraDesde").value = "";
 document.getElementById("obsCliente").value = "";
 
 }
+function resetarClientes(){
 
+if(confirm("Deseja apagar todos os clientes antigos?")){
+
+localStorage.removeItem("clientesCRM");
+
+clientes = [];
+
+mostrarClientes();
+
+alert("Clientes resetados.");
+
+}
+
+}
 function carregarCategorias(){
 
 let area=document.getElementById("categorias");
