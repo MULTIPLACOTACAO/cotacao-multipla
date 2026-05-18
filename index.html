@@ -267,6 +267,33 @@ CRM COMERCIAL
 <input id="pesquisaCliente"
 placeholder="Pesquisar cliente..."
 oninput="mostrarClientes()"
+ <button onclick="
+document.getElementById('pesquisaCliente').value='';
+mostrarClientes();
+"
+style="
+background:#3498db;
+color:white;
+border:none;
+padding:10px;
+border-radius:6px;
+margin-bottom:10px;
+cursor:pointer;
+">
+Voltar Lista Completa
+</button> 
+ <button onclick="limparPesquisaCliente()" style="
+background:#7f8c8d;
+color:white;
+padding:10px;
+border:none;
+border-radius:6px;
+width:100%;
+margin-bottom:15px;
+cursor:pointer;
+">
+VOLTAR / MOSTRAR TODOS
+</button> 
 style="
 width:100%;
 padding:12px;
@@ -738,9 +765,6 @@ let filtro = document
 
 area.innerHTML = "";
 
-function mostrarClientes(){
-
-let area = document.getElementById("listaClientes");
 
 let filtro = document
 .getElementById("pesquisaCliente")
