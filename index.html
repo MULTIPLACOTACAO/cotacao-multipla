@@ -739,8 +739,140 @@ let filtro = document
 
 area.innerHTML = "";
 
-if(filtro === ""){
+function mostrarClientes(){
+
+let area = document.getElementById("listaClientes");
+
+let filtro = document
+.getElementById("pesquisaCliente")
+.value
+.toLowerCase();
+
+area.innerHTML = "";
+
+let clientesFiltrados = clientes.filter(c => {
+
+let textoBusca = `
+${c.codigo || ""}
+${c.nomeFantasia || ""}
+${c.razaoSocial || ""}
+${c.cpfCnpj || ""}
+${c.telefone || ""}
+${c.email || ""}
+${c.estado || ""}
+${c.cidade || ""}
+${c.grupo || ""}
+${c.comprador || ""}
+`.toLowerCase();
+
+return textoBusca.includes(filtro);
+
+});
+
+if(clientesFiltrados.length === 0){
+
+area.innerHTML = `
+
+<div style="
+background:#fff3cd;
+padding:15px;
+border-radius:8px;
+color:#856404;
+font-weight:bold;
+">
+
+Nenhum cliente encontrado.
+
+</div>
+
+`;
+
 return;
+
+}
+
+clientesFiltrados.forEach((c)=>{
+
+let indexReal = clientes.findIndex(cliente =>
+cliente.codigo === c.codigo
+);
+
+area.innerHTML += `
+
+<div style="
+background:white;
+padding:15px;
+margin-bottom:15px;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+">
+
+<div style="
+font-size:18px;
+font-weight:bold;
+color:#2c3e50;
+margin-bottom:10px;
+">
+
+${c.codigo || "SEM CÓDIGO"} - ${c.nomeFantasia}
+
+</div>
+
+<div style="margin-bottom:5px;">
+<b>Razão Social:</b> ${c.razaoSocial}
+</div>
+
+<div style="margin-bottom:5px;">
+<b>Cidade:</b> ${c.cidade} - ${c.estado}
+</div>
+
+<div style="margin-bottom:5px;">
+<b>WhatsApp:</b> ${c.telefone}
+</div>
+
+<div style="margin-bottom:5px;">
+<b>Grupo:</b> ${c.grupo}
+</div>
+
+<div style="margin-bottom:15px;">
+<b>Classificação:</b> ${c.classificacao}
+</div>
+
+<button onclick="editarCliente(${indexReal})"
+style="
+background:#f39c12;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+margin-right:10px;
+">
+
+Editar
+
+</button>
+
+<button onclick="removerCliente(${indexReal})"
+style="
+background:#e74c3c;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+">
+
+Remover
+
+</button>
+
+</div>
+
+`;
+
+});
+
 }
 
 let clientesFiltrados = clientes.filter(c => {
