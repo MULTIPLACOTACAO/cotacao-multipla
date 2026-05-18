@@ -785,7 +785,9 @@ return;
 }
 
 clientesFiltrados.forEach((c,index)=>{
-
+let indexReal = clientes.findIndex(cliente =>
+cliente.codigo === c.codigo
+);
 area.innerHTML += `
 
 <div style="
@@ -827,7 +829,7 @@ ${c.codigo} - ${c.nomeFantasia}
 <b>Classificação:</b> ${c.classificacao}
 </div>
 
-<button onclick="editarCliente(${index})"
+<button onclick="editarCliente(${indexReal})"
 style="
 background:#f39c12;
 color:white;
@@ -842,7 +844,7 @@ Editar
 
 </button>
 
-<button onclick="removerCliente(${index})"
+<button onclick="removerCliente(${indexReal})"
 style="
 background:#e74c3c;
 color:white;
