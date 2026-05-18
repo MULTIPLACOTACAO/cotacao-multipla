@@ -490,7 +490,9 @@ margin-bottom:20px;
 ORÇAMENTO INTERNO
 </h3>
 
-<div id="listaOrcamentoProdutos"></div>
+<div id="categoriasOrcamento" class="categorias"></div>
+
+<div id="produtosOrcamento"></div>
 
 <div id="itensOrcamento"></div>
 
@@ -1136,7 +1138,7 @@ window.open(
 
 function carregarProdutosOrcamento(){
 
-let area = document.getElementById("listaOrcamentoProdutos");
+let area = document.getElementById("categoriasOrcamento");
 
 if(!area) return;
 
@@ -1145,17 +1147,79 @@ area.innerHTML = "";
 for(let categoria in catalogo){
 
 area.innerHTML += `
-<h3 style="
-margin-top:20px;
-color:#2c3e50;
-">
+
+<div class="categoria"
+onclick="abrirCategoriaOrcamento('${categoria}')">
+
 ${categoria}
-</h3>
+
+</div>
+
 `;
+
+}
+
+}
+
+function abrirCategoriaOrcamento(categoria){
+
+let area = document.getElementById("produtosOrcamento");
+
+if(!area) return;
+
+area.innerHTML = `
+
+<div class="tabelaProdutos">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Produto</th>
+<th>Ação</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tbodyOrcamento"></tbody>
+
+</table>
+
+</div>
+
+`;
+
+let tbody = document.getElementById("tbodyOrcamento");
 
 catalogo[categoria].forEach(produto=>{
 
-area.innerHTML += `
+tbody.innerHTML += `
+
+<tr>
+
+<td>${produto}</td>
+
+<td>
+
+<button class="btnAdd"
+onclick="adicionarOrcamento('${produto}')">
+
+Adicionar
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
 
 <div style="
 background:white;
