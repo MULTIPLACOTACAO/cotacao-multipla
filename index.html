@@ -680,7 +680,7 @@ mostrarClientes();
 function salvarCliente(){
 
 let cliente = {
-
+codigo: "CLI-" + (clientes.length + 1),
 tipo: document.getElementById("tipoCliente").value,
 
 nomeFantasia: document.getElementById("nomeFantasia").value,
@@ -746,6 +746,7 @@ return;
 let clientesFiltrados = clientes.filter(c => {
 
 let textoBusca = `
+${c.codigo}
 ${c.nomeFantasia}
 ${c.razaoSocial}
 ${c.cpfCnpj}
@@ -754,6 +755,7 @@ ${c.email}
 ${c.estado}
 ${c.cidade}
 ${c.grupo}
+${c.comprador || ""}
 `.toLowerCase();
 
 return textoBusca.includes(filtro);
@@ -801,7 +803,7 @@ color:#2c3e50;
 margin-bottom:10px;
 ">
 
-${c.nomeFantasia}
+${c.codigo} - ${c.nomeFantasia}
 
 </div>
 
