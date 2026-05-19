@@ -264,6 +264,91 @@ CRM COMERCIAL
 
 </h3>
 
+<input id="pesquisaCliente"
+placeholder="Pesquisar cliente..."
+oninput="mostrarClientes()"
+style="
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:8px;
+">
+
+<select id="tipoCliente"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<option>Pessoa Jurídica</option>
+<option>Pessoa Física</option>
+
+</select>
+
+<input id="nomeFantasia"
+placeholder="Nome Fantasia"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="razaoSocial"
+placeholder="Razão Social"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="cpfCnpj"
+placeholder="CPF ou CNPJ"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="comprador"
+placeholder="Comprador"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="telefoneCliente"
+placeholder="WhatsApp"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<input id="emailCliente"
+placeholder="E-mail"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
 <input id="estadoCliente"
 placeholder="Estado"
 style="
@@ -405,9 +490,7 @@ margin-bottom:20px;
 ORÇAMENTO INTERNO
 </h3>
 
-<div id="categoriasOrcamento" class="categorias"></div>
-
-<div id="produtosOrcamento"></div>
+<div id="listaOrcamentoProdutos"></div>
 
 <div id="itensOrcamento"></div>
 
@@ -456,7 +539,23 @@ GERAR ORÇAMENTO WHATSAPP
 
 
 </div>
+<h3 style="
+color:#2c3e50;
+margin-bottom:20px;
+">
+ORÇAMENTO INTERNO
+</h3>
+<div id="orcamentoArea">
 
+<div id="listaOrcamentoProdutos"></div>
+
+<div id="itensOrcamento"></div>
+
+</div>
+
+</div>
+
+</div>
 
 <script>
 
@@ -580,8 +679,9 @@ mostrarClientes();
 }
 
 function salvarCliente(){
+
 let cliente = {
-codigo: "CLI-" + (clientes.length + 1),
+
 tipo: document.getElementById("tipoCliente").value,
 
 nomeFantasia: document.getElementById("nomeFantasia").value,
@@ -640,136 +740,9 @@ let filtro = document
 
 area.innerHTML = "";
 
-
 let clientesFiltrados = clientes.filter(c => {
 
 let textoBusca = `
-${c.codigo || ""}
-${c.nomeFantasia || ""}
-${c.razaoSocial || ""}
-${c.cpfCnpj || ""}
-${c.telefone || ""}
-${c.email || ""}
-${c.estado || ""}
-${c.cidade || ""}
-${c.grupo || ""}
-${c.comprador || ""}
-`.toLowerCase();
-
-return textoBusca.includes(filtro);
-
-});
-
-if(clientesFiltrados.length === 0){
-
-area.innerHTML = `
-
-<div style="
-background:#fff3cd;
-padding:15px;
-border-radius:8px;
-color:#856404;
-font-weight:bold;
-">
-
-Nenhum cliente encontrado.
-
-</div>
-
-`;
-
-return;
-
-}
-
-clientesFiltrados.forEach((c)=>{
-
-let indexReal = clientes.findIndex(cliente =>
-cliente.codigo === c.codigo
-);
-
-area.innerHTML += `
-
-<div style="
-background:white;
-padding:15px;
-margin-bottom:15px;
-border-radius:10px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-">
-
-<div style="
-font-size:18px;
-font-weight:bold;
-color:#2c3e50;
-margin-bottom:10px;
-">
-
-${c.codigo || "SEM CÓDIGO"} - ${c.nomeFantasia}
-
-</div>
-
-<div style="margin-bottom:5px;">
-<b>Razão Social:</b> ${c.razaoSocial}
-</div>
-
-<div style="margin-bottom:5px;">
-<b>Cidade:</b> ${c.cidade} - ${c.estado}
-</div>
-
-<div style="margin-bottom:5px;">
-<b>WhatsApp:</b> ${c.telefone}
-</div>
-
-<div style="margin-bottom:5px;">
-<b>Grupo:</b> ${c.grupo}
-</div>
-
-<div style="margin-bottom:15px;">
-<b>Classificação:</b> ${c.classificacao}
-</div>
-
-<button onclick="editarCliente(${indexReal})"
-style="
-background:#f39c12;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:6px;
-cursor:pointer;
-margin-right:10px;
-">
-
-Editar
-
-</button>
-
-<button onclick="removerCliente(${indexReal})"
-style="
-background:#e74c3c;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:6px;
-cursor:pointer;
-">
-
-Remover
-
-</button>
-
-</div>
-
-`;
-
-});
-
-}
-
-let clientesFiltrados = clientes.filter(c => {
-
-let textoBusca = `
-${c.codigo}
 ${c.nomeFantasia}
 ${c.razaoSocial}
 ${c.cpfCnpj}
@@ -778,102 +751,122 @@ ${c.email}
 ${c.estado}
 ${c.cidade}
 ${c.grupo}
-${c.comprador || ""}
+${c.concorrentePrincipal || ""}
+${c.outrosConcorrentes || ""}
 `.toLowerCase();
 
 return textoBusca.includes(filtro);
 
 });
 
-if(clientesFiltrados.length === 0){
-
 area.innerHTML = `
 
-<div style="
-background:#fff3cd;
-padding:15px;
-border-radius:8px;
-color:#856404;
-font-weight:bold;
-">
+<div style="overflow-x:auto;">
 
-Nenhum cliente encontrado.
-
-</div>
-
-`;
-
-return;
-
-}
-
-clientesFiltrados.forEach((c,index)=>{
-let indexReal = clientes.findIndex(cliente =>
-cliente.codigo === c.codigo
-);
-area.innerHTML += `
-
-<div style="
+<table style="
+width:100%;
+border-collapse:collapse;
 background:white;
-padding:15px;
-margin-bottom:15px;
 border-radius:10px;
+overflow:hidden;
 box-shadow:0 2px 6px rgba(0,0,0,0.1);
 ">
 
-<div style="
-font-size:18px;
-font-weight:bold;
-color:#2c3e50;
-margin-bottom:10px;
+<thead>
+
+<tr style="
+background:#2c3e50;
+color:white;
 ">
 
-${c.codigo} - ${c.nomeFantasia}
+<th style="padding:12px">Cliente</th>
+<th style="padding:12px">Cidade</th>
+<th style="padding:12px">WhatsApp</th>
+<th style="padding:12px">Grupo</th>
+<th style="padding:12px">Concorrente</th>
+<th style="padding:12px">Classificação</th>
+<th style="padding:12px">Ações</th>
 
-</div>
+</tr>
 
-<div style="margin-bottom:5px;">
-<b>Razão Social:</b> ${c.razaoSocial}
-</div>
+</thead>
 
-<div style="margin-bottom:5px;">
-<b>Cidade:</b> ${c.cidade} - ${c.estado}
-</div>
+<tbody>
 
-<div style="margin-bottom:5px;">
-<b>WhatsApp:</b> ${c.telefone}
-</div>
+${clientesFiltrados.map((c,index)=>`
 
-<div style="margin-bottom:5px;">
-<b>Grupo:</b> ${c.grupo}
-</div>
+<tr style="border-bottom:1px solid #eee;">
 
-<div style="margin-bottom:15px;">
-<b>Classificação:</b> ${c.classificacao}
-</div>
+<td style="padding:12px">
 
-<button onclick="editarCliente(${indexReal})"
+<b>${c.nomeFantasia}</b><br>
+
+<small>${c.razaoSocial}</small><br>
+
+<small>${c.cpfCnpj}</small>
+
+</td>
+
+<td style="padding:12px">
+
+${c.cidade} - ${c.estado}
+
+</td>
+
+<td style="padding:12px">
+
+<a href="https://wa.me/${c.telefone}" target="_blank">
+
+${c.telefone}
+
+</a>
+
+</td>
+
+<td style="padding:12px">
+
+${c.grupo}
+
+</td>
+
+<td style="padding:12px">
+
+${c.concorrentePrincipal || "-"}
+
+</td>
+
+<td style="padding:12px">
+
+${c.classificacao}
+
+</td>
+
+<td style="padding:12px">
+
+<button onclick="editarCliente(${index})"
 style="
 background:#f39c12;
 color:white;
 border:none;
-padding:10px 15px;
-border-radius:6px;
+padding:6px 10px;
+border-radius:5px;
 cursor:pointer;
-margin-right:10px;
+margin-bottom:5px;
 ">
 
 Editar
 
 </button>
 
-<button onclick="removerCliente(${indexReal})"
+<br>
+
+<button onclick="removerCliente(${index})"
 style="
 background:#e74c3c;
 color:white;
 border:none;
-padding:10px 15px;
-border-radius:6px;
+padding:6px 10px;
+border-radius:5px;
 cursor:pointer;
 ">
 
@@ -881,13 +874,22 @@ Remover
 
 </button>
 
+</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
 </div>
 
 `;
 
-});
-
 }
+
 
 function editarCliente(index){
 
@@ -968,21 +970,7 @@ document.getElementById("compraDesde").value = "";
 document.getElementById("obsCliente").value = "";
 
 }
-function resetarClientes(){
 
-if(confirm("Deseja apagar todos os clientes antigos?")){
-
-localStorage.removeItem("clientesCRM");
-
-clientes = [];
-
-mostrarClientes();
-
-alert("Clientes resetados.");
-
-}
-
-}
 function carregarCategorias(){
 
 let area=document.getElementById("categorias");
@@ -1151,7 +1139,7 @@ window.open(
 
 function carregarProdutosOrcamento(){
 
-let area = document.getElementById("categoriasOrcamento");
+let area = document.getElementById("listaOrcamentoProdutos");
 
 if(!area) return;
 
@@ -1160,73 +1148,50 @@ area.innerHTML = "";
 for(let categoria in catalogo){
 
 area.innerHTML += `
-
-<div class="categoria"
-onclick="abrirCategoriaOrcamento('${categoria}')">
-
+<h3 style="
+margin-top:20px;
+color:#2c3e50;
+">
 ${categoria}
-
-</div>
-
+</h3>
 `;
-
-}
-
-}
-
-function abrirCategoriaOrcamento(categoria){
-
-let area = document.getElementById("produtosOrcamento");
-
-if(!area) return;
-
-area.innerHTML = `
-
-<div class="tabelaProdutos">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Produto</th>
-<th>Ação</th>
-
-</tr>
-
-</thead>
-
-<tbody id="tbodyOrcamento"></tbody>
-
-</table>
-
-</div>
-
-`;
-
-let tbody = document.getElementById("tbodyOrcamento");
 
 catalogo[categoria].forEach(produto=>{
 
-tbody.innerHTML += `
+area.innerHTML += `
 
-<tr>
+<div style="
+background:white;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+">
 
-<td>${produto}</td>
+<div style="
+font-size:14px;
+font-weight:bold;
+width:65%;
+">
+${produto}
+</div>
 
-<td>
-
-<button class="btnAdd"
-onclick="adicionarOrcamento('${produto}')">
-
+<button onclick="adicionarOrcamento('${produto}')"
+style="
+background:#3498db;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:6px;
+cursor:pointer;
+">
 Adicionar
-
 </button>
 
-</td>
-
-</tr>
+</div>
 
 `;
 
@@ -1234,26 +1199,21 @@ Adicionar
 
 }
 
-
+}
 function adicionarOrcamento(produto){
 
 let qtd = prompt("Quantidade:");
 
 if(!qtd) return;
 
-qtd = parseFloat(
-qtd.toString().replace(",", ".")
-);
-
 let preco = prompt("Preço Unitário:");
 
 if(!preco) return;
 
-preco = parseFloat(
-preco.toString().replace(",", ".")
-);
+preco = parseFloat(preco);
 
 let total = qtd * preco;
+
 orcamentoInterno.push({
 produto,
 qtd,
@@ -1379,7 +1339,7 @@ mostrarOrcamento();
 
 });
 carregarCategorias();
-carregarProdutosOrcamento();
+
 </script>
 
 </body>
