@@ -71,7 +71,7 @@ margin-bottom:20px;
 }
 
 .categoria{
-background:white;
+background:linear-gradient(135deg,#34495e,#2c3e50);
 border:1px solid #ddd;
 padding:10px 15px;
 border-radius:6px;
@@ -257,7 +257,7 @@ margin-top:10px;
 
 <h3 style="
 margin-bottom:20px;
-color:#2c3e50;
+color:white;
 ">
 
 CRM COMERCIAL
@@ -490,7 +490,14 @@ margin-bottom:20px;
 ORÇAMENTO INTERNO
 </h3>
 
-<div id="listaOrcamentoProdutos"></div>
+<div id="listaOrcamentoProdutos"
+style="
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:15px;
+margin-top:20px;
+">
+</div>
 
 <div id="itensOrcamento"></div>
 
@@ -1147,49 +1154,65 @@ area.innerHTML = "";
 
 for(let categoria in catalogo){
 
-area.innerHTML += `
-<h3 style="
-margin-top:20px;
-color:#2c3e50;
-">
-${categoria}
-</h3>
-`;
-
 catalogo[categoria].forEach(produto=>{
 
 area.innerHTML += `
 
 <div style="
 background:white;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
+padding:18px;
+border-radius:14px;
+box-shadow:0 3px 10px rgba(0,0,0,0.12);
 display:flex;
+flex-direction:column;
 justify-content:space-between;
-align-items:center;
-box-shadow:0 2px 5px rgba(0,0,0,0.1);
+min-height:140px;
+transition:0.3s;
+border:1px solid #e5e7eb;
 ">
 
 <div style="
-font-size:14px;
+font-size:15px;
 font-weight:bold;
-width:65%;
+color:#2c3e50;
+line-height:1.5;
+margin-bottom:15px;
 ">
 ${produto}
 </div>
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:auto;
+">
+
+<span style="
+font-size:12px;
+background:rgba(255,255,255,0.15);
+padding:6px 10px;
+border-radius:20px;
+color:white;
+backdrop-filter:blur(4px);
+">
+${categoria}
+</span>
 
 <button onclick="adicionarOrcamento('${produto}')"
 style="
 background:#3498db;
 color:white;
 border:none;
-padding:8px 12px;
-border-radius:6px;
+padding:10px 14px;
+border-radius:8px;
 cursor:pointer;
+font-weight:bold;
 ">
-Adicionar
++
 </button>
+
+</div>
 
 </div>
 
