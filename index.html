@@ -546,23 +546,6 @@ GERAR ORÇAMENTO WHATSAPP
 
 
 </div>
-<h3 style="
-color:#2c3e50;
-margin-bottom:20px;
-">
-ORÇAMENTO INTERNO
-</h3>
-<div id="orcamentoArea">
-
-<div id="listaOrcamentoProdutos"></div>
-
-<div id="itensOrcamento"></div>
-
-</div>
-
-</div>
-
-</div>
 
 <script>
 
@@ -1154,75 +1137,61 @@ area.innerHTML = "";
 
 for(let categoria in catalogo){
 
+area.innerHTML += `
+
+<div style="
+grid-column:1/-1;
+margin-top:15px;
+font-size:22px;
+font-weight:bold;
+color:#2c3e50;
+">
+${categoria}
+</div>
+
+`;
+
 catalogo[categoria].forEach(produto=>{
 
 area.innerHTML += `
 
 <div style="
-background:white;
-padding:18px;
-border-radius:14px;
-box-shadow:0 3px 10px rgba(0,0,0,0.12);
+background:#eef5ff;
+border:1px solid #d6e4ff;
+padding:15px;
+border-radius:12px;
 display:flex;
 flex-direction:column;
 justify-content:space-between;
+gap:15px;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
 min-height:140px;
-transition:all 0.3s ease;
-cursor:pointer;
-border:1px solid #e5e7eb;
 ">
 
-<div 
-onmouseover="
-this.style.transform='translateY(-6px)';
-this.style.boxShadow='0 10px 25px rgba(0,0,0,0.25)';
-"
-onmouseout="
-this.style.transform='translateY(0px)';
-this.style.boxShadow='0 3px 10px rgba(0,0,0,0.12)';
-"
-style="
+<div style="
 font-size:15px;
 font-weight:bold;
+line-height:1.4;
 color:#2c3e50;
-line-height:1.5;
-margin-bottom:15px;
 ">
 ${produto}
 </div>
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-top:auto;
-">
-
-<span style="
-font-size:12px;
-background:rgba(255,255,255,0.15);
-padding:6px 10px;
-border-radius:20px;
-color:white;
-backdrop-filter:blur(4px);
-">
-${categoria}
-</span>
 
 <button onclick="adicionarOrcamento('${produto}')"
 style="
 background:#3498db;
 color:white;
 border:none;
-padding:10px 14px;
+padding:12px;
 border-radius:8px;
 cursor:pointer;
+font-size:15px;
 font-weight:bold;
 ">
-+
-</button>
 
-</div>
++ Adicionar
+
+</button>
 
 </div>
 
