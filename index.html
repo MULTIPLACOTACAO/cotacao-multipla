@@ -665,7 +665,11 @@ return;
 }
 
 document.getElementById("crmArea").style.display = "block";
-carregarProdutosOrcamento();
+```javascript
+carregarCategoriasOrcamento();
+abrirCategoriaOrcamento("Estribos");
+```
+
 mostrarClientes();
 
 }
@@ -1152,18 +1156,39 @@ ${categoria}
 }
 
 }
+```javascript
 function adicionarOrcamento(produto){
-let qtd = parseFloat(
-prompt("Quantidade:")
-);
+
+let qtd = prompt("Quantidade:");
 
 if(!qtd) return;
 
-let preco = parseFloat(
-prompt("Preço Unitário:")
+qtd = parseFloat(
+qtd.toString().replace(",", ".")
 );
 
+let preco = prompt("Preço Unitário:");
+
 if(!preco) return;
+
+preco = parseFloat(
+preco.toString().replace(",", ".")
+);
+
+let total = qtd * preco;
+
+orcamentoInterno.push({
+produto,
+qtd,
+preco,
+total
+});
+
+mostrarOrcamento();
+
+}
+```
+
 
 let total = qtd * preco;
 orcamentoInterno.push({
