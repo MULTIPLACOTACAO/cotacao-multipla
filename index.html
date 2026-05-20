@@ -36,9 +36,11 @@ object-fit:contain;
 }
 
 .container{
+width:100%;
 max-width:1200px;
 margin:auto;
-padding:20px;
+padding:10px;
+box-sizing:border-box;
 }
 
 .searchBox{
@@ -493,8 +495,8 @@ ORÇAMENTO INTERNO
 <div id="listaOrcamentoProdutos"
 style="
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-gap:15px;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
 margin-top:20px;
 ">
 </div>
@@ -1140,7 +1142,7 @@ for(let categoria in catalogo){
 area.innerHTML += `
 
 <div style="
-grid-column:1/-1;
+grid-column:span 2;
 margin-top:25px;
 margin-bottom:10px;
 padding:10px;
