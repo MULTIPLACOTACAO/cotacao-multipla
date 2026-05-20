@@ -664,11 +664,15 @@ alert("Senha incorreta");
 return;
 }
 
-document.getElementById("crmArea").style.display = "block";
 ```javascript
+document.getElementById("crmArea").style.display = "block";
+
 carregarCategoriasOrcamento();
 abrirCategoriaOrcamento("Estribos");
+
+mostrarClientes();
 ```
+
 
 mostrarClientes();
 
@@ -1155,8 +1159,12 @@ ${categoria}
 
 }
 
-}
+
+E TROQUE POR ESTE:
+
 ```javascript
+}
+
 function adicionarOrcamento(produto){
 
 let qtd = prompt("Quantidade:");
@@ -1187,7 +1195,7 @@ total
 mostrarOrcamento();
 
 }
-```
+
 
 
 let total = qtd * preco;
