@@ -491,7 +491,7 @@ margin-bottom:20px;
 ">
 ORÇAMENTO INTERNO
 </h3>
-<div id="categoriasOrcamento" class="categorias"></div>
+
 <div id="listaOrcamentoProdutos"
 style="
 display:grid;
@@ -664,16 +664,8 @@ alert("Senha incorreta");
 return;
 }
 
-```javascript
 document.getElementById("crmArea").style.display = "block";
-
-carregarCategoriasOrcamento();
-abrirCategoriaOrcamento("Estribos");
-
-mostrarClientes();
-```
-
-
+carregarProdutosOrcamento();
 mostrarClientes();
 
 }
@@ -1137,10 +1129,11 @@ window.open(
 }
 
 
-function carregarCategoriasOrcamento(){
+function carregarProdutosOrcamento(){
 
-let area =
-document.getElementById("categoriasOrcamento");
+let area = document.getElementById("listaOrcamentoProdutos");
+
+if(!area) return;
 
 area.innerHTML = "";
 
@@ -1148,60 +1141,87 @@ for(let categoria in catalogo){
 
 area.innerHTML += `
 
-<div class="categoria"
-onclick="abrirCategoriaOrcamento('${categoria}')">
-
+<div style="
+grid-column:span 2;
+margin-top:25px;
+margin-bottom:10px;
+padding:10px;
+background:#2c3e50;
+color:white;
+font-size:20px;
+font-weight:bold;
+border-radius:10px;
+">
 ${categoria}
+</div>
+
+`;
+
+catalogo[categoria].forEach(produto=>{
+
+area.innerHTML += `
+
+<div style="
+background:#eef5ff;
+border:1px solid #d6e4ff;
+padding:10px;
+border-radius:10px;
+display:flex;
+flex-direction:column;
+gap:10px;
+box-shadow:0 2px 4px rgba(0,0,0,0.08);
+">
+
+<div style="
+font-size:14px;
+font-weight:bold;
+line-height:1.4;
+color:#2c3e50;
+">
+${produto}
+</div>
+
+<button onclick="adicionarOrcamento('${produto}')"
+style="
+background:#2980b9;
+color:white;
+border:none;
+padding:8px;
+border-radius:8px;
+cursor:pointer;
+font-size:15px;
+font-weight:bold;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+width:100%;
+">
+
++ Adicionar
+
+</button>
 
 </div>
 
 `;
 
+});
+
 }
 
-
-E TROQUE POR ESTE:
-
-javascript
-javascript id="p4s7m9"
 }
-
 function adicionarOrcamento(produto){
 
 let qtd = prompt("Quantidade:");
 
 if(!qtd) return;
 
-qtd = parseFloat(
-qtd.toString().replace(",", ".")
-);
-
 let preco = prompt("Preço Unitário:");
 
 if(!preco) return;
 
-preco = parseFloat(
-preco.toString().replace(",", ".")
-);
+preco = parseFloat(preco);
 
 let total = qtd * preco;
 
-orcamentoInterno.push({
-produto,
-qtd,
-preco,
-total
-});
-
-mostrarOrcamento();
-
-}
-
-
-
-
-
-let total = qtd * preco;
 orcamentoInterno.push({
 produto,
 qtd,
@@ -1326,63 +1346,6 @@ mostrarOrcamento();
 }
 
 });
- function abrirCategoriaOrcamento(categoria){
-
-let area =
-document.getElementById("listaOrcamentoProdutos");
-
-area.innerHTML = "";
-
-catalogo[categoria].forEach(produto=>{
-
-area.innerHTML += `
-
-<div style="
-background:#eef5ff;
-border:1px solid #d6e4ff;
-padding:10px;
-border-radius:10px;
-display:flex;
-flex-direction:column;
-gap:10px;
-box-shadow:0 2px 4px rgba(0,0,0,0.08);
-">
-
-<div style="
-font-size:14px;
-font-weight:bold;
-line-height:1.4;
-color:#2c3e50;
-">
-
-${produto}
-
-</div>
-
-<button onclick="adicionarOrcamento('${produto}')"
-style="
-background:#27ae60;
-color:white;
-border:none;
-padding:10px;
-border-radius:8px;
-cursor:pointer;
-font-size:15px;
-font-weight:bold;
-width:100%;
-">
-
-+ Adicionar
-
-</button>
-
-</div>
-
-`;
-
-});
-
-} 
 carregarCategorias();
 
 </script>
