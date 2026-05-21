@@ -1219,11 +1219,32 @@ let preco = prompt("Preço Unitário:");
 if(!preco) return;
 
 
-preco = parseFloat(
-preco
+```javascript
+preco = preco.toString().trim();
+
+if(preco.includes(",") && preco.includes(".")){
+
+if(preco.lastIndexOf(",") > preco.lastIndexOf(".")){
+
+preco = preco
 .replace(/\./g,"")
-.replace(",",".")
-);
+.replace(",", ".");
+
+}else{
+
+preco = preco.replace(/,/g,"");
+
+}
+
+}else if(preco.includes(",")){
+
+preco = preco.replace(",", ".");
+
+}
+
+preco = parseFloat(preco);
+```
+
 
 
 
