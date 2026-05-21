@@ -1218,7 +1218,14 @@ let preco = prompt("Preço Unitário:");
 
 if(!preco) return;
 
-preco = parseFloat(preco);
+javascript id="v0ak2c"
+preco = parseFloat(
+preco
+.replace(/\./g,"")
+.replace(",",".")
+);
+
+
 
 let total = qtd * preco;
 
