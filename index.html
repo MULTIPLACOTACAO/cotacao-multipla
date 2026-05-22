@@ -503,6 +503,17 @@ margin-bottom:20px;
 ">
 ORÇAMENTO INTERNO
 </h3>
+<input id="pesquisaProdutoOrcamento"
+placeholder="Pesquisar produto..."
+oninput="carregarProdutosOrcamento()"
+style="
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:8px;
+">
+
 
 <div id="listaOrcamentoProdutos"
 style="
@@ -1044,10 +1055,21 @@ let termo=document
 let area=document.getElementById("produtos");
 
 area.innerHTML="";
+let filtro = document
+.getElementById("pesquisaProdutoOrcamento")
+?.value
+.toLowerCase() || "";
+
 
 for(let categoria in catalogo){
 
-catalogo[categoria].forEach(produto=>{
+catalogo[categoria]
+.filter(produto =>
+produto.toLowerCase().includes(filtro)
+)
+.forEach(produto=>{
+
+
 
 if(produto.toLowerCase().includes(termo)){
 
