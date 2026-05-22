@@ -503,16 +503,38 @@ margin-bottom:20px;
 ">
 ORÇAMENTO INTERNO
 </h3>
+<div style="
+display:flex;
+gap:10px;
+margin-bottom:15px;
+">
+
 <input id="pesquisaProdutoOrcamento"
 placeholder="Pesquisar produto..."
-oninput="carregarProdutosOrcamento()"
 style="
-width:100%;
+flex:1;
 padding:12px;
-margin-bottom:15px;
 border:1px solid #ccc;
 border-radius:8px;
 ">
+
+<button onclick="carregarProdutosOrcamento()"
+style="
+padding:12px 20px;
+background:#3498db;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+">
+
+Buscar
+
+</button>
+
+</div>
+
+
 
 
 <div id="listaOrcamentoProdutos"
