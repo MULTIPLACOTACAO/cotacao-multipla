@@ -1610,19 +1610,57 @@ width:100%;
 }  
 function gerarPDF(){
 
-let texto = "ORÇAMENTO\n\n";
+const { jsPDF } = window.jspdf;
+
+const doc = new jsPDF();
+
+let data = new Date();
+
+let dataAtual =
+data.toLocaleDateString("pt-BR");
+
+let cliente =
+document.getElementById("nomeFantasia").value || "Cliente";
 
 let total = 0;
 
+doc.setFontSize(22);
+doc.setTextColor(44,62,80);
+doc.text("MULTIPLA COTAÇÃO", 20, 20);
+
+doc.setFontSize(12);
+doc.setTextColor(100);
+
+doc.text("Data: " + dataAtual, 20, 35);
+
+doc.text("Cliente: " + cliente, 20, 43);
+
+doc.setDrawColor(200);
+doc.line(20, 48, 190, 48);
+
+let y = 60;
+
 orcamentoInterno.forEach(item=>{
 
-texto += item.produto + "\n";
+doc.setFontSize(12);
 
-texto += "Qtd: " + item.qtd + "\n";
+doc.setTextColor(40);
 
-texto += "Preço: R$ " + item.preco.toFixed(2) + "\n";
+doc.text(item.produto, 20, y);
 
-texto += "Total: R$ " + item.total.toFixed(2) + "\n\n";
+y += 7;
+
+doc.text(
+"Qtd: " + item.qtd +
+" | Unitário: R$ " +
+item.preco.toFixed(2) +
+" | Total: R$ " +
+item.total.toFixed(2),
+20,
+y
+);
+
+y += 12;
 
 total += item.total;
 
@@ -1634,25 +1672,27 @@ document.getElementById("freteValor").value
 
 total += frete;
 
-texto += "Frete: R$ " + frete.toFixed(2) + "\n";
+doc.setDrawColor(180);
 
-texto += "TOTAL GERAL: R$ " + total.toFixed(2);
+doc.line(20, y, 190, y);
 
-const { jsPDF } = window.jspdf;
-
-const doc = new jsPDF();
+y += 15;
 
 doc.setFontSize(16);
 
-doc.text("MULTIPLA COTAÇÃO", 20, 20);
+doc.setTextColor(39,174,96);
 
-doc.setFontSize(12);
-
-doc.text(texto, 20, 40);
+doc.text(
+"TOTAL GERAL: R$ " + total.toFixed(2),
+20,
+y
+);
 
 doc.save("orcamento.pdf");
 
 }
+
+
   
 carregarCategorias();
 
