@@ -266,7 +266,12 @@ color:white;
 CRM COMERCIAL
 
 </h3>
-
+<h3 style="
+color:#2c3e50;
+margin-bottom:10px;
+">
+Pesquisar Cliente
+</h3>
 <input id="pesquisaCliente"
 placeholder="Pesquisar cliente..."
 oninput="mostrarClientes()"
@@ -277,7 +282,24 @@ margin-bottom:15px;
 border:1px solid #ccc;
 border-radius:8px;
 ">
+<button onclick="toggleCadastroCliente()" style="
+background:#3498db;
+color:white;
+padding:12px;
+border:none;
+border-radius:8px;
+width:100%;
+font-size:16px;
+cursor:pointer;
+font-weight:bold;
+margin-bottom:15px;
+">
 
++ CADASTRAR CLIENTE
+
+</button>
+
+<div id="areaCadastroCliente" style="display:none;">
 <select id="tipoCliente"
 style="
 width:100%;
@@ -480,7 +502,7 @@ font-weight:bold;
 SALVAR CLIENTE
 
 </button>
-
+</div>
 <div id="listaClientes"
 style="
 margin-top:20px;
@@ -767,7 +789,7 @@ JSON.stringify(clientes)
 mostrarClientes();
 
 limparCampos();
-
+document.getElementById("areaCadastroCliente").style.display = "none";
 }
 
 function mostrarClientes(){
@@ -868,6 +890,8 @@ ${c.cidade} - ${c.estado}
 
 <td style="padding:12px">
 
+<td style="padding:12px">
+
 <a href="https://wa.me/${c.telefone}" target="_blank">
 
 ${c.telefone}
@@ -878,7 +902,7 @@ ${c.telefone}
 
 <td style="padding:12px">
 
-${c.email || "-"}
+${c.email}
 
 </td>
 
@@ -1003,7 +1027,21 @@ JSON.stringify(clientes)
 mostrarClientes();
 
 }
+function toggleCadastroCliente(){
 
+let area = document.getElementById("areaCadastroCliente");
+
+if(area.style.display === "none"){
+
+area.style.display = "block";
+
+}else{
+
+area.style.display = "none";
+
+}
+
+}
 function limparCampos(){
 
 document.getElementById("nomeFantasia").value = "";
