@@ -484,7 +484,6 @@ SALVAR CLIENTE
 <div id="listaClientes"
 style="
 margin-top:20px;
-id="0pjlwm"
 max-height:250px;
 overflow-y:auto;
 border:1px solid #ddd;
@@ -746,6 +745,10 @@ cidade: document.getElementById("cidadeCliente").value,
 
 grupo: document.getElementById("grupoCliente").value,
 
+concorrentePrincipal: document.getElementById("concorrentePrincipal").value,
+
+outrosConcorrentes: document.getElementById("outrosConcorrentes").value,
+
 classificacao: document.getElementById("classificacao").value,
 
 compraDesde: document.getElementById("compraDesde").value,
@@ -826,6 +829,7 @@ color:white;
 <th style="padding:12px">Cliente</th>
 <th style="padding:12px">Cidade</th>
 <th style="padding:12px">WhatsApp</th>
+<th style="padding:12px">E-mail</th>
 <th style="padding:12px">Grupo</th>
 <th style="padding:12px">Concorrente</th>
 <th style="padding:12px">Classificação</th>
@@ -869,6 +873,12 @@ ${c.cidade} - ${c.estado}
 ${c.telefone}
 
 </a>
+
+</td>
+
+<td style="padding:12px">
+
+${c.email || "-"}
 
 </td>
 
