@@ -1451,6 +1451,95 @@ mostrarOrcamento();
 }
 
 });
+function filtrarProdutosOrcamento(){
+
+let termo = document
+.getElementById("pesquisaProdutoOrcamento")
+.value
+.toLowerCase();
+
+let area = document.getElementById("listaOrcamentoProdutos");
+
+area.innerHTML = "";
+
+for(let categoria in catalogo){
+
+let produtosFiltrados = catalogo[categoria].filter(produto =>
+produto.toLowerCase().includes(termo)
+);
+
+if(produtosFiltrados.length > 0){
+
+area.innerHTML += `
+
+<div style="
+grid-column:span 2;
+margin-top:25px;
+margin-bottom:10px;
+padding:10px;
+background:#2c3e50;
+color:white;
+font-size:20px;
+font-weight:bold;
+border-radius:10px;
+">
+${categoria}
+</div>
+
+`;
+
+produtosFiltrados.forEach(produto=>{
+
+area.innerHTML += `
+
+<div style="
+background:white;
+border:1px solid #ddd;
+padding:10px;
+border-radius:10px;
+display:flex;
+flex-direction:column;
+gap:10px;
+box-shadow:0 2px 4px rgba(0,0,0,0.08);
+">
+
+<div style="
+font-size:14px;
+font-weight:bold;
+line-height:1.4;
+color:#2c3e50;
+">
+${produto}
+</div>
+
+<button onclick="adicionarOrcamento('${produto}')"
+style="
+background:#2980b9;
+color:white;
+border:none;
+padding:8px;
+border-radius:8px;
+cursor:pointer;
+font-size:15px;
+font-weight:bold;
+width:100%;
+">
+
++ Adicionar
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+}
+
+}  
 carregarCategorias();
 
 </script>
