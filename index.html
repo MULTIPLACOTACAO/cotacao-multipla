@@ -1063,11 +1063,20 @@ let filtro = document
 
 for(let categoria in catalogo){
 
-catalogo[categoria]
+let produtosFiltrados = catalogo[categoria]
 .filter(produto =>
 produto.toLowerCase().includes(filtro)
-)
-.forEach(produto=>{
+);
+
+if(produtosFiltrados.length === 0){
+continue;
+}
+
+
+
+produtosFiltrados.forEach(produto=>{
+
+
 
 
 
