@@ -1608,6 +1608,52 @@ width:100%;
 }
 
 }  
+function gerarPDF(){
+
+let texto = "ORÇAMENTO\n\n";
+
+let total = 0;
+
+orcamentoInterno.forEach(item=>{
+
+texto += item.produto + "\n";
+
+texto += "Qtd: " + item.qtd + "\n";
+
+texto += "Preço: R$ " + item.preco.toFixed(2) + "\n";
+
+texto += "Total: R$ " + item.total.toFixed(2) + "\n\n";
+
+total += item.total;
+
+});
+
+let frete = parseFloat(
+document.getElementById("freteValor").value
+) || 0;
+
+total += frete;
+
+texto += "Frete: R$ " + frete.toFixed(2) + "\n";
+
+texto += "TOTAL GERAL: R$ " + total.toFixed(2);
+
+const { jsPDF } = window.jspdf;
+
+const doc = new jsPDF();
+
+doc.setFontSize(16);
+
+doc.text("MULTIPLA COTAÇÃO", 20, 20);
+
+doc.setFontSize(12);
+
+doc.text(texto, 20, 40);
+
+doc.save("orcamento.pdf");
+
+}
+  
 carregarCategorias();
 
 </script>
