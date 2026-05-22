@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="logo_512.png">
@@ -596,6 +598,23 @@ margin-bottom:15px;
 TOTAL: R$ 0,00
 </h2>
 
+```html
+<button onclick="gerarPDF()"
+style="
+background:#e74c3c;
+color:white;
+padding:14px;
+border:none;
+border-radius:8px;
+width:100%;
+font-size:16px;
+cursor:pointer;
+font-weight:bold;
+margin-bottom:10px;
+">
+GERAR PDF DO ORÇAMENTO
+</button>
+
 <button onclick="gerarOrcamentoWhats()"
 style="
 background:#25D366;
@@ -610,6 +629,8 @@ font-weight:bold;
 ">
 GERAR ORÇAMENTO WHATSAPP
 </button>
+```
+
 
 </div>
 
