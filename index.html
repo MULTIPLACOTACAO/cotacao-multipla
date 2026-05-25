@@ -526,16 +526,17 @@ margin-bottom:20px;
 ">
 ORÇAMENTO INTERNO
 </h3>
-<select id="clienteOrcamento"
+<input
+<select
+id="clienteOrcamento"
 style="
 width:100%;
 padding:12px;
-margin-bottom:15px;
+margin-bottom:10px;
 border-radius:8px;
 border:1px solid #ccc;
 ">
 <option value="">SEM CLIENTE</option>
-
 </select>
 
  
@@ -825,32 +826,10 @@ mostrarClientes();
 
 carregarClientesOrcamento();
 
-carregarClientesOrcamento();
 
 
 limparCampos();
 document.getElementById("areaCadastroCliente").style.display = "none";
-}
-function carregarClientesOrcamento(){
-
-let select = document.getElementById("clienteOrcamento");
-
-if(!select) return;
-
-select.innerHTML = `
-<option value="">SEM CLIENTE</option>
-`;
-
-clientes.forEach(c => {
-
-select.innerHTML += `
-<option value="${c.nomeFantasia}">
-${c.nomeFantasia}
-</option>
-`;
-
-});
-
 }
 
 
@@ -1060,7 +1039,11 @@ document.getElementById("emailCliente").value = c.email;
 document.getElementById("estadoCliente").value = c.estado;
 
 document.getElementById("cidadeCliente").value = c.cidade;
-
+document.getElementById("enderecoCliente").value = c.endereco;
+document.getElementById("bairroCliente").value = c.bairro;
+document.getElementById("cepCliente").value = c.cep;
+document.getElementById("concorrentePrincipal").value = c.concorrentePrincipal;
+document.getElementById("outrosConcorrentes").value = c.outrosConcorrentes;
 document.getElementById("grupoCliente").value = c.grupo;
 
 document.getElementById("classificacao").value = c.classificacao;
@@ -1692,42 +1675,42 @@ ${c.nomeFantasia}
 }
 
  
+```javascript
 function gerarPDF(){
 
 const { jsPDF } = window.jspdf;
 
 const doc = new jsPDF();
+
 const logo = new Image();
 
 logo.src = "logo_512.png";
+
+logo.onload = function(){
+
 let data = new Date();
 
 let dataAtual =
 data.toLocaleDateString("pt-BR");
 
+let clienteSelect =
+document.getElementById("clienteOrcamento");
 
-let clienteSelect = document.getElementById("clienteOrcamento");
-
-let cliente = "";
-
-if(clienteSelect){
-
-cliente = clienteSelect.value;
-
-}
-
-
-
-
+let cliente = clienteSelect
+? clienteSelect.value
+: "";
 
 let total = 0;
+
 doc.addImage(logo, "PNG", 150, 10, 40, 40);
 
 doc.setFontSize(22);
 doc.setTextColor(44,62,80);
+
 doc.text("MULTIPLA COTAÇÃO", 20, 20);
 
 doc.setFontSize(12);
+
 doc.setTextColor(100);
 
 doc.text("Data: " + dataAtual, 20, 35);
@@ -1735,6 +1718,7 @@ doc.text("Data: " + dataAtual, 20, 35);
 doc.text("Cliente: " + cliente, 20, 43);
 
 doc.setDrawColor(200);
+
 doc.line(20, 48, 190, 48);
 
 let y = 60;
@@ -1789,7 +1773,14 @@ y
 
 doc.save("orcamento.pdf");
 
+};
+
 }
+```
+
+
+
+let clienteSelecionado = "";
 
 
   
