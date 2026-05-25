@@ -1613,7 +1613,9 @@ function gerarPDF(){
 const { jsPDF } = window.jspdf;
 
 const doc = new jsPDF();
+const logo = new Image();
 
+logo.src = "logo_512.png";
 let data = new Date();
 
 let dataAtual =
@@ -1623,6 +1625,7 @@ let cliente =
 document.getElementById("nomeFantasia").value || "Cliente";
 
 let total = 0;
+doc.addImage(logo, "PNG", 150, 10, 40, 40);
 
 doc.setFontSize(22);
 doc.setTextColor(44,62,80);
