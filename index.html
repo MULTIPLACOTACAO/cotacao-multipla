@@ -768,6 +768,8 @@ return;
 document.getElementById("crmArea").style.display = "block";
 carregarProdutosOrcamento();
 mostrarClientes();
+carregarClientesOrcamento();
+
 
 }
 
@@ -1520,8 +1522,17 @@ mostrarOrcamento();
 
 }
 function gerarOrcamentoWhats(){
-let cliente =
-document.getElementById("clienteOrcamento").value || "SEM CLIENTE";
+let clienteSelect = document.getElementById("clienteOrcamento");
+
+let cliente = "";
+
+if(clienteSelect){
+
+cliente = clienteSelect.value;
+
+}
+
+
 
 
 let msg = "ORÇAMENTO:%0A";
@@ -1659,6 +1670,29 @@ width:100%;
 }
 
 }  
+function carregarClientesOrcamento(){
+
+let select = document.getElementById("clienteOrcamento");
+
+if(!select) return;
+
+select.innerHTML = `
+<option value="">SEM CLIENTE</option>
+`;
+
+clientes.forEach(c => {
+
+select.innerHTML += `
+<option value="${c.nomeFantasia}">
+${c.nomeFantasia}
+</option>
+`;
+
+});
+
+}
+
+ 
 function gerarPDF(){
 
 const { jsPDF } = window.jspdf;
@@ -1672,8 +1706,18 @@ let data = new Date();
 let dataAtual =
 data.toLocaleDateString("pt-BR");
 
-let cliente =
-document.getElementById("clienteOrcamento").value || "SEM CLIENTE";
+
+let clienteSelect = document.getElementById("clienteOrcamento");
+
+let cliente = "";
+
+if(clienteSelect){
+
+cliente = clienteSelect.value;
+
+}
+
+
 
 
 
