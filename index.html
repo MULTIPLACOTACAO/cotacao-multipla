@@ -526,19 +526,6 @@ margin-bottom:20px;
 ">
 ORÇAMENTO INTERNO
 </h3>
-<select
-id="clienteOrcamento"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-<option value="">SEM CLIENTE</option>
-</select>
-
- 
 <div style="
 display:flex;
 gap:10px;
@@ -767,8 +754,6 @@ return;
 document.getElementById("crmArea").style.display = "block";
 carregarProdutosOrcamento();
 mostrarClientes();
-carregarClientesOrcamento();
-
 
 }
 
@@ -778,31 +763,39 @@ let cliente = {
 
 tipo: document.getElementById("tipoCliente").value,
 
-function limparCampos(){
+nomeFantasia: document.getElementById("nomeFantasia").value,
 
-document.getElementById("nomeFantasia").value = "";
+razaoSocial: document.getElementById("razaoSocial").value,
 
-document.getElementById("razaoSocial").value = "";
+cpfCnpj: document.getElementById("cpfCnpj").value,
 
-document.getElementById("cpfCnpj").value = "";
+comprador: document.getElementById("comprador").value,
 
-document.getElementById("comprador").value = "";
+telefone: document.getElementById("telefoneCliente").value,
 
-document.getElementById("telefoneCliente").value = "";
+email: document.getElementById("emailCliente").value,
 
-document.getElementById("emailCliente").value = "";
+estado: document.getElementById("estadoCliente").value,
 
-document.getElementById("estadoCliente").value = "";
+endereco: document.getElementById("enderecoCliente").value,
 
-document.getElementById("cidadeCliente").value = "";
+bairro: document.getElementById("bairroCliente").value,
 
-document.getElementById("grupoCliente").value = "";
+cep: document.getElementById("cepCliente").value,
 
-document.getElementById("compraDesde").value = "";
+cidade: document.getElementById("cidadeCliente").value,
 
-document.getElementById("obsCliente").value = "";
+grupo: document.getElementById("grupoCliente").value,
 
-}
+concorrentePrincipal: document.getElementById("concorrentePrincipal").value,
+
+outrosConcorrentes: document.getElementById("outrosConcorrentes").value,
+
+classificacao: document.getElementById("classificacao").value,
+
+compraDesde: document.getElementById("compraDesde").value,
+
+obs: document.getElementById("obsCliente").value
 
 };
 
@@ -815,14 +808,9 @@ JSON.stringify(clientes)
 
 mostrarClientes();
 
-carregarClientesOrcamento();
-
-
-
 limparCampos();
 document.getElementById("areaCadastroCliente").style.display = "none";
 }
-
 
 function mostrarClientes(){
 
@@ -1030,11 +1018,7 @@ document.getElementById("emailCliente").value = c.email;
 document.getElementById("estadoCliente").value = c.estado;
 
 document.getElementById("cidadeCliente").value = c.cidade;
-document.getElementById("enderecoCliente").value = c.endereco;
-document.getElementById("bairroCliente").value = c.bairro;
-document.getElementById("cepCliente").value = c.cep;
-document.getElementById("concorrentePrincipal").value = c.concorrentePrincipal;
-document.getElementById("outrosConcorrentes").value = c.outrosConcorrentes;
+
 document.getElementById("grupoCliente").value = c.grupo;
 
 document.getElementById("classificacao").value = c.classificacao;
@@ -1081,13 +1065,15 @@ area.style.display = "none";
 }
 
 }
+function limparCampos(){
+
 document.getElementById("nomeFantasia").value = "";
 
 document.getElementById("razaoSocial").value = "";
 
 document.getElementById("cpfCnpj").value = "";
 
-document.getElementById("comprador").value = "";comessa aqui 
+document.getElementById("comprador").value = "";
 
 document.getElementById("telefoneCliente").value = "";
 
@@ -1103,6 +1089,7 @@ document.getElementById("compraDesde").value = "";
 
 document.getElementById("obsCliente").value = "";
 
+}
 
 function carregarCategorias(){
 
@@ -1492,24 +1479,8 @@ mostrarOrcamento();
 
 }
 function gerarOrcamentoWhats(){
-let clienteSelect = document.getElementById("clienteOrcamento");
 
-let cliente = "";
-
-if(clienteSelect){
-
-cliente = clienteSelect.value;
-
-}
-
-
-
-
-let msg = "ORÇAMENTO:%0A";
-
-msg += "Cliente: " + cliente + "%0A%0A";
-
-
+let msg = "ORÇAMENTO:%0A%0A";
 
 orcamentoInterno.forEach(item=>{
 
@@ -1640,65 +1611,30 @@ width:100%;
 }
 
 }  
-function carregarClientesOrcamento(){
-
-let select = document.getElementById("clienteOrcamento");
-
-if(!select) return;
-
-select.innerHTML = `
-<option value="">SEM CLIENTE</option>
-`;
-
-clientes.forEach(c => {
-
-select.innerHTML += `
-<option value="${c.nomeFantasia}">
-${c.nomeFantasia}
-</option>
-`;
-
-});
-
-}
-
- 
-
 function gerarPDF(){
 
 const { jsPDF } = window.jspdf;
 
 const doc = new jsPDF();
-
 const logo = new Image();
 
 logo.src = "logo_512.png";
-
-logo.onload = function(){
-
 let data = new Date();
 
 let dataAtual =
 data.toLocaleDateString("pt-BR");
 
-let clienteSelect =
-document.getElementById("clienteOrcamento");
-
-let cliente = clienteSelect
-? clienteSelect.value
-: "";
+let cliente =
+document.getElementById("nomeFantasia").value || "Cliente";
 
 let total = 0;
-
 doc.addImage(logo, "PNG", 150, 10, 40, 40);
 
 doc.setFontSize(22);
 doc.setTextColor(44,62,80);
-
 doc.text("MULTIPLA COTAÇÃO", 20, 20);
 
 doc.setFontSize(12);
-
 doc.setTextColor(100);
 
 doc.text("Data: " + dataAtual, 20, 35);
@@ -1706,7 +1642,6 @@ doc.text("Data: " + dataAtual, 20, 35);
 doc.text("Cliente: " + cliente, 20, 43);
 
 doc.setDrawColor(200);
-
 doc.line(20, 48, 190, 48);
 
 let y = 60;
@@ -1761,14 +1696,7 @@ y
 
 doc.save("orcamento.pdf");
 
-};
-
 }
-
-
-
-
-let clienteSelecionado = "";
 
 
   
