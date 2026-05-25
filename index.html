@@ -526,6 +526,20 @@ margin-bottom:20px;
 ">
 ORÇAMENTO INTERNO
 </h3>
+<select id="clienteOrcamento"
+style="
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border-radius:8px;
+border:1px solid #ccc;
+">
+
+<option value="">SEM CLIENTE</option>
+
+</select>
+
+ 
 <div style="
 display:flex;
 gap:10px;
@@ -808,9 +822,36 @@ JSON.stringify(clientes)
 
 mostrarClientes();
 
+carregarClientesOrcamento();
+
+carregarClientesOrcamento();
+
+
 limparCampos();
 document.getElementById("areaCadastroCliente").style.display = "none";
 }
+function carregarClientesOrcamento(){
+
+let select = document.getElementById("clienteOrcamento");
+
+if(!select) return;
+
+select.innerHTML = `
+<option value="">SEM CLIENTE</option>
+`;
+
+clientes.forEach(c => {
+
+select.innerHTML += `
+<option value="${c.nomeFantasia}">
+${c.nomeFantasia}
+</option>
+`;
+
+});
+
+}
+
 
 function mostrarClientes(){
 
@@ -1479,8 +1520,15 @@ mostrarOrcamento();
 
 }
 function gerarOrcamentoWhats(){
+let cliente =
+document.getElementById("clienteOrcamento").value || "SEM CLIENTE";
 
-let msg = "ORÇAMENTO:%0A%0A";
+
+let msg = "ORÇAMENTO:%0A";
+
+msg += "Cliente: " + cliente + "%0A%0A";
+
+
 
 orcamentoInterno.forEach(item=>{
 
@@ -1625,7 +1673,9 @@ let dataAtual =
 data.toLocaleDateString("pt-BR");
 
 let cliente =
-document.getElementById("nomeFantasia").value || "Cliente";
+document.getElementById("clienteOrcamento").value || "SEM CLIENTE";
+
+
 
 let total = 0;
 doc.addImage(logo, "PNG", 150, 10, 40, 40);
