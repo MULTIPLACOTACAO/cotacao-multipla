@@ -968,6 +968,23 @@ ${c.classificacao}
 <td style="padding:12px">
 
 <button onclick="editarCliente(${index})"
+<br><br>
+
+<button onclick="selecionarCliente(${index})"
+style="
+background:#27ae60;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:5px;
+cursor:pointer;
+">
+
+Selecionar
+
+</button>
+
+
 style="
 background:#f39c12;
 color:white;
@@ -1014,6 +1031,17 @@ Remover
 
 }
 
+
+function selecionarCliente(index){
+
+clienteSelecionado = clientes[index];
+
+alert(
+"Cliente selecionado: " +
+clienteSelecionado.nomeFantasia
+);
+
+}
 
 
 function editarCliente(index){
@@ -1655,8 +1683,16 @@ let data = new Date();
 let dataAtual =
 data.toLocaleDateString("pt-BR");
 
-let cliente =
-document.getElementById("nomeFantasia").value || "Cliente";
+let cliente = "SEM CLIENTE";
+
+if(clienteSelecionado){
+
+cliente =
+clienteSelecionado.nomeFantasia || "SEM CLIENTE";
+
+}
+
+
 
 let total = 0;
 doc.addImage(logo, "PNG", 150, 10, 40, 40);
