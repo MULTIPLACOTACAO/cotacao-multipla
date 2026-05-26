@@ -741,6 +741,9 @@ const catalogo = {
 let carrinho=[];
 let orcamentoInterno = [];
 let clientes = JSON.parse(localStorage.getItem("clientesCRM")) || [];
+let clienteEditando = -1;
+let clienteSelecionado = null;
+
 
 function abrirCRM(){
 
@@ -779,38 +782,9 @@ estado: document.getElementById("estadoCliente").value,
 
 endereco: document.getElementById("enderecoCliente").value,
 
-bairro: document.getElementById("bairroCliente").value,
+bairro: document
 
-cep: document.getElementById("cepCliente").value,
 
-cidade: document.getElementById("cidadeCliente").value,
-
-grupo: document.getElementById("grupoCliente").value,
-
-concorrentePrincipal: document.getElementById("concorrentePrincipal").value,
-
-outrosConcorrentes: document.getElementById("outrosConcorrentes").value,
-
-classificacao: document.getElementById("classificacao").value,
-
-compraDesde: document.getElementById("compraDesde").value,
-
-obs: document.getElementById("obsCliente").value
-
-};
-
-clientes.push(cliente);
-
-localStorage.setItem(
-"clientesCRM",
-JSON.stringify(clientes)
-);
-
-mostrarClientes();
-
-limparCampos();
-document.getElementById("areaCadastroCliente").style.display = "none";
-}
 
 function mostrarClientes(){
 
@@ -997,46 +971,59 @@ Remover
 }
 
 
+
 function editarCliente(index){
 
 let c = clientes[index];
 
-document.getElementById("tipoCliente").value = c.tipo;
+clienteEditando = index;
 
-document.getElementById("nomeFantasia").value = c.nomeFantasia;
+document.getElementById("tipoCliente").value = c.tipo || "";
 
-document.getElementById("razaoSocial").value = c.razaoSocial;
+document.getElementById("nomeFantasia").value = c.nomeFantasia || "";
 
-document.getElementById("cpfCnpj").value = c.cpfCnpj;
+document.getElementById("razaoSocial").value = c.razaoSocial || "";
 
-document.getElementById("comprador").value = c.comprador;
+document.getElementById("cpfCnpj").value = c.cpfCnpj || "";
 
-document.getElementById("telefoneCliente").value = c.telefone;
+document.getElementById("comprador").value = c.comprador || "";
 
-document.getElementById("emailCliente").value = c.email;
+document.getElementById("telefoneCliente").value = c.telefone || "";
 
-document.getElementById("estadoCliente").value = c.estado;
+document.getElementById("emailCliente").value = c.email || "";
 
-document.getElementById("cidadeCliente").value = c.cidade;
+document.getElementById("estadoCliente").value = c.estado || "";
 
-document.getElementById("grupoCliente").value = c.grupo;
+document.getElementById("enderecoCliente").value = c.endereco || "";
 
-document.getElementById("classificacao").value = c.classificacao;
+document.getElementById("bairroCliente").value = c.bairro || "";
 
-document.getElementById("compraDesde").value = c.compraDesde;
+document.getElementById("cepCliente").value = c.cep || "";
 
-document.getElementById("obsCliente").value = c.obs;
+document.getElementById("cidadeCliente").value = c.cidade || "";
 
-clientes.splice(index,1);
+document.getElementById("grupoCliente").value = c.grupo || "";
 
-localStorage.setItem(
-"clientesCRM",
-JSON.stringify(clientes)
-);
+document.getElementById("concorrentePrincipal").value = c.concorrentePrincipal || "";
 
-mostrarClientes();
+document.getElementById("outrosConcorrentes").value = c.outrosConcorrentes || "";
+
+document.getElementById("classificacao").value = c.classificacao || "";
+
+document.getElementById("compraDesde").value = c.compraDesde || "";
+
+document.getElementById("obsCliente").value = c.obs || "";
+
+document.getElementById("areaCadastroCliente").style.display = "block";
+
+window.scrollTo({
+top: document.getElementById("areaCadastroCliente").offsetTop - 50,
+behavior: "smooth"
+});
 
 }
+
+
 
 function removerCliente(index){
 
