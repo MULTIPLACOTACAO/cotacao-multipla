@@ -262,7 +262,7 @@ margin-top:10px;
 
 <h3 style="
 margin-bottom:20px;
-color:white;
+color:#2c3e50;
 ">
 
 CRM COMERCIAL
@@ -775,7 +775,10 @@ cpfCnpj: document.getElementById("cpfCnpj").value,
 
 comprador: document.getElementById("comprador").value,
 
-telefone: document.getElementById("telefoneCliente").value,
+telefone: document
+.getElementById("telefoneCliente")
+.value
+.replace(/\D/g,''),
 
 email: document.getElementById("emailCliente").value,
 
@@ -982,7 +985,6 @@ Editar
 
 <br><br>
 
-
 <button onclick="selecionarCliente(${index})"
 style="
 background:#27ae60;
@@ -991,28 +993,12 @@ border:none;
 padding:6px 10px;
 border-radius:5px;
 cursor:pointer;
-">
-
-Selecionar
-
-</button>
-
-
-style="
-background:#f39c12;
-color:white;
-border:none;
-padding:6px 10px;
-border-radius:5px;
-cursor:pointer;
 margin-bottom:5px;
 ">
-
-Editar
-
+Selecionar
 </button>
 
-<br>
+<br><br>
 
 <button onclick="removerCliente(${index})"
 style="
@@ -1023,12 +1009,11 @@ padding:6px 10px;
 border-radius:5px;
 cursor:pointer;
 ">
-
 Remover
-
 </button>
 
 </td>
+
 
 </tr>
 
@@ -1195,7 +1180,7 @@ area.innerHTML += `
 <td>${p}</td>
 
 <td>
-<input type="number" id="${p}">
+<input type="number" id="${btoa(p)}">
 </td>
 
 <td>
@@ -1221,10 +1206,6 @@ let termo=document
 let area=document.getElementById("produtos");
 
 area.innerHTML="";
-let filtro = document
-.getElementById("pesquisaProdutoOrcamento")
-?.value
-.toLowerCase() || "";
 
 
 for(let categoria in catalogo){
@@ -1276,7 +1257,7 @@ Adicionar
 
 function add(prod){
 
-let q=document.getElementById(prod).value;
+let q=document.getElementById(btoa(prod)).value;
 
 if(!q)return;
 
@@ -1683,14 +1664,19 @@ width:100%;
 }
 
 }  
+
 function gerarPDF(){
 
 const { jsPDF } = window.jspdf;
 
 const doc = new jsPDF();
+
 const logo = new Image();
 
 logo.src = "logo_512.png";
+
+logo.onload = function(){
+
 let data = new Date();
 
 let dataAtual =
@@ -1704,6 +1690,82 @@ cliente =
 clienteSelecionado.nomeFantasia || "SEM CLIENTE";
 
 }
+
+let total = 0;
+
+doc.addImage(logo, "PNG", 150, 10, 40, 40);
+
+doc.setFontSize(22);
+doc.setTextColor(44,62,80);
+doc.text("MULTIPLA COTAÇÃO", 20, 20);
+
+doc.setFontSize(12);
+doc.setTextColor(100);
+
+doc.text("Data: " + dataAtual, 20, 35);
+
+doc.text("Cliente: " + cliente, 20, 43);
+
+doc.setDrawColor(200);
+doc.line(20, 48, 190, 48);
+
+let y = 60;
+
+orcamentoInterno.forEach(item=>{
+
+doc.setFontSize(12);
+
+doc.setTextColor(40);
+
+doc.text(item.produto, 20, y);
+
+y += 7;
+
+doc.text(
+"Qtd: " + item.qtd +
+" | Unitário: R$ " +
+item.preco.toFixed(2) +
+" | Total: R$ " +
+item.total.toFixed(2),
+20,
+y
+);
+
+y += 12;
+
+total += item.total;
+
+});
+
+let frete = parseFloat(
+document.getElementById("freteValor").value
+) || 0;
+
+total += frete;
+
+doc.setDrawColor(180);
+
+doc.line(20, y, 190, y);
+
+y += 15;
+
+doc.setFontSize(16);
+
+doc.setTextColor(39,174,96);
+
+doc.text(
+"TOTAL GERAL: R$ " + total.toFixed(2),
+20,
+y
+);
+
+doc.save("orcamento.pdf");
+
+};
+
+}
+
+
 
 
 
