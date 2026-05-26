@@ -760,6 +760,7 @@ mostrarClientes();
 
 }
 
+
 function salvarCliente(){
 
 let cliente = {
@@ -782,7 +783,50 @@ estado: document.getElementById("estadoCliente").value,
 
 endereco: document.getElementById("enderecoCliente").value,
 
-bairro: document
+bairro: document.getElementById("bairroCliente").value,
+
+cep: document.getElementById("cepCliente").value,
+
+cidade: document.getElementById("cidadeCliente").value,
+
+grupo: document.getElementById("grupoCliente").value,
+
+concorrentePrincipal: document.getElementById("concorrentePrincipal").value,
+
+outrosConcorrentes: document.getElementById("outrosConcorrentes").value,
+
+classificacao: document.getElementById("classificacao").value,
+
+compraDesde: document.getElementById("compraDesde").value,
+
+obs: document.getElementById("obsCliente").value
+
+};
+
+if(clienteEditando >= 0){
+
+clientes[clienteEditando] = cliente;
+clienteEditando = -1;
+
+}else{
+
+clientes.push(cliente);
+
+}
+
+localStorage.setItem(
+"clientesCRM",
+JSON.stringify(clientes)
+);
+
+mostrarClientes();
+
+limparCampos();
+
+document.getElementById("areaCadastroCliente").style.display = "none";
+
+}
+
 
 
 
