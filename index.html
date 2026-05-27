@@ -2,1907 +2,1866 @@
 <html lang="pt-br">
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="logo_512.png">
 <link rel="apple-touch-icon" href="logo_512.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Multipla Cotação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
-body{
-font-family:Arial;
-margin:0;
-background:#f4f6f9;
-color:#333;
+/* ── CSS Variables ── */
+:root {
+  --bg:          #0f1117;
+  --surface:     #181c27;
+  --surface2:    #1e2333;
+  --surface3:    #242a3e;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.12);
+  --accent:      #3b82f6;
+  --accent2:     #60a5fa;
+  --accent-glow: rgba(59,130,246,0.25);
+  --green:       #22c55e;
+  --green-glow:  rgba(34,197,94,0.2);
+  --red:         #ef4444;
+  --orange:      #f59e0b;
+  --whatsapp:    #25D366;
+  --text:        #e8ecf4;
+  --text-muted:  #8892a4;
+  --text-dim:    #5a6478;
+  --radius:      12px;
+  --radius-lg:   18px;
+  --shadow:      0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg:   0 8px 48px rgba(0,0,0,0.6);
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
 }
 
-header{
-background:#2c3e50;
-color:white;
-padding:10px 20px;
-font-size:26px;
-font-weight:bold;
-display:flex;
-align-items:center;
-gap:15px;
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-header img{
-height:70px;
-object-fit:contain;
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ── Header ── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 0 var(--border), 0 4px 32px rgba(0,0,0,0.5);
+  backdrop-filter: blur(12px);
 }
 
-.container{
-width:100%;
-max-width:1200px;
-margin:auto;
-padding:10px;
-box-sizing:border-box;
+header img {
+  height: 42px;
+  object-fit: contain;
+  filter: brightness(1.1);
 }
 
-.searchBox{
-display:flex;
-gap:10px;
-margin-bottom:20px;
+.header-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #fff 0%, var(--accent2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.searchBox input{
-flex:1;
-padding:12px;
-border-radius:6px;
-border:1px solid #ccc;
+.header-badge {
+  margin-left: auto;
+  background: var(--accent-glow);
+  border: 1px solid var(--accent);
+  color: var(--accent2);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 99px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.searchBox button{
-padding:12px 20px;
-background:#3498db;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
+/* ── Layout ── */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 20px;
+  box-sizing: border-box;
 }
 
-.categorias{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-margin-bottom:20px;
+/* ── Section Labels ── */
+.section-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 99px;
 }
 
-.categoria{
-background:white;
-color:#333;
-border:1px solid #ddd;
-padding:10px 15px;
-border-radius:6px;
-cursor:pointer;
+/* ── Search Box ── */
+.searchBox {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  position: relative;
 }
 
-.tabelaProdutos{
-background:white;
-border-radius:6px;
-overflow:hidden;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-margin-bottom:20px;
+.searchBox input {
+  flex: 1;
+  padding: 13px 18px 13px 44px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.searchBox input::placeholder { color: var(--text-dim); }
+.searchBox input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-.tabelaProdutos table{
-width:100%;
-border-collapse:collapse;
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  pointer-events: none;
+  font-size: 16px;
 }
 
-.tabelaProdutos th{
-background:#34495e;
-color:white;
-padding:12px;
-text-align:left;
+.searchBox button {
+  padding: 13px 22px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+.searchBox button:hover {
+  background: var(--accent2);
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+.searchBox button:active { transform: scale(0.97); }
+
+/* ── Categorias ── */
+.categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.tabelaProdutos td{
-padding:10px;
-border-bottom:1px solid #eee;
+.categoria {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.18s;
+  user-select: none;
+}
+.categoria:hover {
+  background: var(--surface3);
+  color: var(--text);
+  border-color: var(--border2);
+}
+.categoria.ativo {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 0 16px var(--accent-glow);
 }
 
-.tabelaProdutos input{
-width:80px;
-padding:5px;
+/* ── Tabela Produtos ── */
+.tabelaProdutos {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  animation: fadeUp 0.3s ease;
 }
 
-.btnAdd{
-background:#27ae60;
-color:white;
-border:none;
-padding:6px 10px;
-border-radius:4px;
-cursor:pointer;
+.tabelaProdutos table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-#carrinho{
-background:white;
-border-radius:6px;
-padding:15px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
+.tabelaProdutos thead th {
+  background: var(--surface3);
+  color: var(--text-muted);
+  padding: 14px 18px;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
 }
 
-.itemCarrinho{
-display:flex;
-justify-content:space-between;
-border-bottom:1px solid #eee;
-padding:6px 0;
+.tabelaProdutos tbody tr {
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--border);
+}
+.tabelaProdutos tbody tr:last-child { border-bottom: none; }
+.tabelaProdutos tbody tr:hover { background: var(--surface2); }
+
+.tabelaProdutos td {
+  padding: 12px 18px;
+  font-size: 13px;
+  color: var(--text);
 }
 
-.remover{
-background:#e74c3c;
-color:white;
-border:none;
-border-radius:4px;
-padding:4px 8px;
-cursor:pointer;
+.tabelaProdutos td:first-child {
+  font-weight: 500;
+  color: var(--text);
+  max-width: 260px;
 }
 
-.limpar{
-margin-top:10px;
-background:#7f8c8d;
-color:white;
-border:none;
-padding:8px;
-border-radius:4px;
-width:100%;
-cursor:pointer;
+.tabelaProdutos input[type="number"] {
+  width: 80px;
+  padding: 8px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+  text-align: center;
+}
+.tabelaProdutos input[type="number"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
 }
 
-.whatsapp{
-margin-top:10px;
-background:#25D366;
-color:white;
-border:none;
-padding:12px;
-border-radius:6px;
-width:100%;
-font-size:16px;
-cursor:pointer;
+.btnAdd {
+  background: var(--green);
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+.btnAdd:hover {
+  background: #16a34a;
+  box-shadow: 0 4px 12px var(--green-glow);
+}
+.btnAdd:active { transform: scale(0.96); }
+
+/* ── Carrinho ── */
+#carrinho {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow);
 }
 
-.install{
-margin-top:10px;
-background:#ff9800;
-color:white;
-border:none;
-padding:12px;
-border-radius:6px;
-width:100%;
-font-size:16px;
-cursor:pointer;
+.carrinho-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
 }
 
-textarea{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:6px;
-border:1px solid #ccc;
+.carrinho-header h3 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+
+.carrinho-count {
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 99px;
+  min-width: 24px;
+  text-align: center;
+}
+
+#listaCarrinho {
+  min-height: 60px;
+  margin-bottom: 16px;
+}
+
+.itemCarrinho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  border-radius: 9px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  animation: fadeIn 0.2s ease;
+  gap: 10px;
+}
+.itemCarrinho span { flex: 1; }
+
+.remover {
+  background: rgba(239,68,68,0.12);
+  color: var(--red);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 7px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.remover:hover {
+  background: var(--red);
+  color: white;
+  border-color: var(--red);
+}
+
+/* ── Textarea ── */
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 4px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+textarea::placeholder { color: var(--text-dim); }
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* ── Botões Ação ── */
+.btn-block {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.btn-danger {
+  background: var(--surface2);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.btn-danger:hover {
+  background: rgba(239,68,68,0.1);
+  color: var(--red);
+  border-color: rgba(239,68,68,0.3);
+}
+
+.btn-whatsapp {
+  background: var(--whatsapp);
+  color: white;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.25);
+}
+.btn-whatsapp:hover {
+  background: #1fbd59;
+  box-shadow: 0 6px 28px rgba(37,211,102,0.4);
+  transform: translateY(-1px);
+}
+
+.btn-install {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: white;
+  box-shadow: 0 4px 20px rgba(245,158,11,0.25);
+}
+.btn-install:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(245,158,11,0.4);
+}
+
+.btn-panel {
+  background: var(--surface3);
+  color: var(--text);
+  border: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-panel:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+.btn-primary:hover {
+  background: var(--accent2);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px var(--accent-glow);
+}
+
+.btn-success {
+  background: var(--green);
+  color: white;
+  box-shadow: 0 4px 20px var(--green-glow);
+}
+.btn-success:hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px var(--green-glow);
+}
+
+.btn-pdf {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 4px 20px rgba(239,68,68,0.25);
+}
+.btn-pdf:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(239,68,68,0.4);
+}
+
+.btn-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+
+/* ── Divider ── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 24px 0;
+}
+
+/* ── CRM Area ── */
+#crmArea {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-top: 16px;
+  overflow: hidden;
+  animation: fadeUp 0.3s ease;
+}
+
+.crm-header {
+  background: linear-gradient(135deg, var(--surface3), var(--surface2));
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.crm-header-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--accent-glow);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.crm-header-text h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.crm-header-text p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.crm-body { padding: 24px; }
+
+/* ── CRM Tabs ── */
+.crm-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 5px;
+  margin-bottom: 24px;
+}
+
+.crm-tab {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-radius: 9px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-align: center;
+}
+.crm-tab:hover { color: var(--text); background: var(--surface3); }
+.crm-tab.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 2px 12px var(--accent-glow);
+}
+
+/* ── Form Grid ── */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.form-grid.single { grid-template-columns: 1fr; }
+.form-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ── Inputs Global ── */
+.input-premium {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.input-premium::placeholder { color: var(--text-dim); }
+.input-premium:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.input-premium option { background: var(--surface2); }
+
+select.input-premium { cursor: pointer; appearance: none; }
+
+/* ── Badge classificação ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.badge-ouro   { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.badge-prata  { background: rgba(148,163,184,0.15); color: #94a3b8; border: 1px solid rgba(148,163,184,0.3); }
+.badge-bronze { background: rgba(180,83,9,0.15); color: #b45309; border: 1px solid rgba(180,83,9,0.3); }
+.badge-potencial { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+
+/* ── Lista Clientes (tabela) ── */
+#listaClientes {
+  margin-top: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface2);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.clientes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.clientes-table thead th {
+  background: var(--surface3);
+  color: var(--text-dim);
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+
+.clientes-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.clientes-table tbody tr:last-child { border-bottom: none; }
+.clientes-table tbody tr:hover { background: var(--surface3); }
+
+.clientes-table td {
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text);
+  vertical-align: top;
+}
+
+.cliente-nome strong { font-weight: 600; display: block; }
+.cliente-nome small { color: var(--text-dim); font-size: 11px; }
+
+.btn-edit {
+  background: rgba(245,158,11,0.12);
+  color: var(--orange);
+  border: 1px solid rgba(245,158,11,0.2);
+  padding: 5px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.15s;
+  white-space: nowrap;
+  margin-bottom: 4px;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.btn-edit:hover { background: var(--orange); color: white; border-color: var(--orange); }
+
+.btn-del {
+  background: rgba(239,68,68,0.1);
+  color: var(--red);
+  border: 1px solid rgba(239,68,68,0.18);
+  padding: 5px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.15s;
+  white-space: nowrap;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.btn-del:hover { background: var(--red); color: white; border-color: var(--red); }
+
+/* ── Orçamento Interno ── */
+.orcamento-section {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.orcamento-section-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#listaOrcamentoProdutos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.produto-card-orcamento {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.produto-card-orcamento:hover {
+  border-color: var(--border2);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.produto-card-orcamento .nome-produto {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.categoria-header-orcamento {
+  grid-column: span 2;
+  margin-top: 16px;
+  margin-bottom: 4px;
+  padding: 10px 14px;
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: var(--radius);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ── Itens Orçamento (lista) ── */
+.orcamento-item-card {
+  background: var(--surface);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  animation: fadeIn 0.2s ease;
+}
+
+.orcamento-item-card strong { color: var(--text); font-size: 13px; }
+.orcamento-item-card .meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+.orcamento-item-card .meta span strong {
+  color: var(--accent2);
+  font-size: 12px;
+}
+
+/* ── Total / Frete ── */
+.total-box {
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.total-valor {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--green);
+  margin-bottom: 16px;
+  text-shadow: 0 0 24px var(--green-glow);
+}
+
+/* ── WhatsApp Link ── */
+.whatsapp-link {
+  color: var(--whatsapp);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.whatsapp-link:hover { text-decoration: underline; }
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.empty-state-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+  display: block;
+  opacity: 0.4;
+}
+
+/* ── Resultado cliente orçamento ── */
+#resultadoClienteOrcamento {
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  margin-bottom: 10px;
+}
+
+#resultadoClienteOrcamento div {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text);
+  transition: background 0.15s;
+}
+#resultadoClienteOrcamento div:last-child { border-bottom: none; }
+#resultadoClienteOrcamento div:hover { background: var(--surface3); }
+
+/* ── Checkbox ── */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.2s;
+}
+.checkbox-label:hover { border-color: var(--border2); }
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.page-load { animation: fadeUp 0.4s ease both; }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+
+  header { padding: 0 16px; height: 60px; }
+  .header-title { font-size: 16px; }
+  .header-badge { display: none; }
+
+  .container { padding: 16px 14px; }
+
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid.triple { grid-template-columns: 1fr; }
+
+  #listaOrcamentoProdutos { grid-template-columns: 1fr; }
+  .categoria-header-orcamento { grid-column: span 1; }
+
+  .crm-tabs { flex-direction: column; }
+  .crm-tab { text-align: center; }
+
+  .tabelaProdutos { overflow-x: auto; }
+  .tabelaProdutos table { min-width: 440px; }
+
+  .total-valor { font-size: 20px; }
+
+  .clientes-table { min-width: 700px; }
+  #listaClientes { overflow-x: auto; }
+}
+
+@media (max-width: 480px) {
+  .header-title { font-size: 14px; letter-spacing: 0; }
+  .crm-header { padding: 14px 16px; }
+  .crm-body { padding: 16px; }
+  .orcamento-section { padding: 14px; }
+}
+
+/* ── Install button ── */
+.install { display: none; }
+#installBtn { display: none; }
 
 </style>
-
 </head>
-
 <body>
 
 <header>
-<img src="/logo_512.png">
-MULTIPLA COTAÇÃO
+  <img src="/logo_512.png" alt="Logo">
+  <span class="header-title">MULTIPLA COTAÇÃO</span>
+  <span class="header-badge">Sistema Comercial</span>
 </header>
 
-<div class="container">
-
-<div class="searchBox">
-<input id="busca" placeholder="Buscar produto" oninput="buscarProduto()">
-<button onclick="buscarProduto()">Buscar</button>
-</div>
-
-<div id="categorias" class="categorias"></div>
-
-<div class="tabelaProdutos">
-<table>
-<thead>
-<tr>
-<th>Produto</th>
-<th>Qtd</th>
-<th></th>
-</tr>
-</thead>
-<tbody id="produtos"></tbody>
-</table>
-</div>
-
-<div id="carrinho">
-
-<h3>Carrinho (<span id="contador">0</span>)</h3>
-
-<div id="listaCarrinho"></div>
-
-<textarea id="obs" placeholder="Observações"></textarea>
-
-<button class="limpar" onclick="limparCarrinho()">Limpar Pedido</button>
-
-<button class="whatsapp" onclick="enviar()">Enviar Cotação no WhatsApp</button>
-
-<button id="installBtn" class="install" style="display:none">Baixar App</button>
-<hr style="margin:20px 0">
-
-<button onclick="abrirCRM()" style="
-background:#2c3e50;
-color:white;
-padding:12px;
-border:none;
-border-radius:6px;
-width:100%;
-font-size:16px;
-cursor:pointer;
-margin-bottom:10px;
-">
-
-⚙️ Painel
-
-</button>
-
-<div id="crmArea" style="
-display:none;
-background:white;
-padding:15px;
-border-radius:6px;
-margin-top:10px;
-">
-
-<h3 style="
-margin-bottom:20px;
-color:white;
-">
-
-CRM COMERCIAL
-
-</h3>
-<h3 style="
-color:#2c3e50;
-margin-bottom:10px;
-">
-Pesquisar Cliente
-</h3>
-<input id="pesquisaCliente"
-placeholder="Pesquisar cliente..."
-oninput="mostrarClientes()"
-style="
-width:100%;
-padding:12px;
-margin-bottom:15px;
-border:1px solid #ccc;
-border-radius:8px;
-">
-<button onclick="toggleCadastroCliente()" style="
-background:#3498db;
-color:white;
-padding:12px;
-border:none;
-border-radius:8px;
-width:100%;
-font-size:16px;
-cursor:pointer;
-font-weight:bold;
-margin-bottom:15px;
-">
-
-+ CADASTRAR CLIENTE
-
-</button>
-
-<div id="areaCadastroCliente" style="display:none;">
-<select id="tipoCliente"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<option>Pessoa Jurídica</option>
-<option>Pessoa Física</option>
-
-</select>
-
-<input id="nomeFantasia"
-placeholder="Nome Fantasia"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="razaoSocial"
-placeholder="Razão Social"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="cpfCnpj"
-placeholder="CPF ou CNPJ"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="comprador"
-placeholder="Comprador"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="telefoneCliente"
-placeholder="WhatsApp"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="emailCliente"
-placeholder="E-mail"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="estadoCliente"
-placeholder="Estado"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-<input id="enderecoCliente"
-placeholder="Endereço"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="bairroCliente"
-placeholder="Bairro"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="cepCliente"
-placeholder="CEP"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="cidadeCliente"
-placeholder="Cidade"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="grupoCliente"
-placeholder="Grupo de Cliente"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-<input id="concorrentePrincipal"
-placeholder="Concorrente Principal"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<input id="outrosConcorrentes"
-placeholder="Outros Concorrentes (separados por vírgula)"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-<input id="compraDesde"
-placeholder="Compra desde"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<select id="classificacao"
-style="
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<option>Ouro</option>
-<option>Prata</option>
-<option>Bronze</option>
-<option>Potencial</option>
-
-</select>
-
-<textarea id="obsCliente"
-placeholder="Observações comerciais"
-style="
-width:100%;
-padding:12px;
-margin-bottom:15px;
-border-radius:8px;
-border:1px solid #ccc;
-"></textarea>
-
-<button onclick="salvarCliente()" style="
-background:#27ae60;
-color:white;
-padding:14px;
-border:none;
-border-radius:8px;
-width:100%;
-font-size:16px;
-cursor:pointer;
-font-weight:bold;
-">
-
-SALVAR CLIENTE
-
-</button>
-</div>
-<div id="listaClientes"
-style="
-margin-top:20px;
-max-height:250px;
-overflow-y:auto;
-border:1px solid #ddd;
-border-radius:10px;
-padding:10px;
-background:#fff;
-"></div>
-
-
-
-<hr style="margin:30px 0">
-
-<h3 style="
-color:#2c3e50;
-margin-bottom:20px;
-">
-ORÇAMENTO INTERNO
-</h3>
-<div style="
-background:#f8f9fa;
-padding:15px;
-border-radius:10px;
-margin-bottom:15px;
-border:1px solid #ddd;
-">
-
-<h3 style="
-margin-top:0;
-color:#2c3e50;
-margin-bottom:10px;
-">
-Cliente no Orçamento
-</h3>
-
-
-<input
-id="clienteOrcamento"
-placeholder="Pesquisar cliente para o orçamento"
-oninput="pesquisarClienteOrcamento()"
-style="
-width:100%;
-padding:12px;
-border-radius:8px;
-border:1px solid #ccc;
-margin-bottom:10px;
-">
-
-<div id="resultadoClienteOrcamento"
-style="
-max-height:150px;
-overflow-y:auto;
-border:1px solid #ddd;
-border-radius:8px;
-background:white;
-margin-bottom:10px;
-">
-</div>
-
-
-
-<label style="
-display:flex;
-align-items:center;
-gap:10px;
-font-weight:bold;
-color:#2c3e50;
-">
-
-<input
-type="checkbox"
-id="usarClientePDF"
-onchange="toggleClientePDF()"
->
-
-Inserir cliente
-</label>
-  
-<div style="
-display:flex;
-gap:10px;
-margin-bottom:15px;
-">
-
-<input id="pesquisaProdutoOrcamento"
-placeholder="Pesquisar produto..."
-oninput="filtrarProdutosOrcamento()"  
-style="
-flex:1;
-padding:12px;
-border:1px solid #ccc;
-border-radius:8px;
-">
-
-<button onclick="filtrarProdutosOrcamento()"
-style="
-padding:12px 20px;
-background:#3498db;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-">
-
-Buscar
-
-</button>
-
-</div>
-
-
-
-
-<div id="listaOrcamentoProdutos"
-style="
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-margin-top:20px;
-">
-</div>
-
-<div id="itensOrcamento"></div>
-
-<div style="
-margin-top:20px;
-background:#f8f9fa;
-padding:15px;
-border-radius:10px;
-">
-
-<input id="freteValor"
-placeholder="Valor do Frete"
-type="number"
-style="
-width:100%;
-padding:12px;
-margin-bottom:15px;
-border-radius:8px;
-border:1px solid #ccc;
-">
-
-<h2 id="totalGeral"
-style="
-color:#27ae60;
-margin-bottom:15px;
-">
-TOTAL: R$ 0,00
-</h2>
-
-<button onclick="gerarPDF()"
-style="
-background:#e74c3c;
-color:white;
-padding:14px;
-border:none;
-border-radius:8px;
-width:100%;
-font-size:16px;
-cursor:pointer;
-font-weight:bold;
-margin-bottom:10px;
-">
-GERAR PDF DO ORÇAMENTO
-</button>
-
-<button onclick="gerarOrcamentoWhats()"
-style="
-background:#25D366;
-color:white;
-padding:14px;
-border:none;
-border-radius:8px;
-width:100%;
-font-size:16px;
-cursor:pointer;
-font-weight:bold;
-">
-GERAR ORÇAMENTO WHATSAPP
-</button>
-
-
-
-</div>
-
-
-</div>
+<div class="container page-load">
+
+  <!-- Search -->
+  <div class="section-label">Buscar Produto</div>
+  <div class="searchBox" style="position:relative;">
+    <span class="search-icon">🔍</span>
+    <input id="busca" placeholder="Pesquisar por produto, código ou categoria..." oninput="buscarProduto()">
+    <button onclick="buscarProduto()">Buscar</button>
+  </div>
+
+  <!-- Categorias -->
+  <div class="section-label">Categorias</div>
+  <div id="categorias" class="categorias"></div>
+
+  <!-- Tabela de Produtos -->
+  <div class="tabelaProdutos">
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Qtd</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody id="produtos"></tbody>
+    </table>
+  </div>
+
+  <!-- Carrinho -->
+  <div id="carrinho">
+
+    <div class="carrinho-header">
+      <h3>
+        🛒 Pedido de Cotação
+        <span class="carrinho-count" id="contador">0</span>
+      </h3>
+    </div>
+
+    <div id="listaCarrinho">
+      <div class="empty-state">
+        <span class="empty-state-icon">📦</span>
+        Nenhum produto adicionado
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:16px;">
+      <label class="form-label">Observações</label>
+      <textarea id="obs" placeholder="Informações adicionais sobre o pedido..."></textarea>
+    </div>
+
+    <div class="btn-stack">
+      <button class="btn-block btn-danger" onclick="limparCarrinho()">🗑 Limpar Pedido</button>
+      <button class="btn-block btn-whatsapp" onclick="enviar()">
+        <span>📲 Enviar Cotação no WhatsApp</span>
+      </button>
+      <button id="installBtn" class="btn-block btn-install" style="display:none">
+        📥 Baixar App
+      </button>
+    </div>
+
+    <hr class="divider">
+
+    <button class="btn-block btn-panel" onclick="abrirCRM()">
+      ⚙️ Painel Administrativo
+    </button>
+
+    <!-- CRM Area -->
+    <div id="crmArea">
+
+      <div class="crm-header">
+        <div class="crm-header-icon">⚙️</div>
+        <div class="crm-header-text">
+          <h2>CRM COMERCIAL</h2>
+          <p>Gestão de clientes e orçamentos internos</p>
+        </div>
+      </div>
+
+      <div class="crm-body">
+
+        <!-- Tabs -->
+        <div class="crm-tabs">
+          <button class="crm-tab active" onclick="mostrarTab('clientes', this)">👥 Clientes</button>
+          <button class="crm-tab" onclick="mostrarTab('orcamento', this)">📋 Orçamento</button>
+        </div>
+
+        <!-- ====== TAB CLIENTES ====== -->
+        <div id="tab-clientes">
+
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label">Pesquisar cliente</label>
+            <input class="input-premium"
+              id="pesquisaCliente"
+              placeholder="Buscar por nome, CNPJ, cidade..."
+              oninput="mostrarClientes()">
+          </div>
+
+          <button onclick="toggleCadastroCliente()" class="btn-block btn-primary" style="margin-bottom:16px;">
+            + Cadastrar Novo Cliente
+          </button>
+
+          <!-- Form Cadastro -->
+          <div id="areaCadastroCliente" style="display:none;">
+
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px;">
+
+              <div class="section-label" style="margin-bottom:16px;">Dados Cadastrais</div>
+
+              <div class="form-grid single" style="margin-bottom:12px;">
+                <div class="form-group">
+                  <label class="form-label">Tipo</label>
+                  <select id="tipoCliente" class="input-premium">
+                    <option>Pessoa Jurídica</option>
+                    <option>Pessoa Física</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Nome Fantasia</label>
+                  <input id="nomeFantasia" class="input-premium" placeholder="Nome Fantasia">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Razão Social</label>
+                  <input id="razaoSocial" class="input-premium" placeholder="Razão Social">
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">CPF / CNPJ</label>
+                  <input id="cpfCnpj" class="input-premium" placeholder="CPF ou CNPJ">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Comprador</label>
+                  <input id="comprador" class="input-premium" placeholder="Nome do Comprador">
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">WhatsApp</label>
+                  <input id="telefoneCliente" class="input-premium" placeholder="(00) 00000-0000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">E-mail</label>
+                  <input id="emailCliente" class="input-premium" placeholder="email@empresa.com">
+                </div>
+              </div>
+
+              <div class="section-label" style="margin-top:16px;margin-bottom:12px;">Endereço</div>
+
+              <div class="form-grid triple">
+                <div class="form-group">
+                  <label class="form-label">CEP</label>
+                  <input id="cepCliente" class="input-premium" placeholder="00000-000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Estado</label>
+                  <input id="estadoCliente" class="input-premium" placeholder="UF">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Cidade</label>
+                  <input id="cidadeCliente" class="input-premium" placeholder="Cidade">
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Endereço</label>
+                  <input id="enderecoCliente" class="input-premium" placeholder="Rua, número">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Bairro</label>
+                  <input id="bairroCliente" class="input-premium" placeholder="Bairro">
+                </div>
+              </div>
+
+              <div class="section-label" style="margin-top:16px;margin-bottom:12px;">Comercial</div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Grupo de Cliente</label>
+                  <input id="grupoCliente" class="input-premium" placeholder="Grupo">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Compra Desde</label>
+                  <input id="compraDesde" class="input-premium" placeholder="Data / Ano">
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Concorrente Principal</label>
+                  <input id="concorrentePrincipal" class="input-premium" placeholder="Concorrente principal">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Outros Concorrentes</label>
+                  <input id="outrosConcorrentes" class="input-premium" placeholder="Separados por vírgula">
+                </div>
+              </div>
+
+              <div class="form-grid single" style="margin-top:4px;">
+                <div class="form-group">
+                  <label class="form-label">Classificação</label>
+                  <select id="classificacao" class="input-premium">
+                    <option>Ouro</option>
+                    <option>Prata</option>
+                    <option>Bronze</option>
+                    <option>Potencial</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top:12px;">
+                <label class="form-label">Observações Comerciais</label>
+                <textarea id="obsCliente" class="input-premium" placeholder="Informações adicionais..." style="min-height:80px;"></textarea>
+              </div>
+
+              <button onclick="salvarCliente()" class="btn-block btn-success" style="margin-top:16px;">
+                ✓ Salvar Cliente
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Lista de Clientes -->
+          <div id="listaClientes"></div>
+
+        </div>
+
+        <!-- ====== TAB ORÇAMENTO ====== -->
+        <div id="tab-orcamento" style="display:none;">
+
+          <!-- Cliente no orçamento -->
+          <div class="orcamento-section">
+            <div class="orcamento-section-title">👤 Cliente do Orçamento</div>
+
+            <div class="form-group" style="margin-bottom:10px;">
+              <input class="input-premium"
+                id="clienteOrcamento"
+                placeholder="Pesquisar cliente para vincular ao orçamento..."
+                oninput="pesquisarClienteOrcamento()">
+            </div>
+
+            <div id="resultadoClienteOrcamento"></div>
+
+            <label class="checkbox-label">
+              <input type="checkbox" id="usarClientePDF" onchange="toggleClientePDF()">
+              Inserir dados do cliente no PDF
+            </label>
+          </div>
+
+          <!-- Busca produtos orçamento -->
+          <div class="orcamento-section">
+            <div class="orcamento-section-title">🔍 Buscar Produtos</div>
+
+            <div style="display:flex;gap:10px;">
+              <input id="pesquisaProdutoOrcamento"
+                class="input-premium"
+                placeholder="Buscar produto para o orçamento..."
+                oninput="filtrarProdutosOrcamento()"
+                style="flex:1;">
+              <button onclick="filtrarProdutosOrcamento()"
+                class="btn-block btn-primary"
+                style="width:auto;padding:11px 18px;white-space:nowrap;">
+                Buscar
+              </button>
+            </div>
+
+            <div id="listaOrcamentoProdutos"></div>
+          </div>
+
+          <!-- Itens adicionados -->
+          <div class="orcamento-section" style="margin-top:0;">
+            <div class="orcamento-section-title">📦 Itens do Orçamento</div>
+            <div id="itensOrcamento">
+              <div class="empty-state">
+                <span class="empty-state-icon">📋</span>
+                Nenhum produto adicionado ao orçamento
+              </div>
+            </div>
+          </div>
+
+          <!-- Total e Ações -->
+          <div class="total-box">
+            <div class="form-group" style="margin-bottom:16px;">
+              <label class="form-label">Valor do Frete (R$)</label>
+              <input id="freteValor"
+                class="input-premium"
+                placeholder="0,00"
+                type="number">
+            </div>
+
+            <div class="total-valor" id="totalGeral">TOTAL: R$ 0,00</div>
+
+            <div class="btn-stack">
+              <button onclick="gerarPDF()" class="btn-block btn-pdf">
+                📄 Gerar PDF do Orçamento
+              </button>
+              <button onclick="gerarOrcamentoWhats()" class="btn-block btn-whatsapp">
+                📲 Enviar Orçamento no WhatsApp
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- fim tab-orcamento -->
+
+      </div><!-- fim crm-body -->
+    </div><!-- fim crmArea -->
+
+  </div><!-- fim carrinho -->
+</div><!-- fim container -->
 
 <script>
 
-const numero="5531986580180";
+const numero = "5531986580180";
 
 const catalogo = {
-
-"Estribos":[
-"EST001 - Estribo 11x17 4.2mm",
-"EST002 - Estribo 12x27 4.2mm",
-"EST003 - Estribo 7x17 4.2mm",
-"EST004 - Estribo 17x17 4.2mm",
-"EST005 - Estribo 27x27 4.2mm",
-"EST006 - Estribo 7x14 4.2mm",
-"EST007 - Estribo 12x27 5mm",
-"EST008 - Estribo 7x14 5mm",
-"EST009 - Estribo 11x17 5mm",
-"EST010 - Estribo 7x17 5mm"
-],
-
-"Argamassas":[
-"ARG001 - Argamassa Precon ACI Cinza",
-"ARG002 - Argamassa Precon ACII Cinza",
-"ARG003 - Argamassa Precon ACIII Cinza",
-"ARG004 - Argamassa Porcelanato Interno",
-"ARG005 - Argamassa Refratária 20kg",
-"ARG006 - Argamassa Projetada 40kg",
-"ARG007 - Argamassa Precon ACIII Branca"
-],
-
-"Pregos":[
-"PRG001 - Prego Ardox SC 17x21 2x11",
-"PRG002 - Prego CCAB 12x12 Gerdau",
-"PRG003 - Prego CCAB 15x15 1.1/4x13 Gerdau",
-"PRG004 - Prego CCAB 17x21 2x11 Gerdau",
-"PRG005 - Prego CCAB 18x30 2.3/4x10 Gerdau",
-"PRG006 - Prego CCAB 19x36 Gerdau",
-"PRG007 - Prego 20x48 Gerdau",
-"PRG008 - Prego 22x48 Gerdau",
-"PRG009 - Prego 19x11 Gerdau"
-],
-
-"Treliças":[
-"TRL001 - Treliça Média TR8-633 12M",
-"TRL002 - Treliça Média TR8-633 6M",
-"TRL003 - Treliça Pesada TR12-644 6M",
-"TRL004 - Treliça Leve TR8-533 6M",
-"TRL005 - Treliça Média TR12-644 12M",
-"TRL006 - Treliça Pesada TR8-644 6M"
-],
-
-"Arames":[
-"ARM001 - BOB ARAME REC 3,40MM LISO BWG10 (PG18)",
-"ARM002 - BOB ARAME REC 2,77MM LISO BWG12 (PG16)",
-"ARM003 - BOB ARAME REC 2,10MM LISO BWG14 (PG14)",
-"ARM004 - BOB ARAME REC 1,65MM LISO BWG16 (PG12)",
-"ARM005 - BOB ARAME REC 1,24 REC TORC BWG18 (PG7)",
-"ARM006 - BOB ARAME REC LISO BWG18 (PG7)"
-],
-
-"Kit Arame":[
-"KIT001 - KIT 10X ARAME REC 1,24MM TORC BWG18 (PG7)",
-"KIT002 - KIT 10X ARAME REC 1,24 LISO BWG18 (PG7)",
-"KIT003 - KIT 10X ARAME REC 1,65 LISO BWG16 (PG12)",
-"KIT004 - KIT 10X ARAME REC 2,10MM LISO BWG14 (PG14)",
-"KIT005 - KIT 10X ARAME REC 2,77MM LISO BWG12 (PG16)",
-"KIT006 - KIT 10X ARAME REC 3,40MM LISO BWG10 (PG18)"
-],
-
-"Malhas":[
-"MLP001 - MALHA POP 10X10 4.2MM 2X3M",
-"MLP002 - MALHA POP 20X20 3.4MM 2X3M",
-"MLP003 - MALHA POP 15X15 3.4MM 2X3M",
-"MLP004 - MALHA POP 15X15 4.2MM 2X3M",
-"MLP005 - MALHA POP 10X10 4.2MM 2,45X6M"
-],
-
-"Colunas":[
-"COL001 - COLUNA LEVE 6MM 12X17X25CM 6M",
-"COL002 - COLUNA LEVE 6MM 7X14X25CM 6M",
-"COL003 - COLUNA LEVE 6MM 7X17X25CM 6M",
-"COL004 - COLUNA MEDIA 8MM 12X12X25CM 6M",
-"COL005 - COLUNA MEDIA 8MM 11X17X25CM 6M",
-"COL006 - COLUNA MEDIA 8MM 7X14X25CM 6M",
-"COL007 - COLUNA MEDIA 8MM 7X17X25CM 6M",
-"COL008 - COLUNA PESADA 10MM 11X17X25CM 6M",
-"COL009 - COLUNA PESADA 10MM 7X14X25CM 6M",
-"COL010 - COLUNA PESADA 10MM 7X17X25CM 6M"
-],
-
-"Vergalhoes":[
-"VRG001 - Vergalhão CA60 4.2MM Feixe 50 Barras",
-"VRG002 - Vergalhão CA60 5MM Feixe 35 Barras",
-"VRG003 - Vergalhão CA50 6.3MM Feixe 25 Barras",
-"VRG004 - Vergalhão CA50 8MM Feixe 15 Barras",
-"VRG005 - Vergalhão CA50 10MM Feixe 10 Barras",
-"VRG006 - Vergalhão CA50 12.5MM Feixe 6 Barras",
-"VRG007 - Vergalhão CA50 16MM Feixe 3 Barras",
-"VRG008 - Vergalhão CA50 20MM Feixe 3 Barras"
-]
-
+  "Estribos": [
+    "EST001 - Estribo 11x17 4.2mm","EST002 - Estribo 12x27 4.2mm",
+    "EST003 - Estribo 7x17 4.2mm","EST004 - Estribo 17x17 4.2mm",
+    "EST005 - Estribo 27x27 4.2mm","EST006 - Estribo 7x14 4.2mm",
+    "EST007 - Estribo 12x27 5mm","EST008 - Estribo 7x14 5mm",
+    "EST009 - Estribo 11x17 5mm","EST010 - Estribo 7x17 5mm"
+  ],
+  "Argamassas": [
+    "ARG001 - Argamassa Precon ACI Cinza","ARG002 - Argamassa Precon ACII Cinza",
+    "ARG003 - Argamassa Precon ACIII Cinza","ARG004 - Argamassa Porcelanato Interno",
+    "ARG005 - Argamassa Refratária 20kg","ARG006 - Argamassa Projetada 40kg",
+    "ARG007 - Argamassa Precon ACIII Branca"
+  ],
+  "Pregos": [
+    "PRG001 - Prego Ardox SC 17x21 2x11","PRG002 - Prego CCAB 12x12 Gerdau",
+    "PRG003 - Prego CCAB 15x15 1.1/4x13 Gerdau","PRG004 - Prego CCAB 17x21 2x11 Gerdau",
+    "PRG005 - Prego CCAB 18x30 2.3/4x10 Gerdau","PRG006 - Prego CCAB 19x36 Gerdau",
+    "PRG007 - Prego 20x48 Gerdau","PRG008 - Prego 22x48 Gerdau","PRG009 - Prego 19x11 Gerdau"
+  ],
+  "Treliças": [
+    "TRL001 - Treliça Média TR8-633 12M","TRL002 - Treliça Média TR8-633 6M",
+    "TRL003 - Treliça Pesada TR12-644 6M","TRL004 - Treliça Leve TR8-533 6M",
+    "TRL005 - Treliça Média TR12-644 12M","TRL006 - Treliça Pesada TR8-644 6M"
+  ],
+  "Arames": [
+    "ARM001 - BOB ARAME REC 3,40MM LISO BWG10 (PG18)",
+    "ARM002 - BOB ARAME REC 2,77MM LISO BWG12 (PG16)",
+    "ARM003 - BOB ARAME REC 2,10MM LISO BWG14 (PG14)",
+    "ARM004 - BOB ARAME REC 1,65MM LISO BWG16 (PG12)",
+    "ARM005 - BOB ARAME REC 1,24 REC TORC BWG18 (PG7)",
+    "ARM006 - BOB ARAME REC LISO BWG18 (PG7)"
+  ],
+  "Kit Arame": [
+    "KIT001 - KIT 10X ARAME REC 1,24MM TORC BWG18 (PG7)",
+    "KIT002 - KIT 10X ARAME REC 1,24 LISO BWG18 (PG7)",
+    "KIT003 - KIT 10X ARAME REC 1,65 LISO BWG16 (PG12)",
+    "KIT004 - KIT 10X ARAME REC 2,10MM LISO BWG14 (PG14)",
+    "KIT005 - KIT 10X ARAME REC 2,77MM LISO BWG12 (PG16)",
+    "KIT006 - KIT 10X ARAME REC 3,40MM LISO BWG10 (PG18)"
+  ],
+  "Malhas": [
+    "MLP001 - MALHA POP 10X10 4.2MM 2X3M","MLP002 - MALHA POP 20X20 3.4MM 2X3M",
+    "MLP003 - MALHA POP 15X15 3.4MM 2X3M","MLP004 - MALHA POP 15X15 4.2MM 2X3M",
+    "MLP005 - MALHA POP 10X10 4.2MM 2,45X6M"
+  ],
+  "Colunas": [
+    "COL001 - COLUNA LEVE 6MM 12X17X25CM 6M","COL002 - COLUNA LEVE 6MM 7X14X25CM 6M",
+    "COL003 - COLUNA LEVE 6MM 7X17X25CM 6M","COL004 - COLUNA MEDIA 8MM 12X12X25CM 6M",
+    "COL005 - COLUNA MEDIA 8MM 11X17X25CM 6M","COL006 - COLUNA MEDIA 8MM 7X14X25CM 6M",
+    "COL007 - COLUNA MEDIA 8MM 7X17X25CM 6M","COL008 - COLUNA PESADA 10MM 11X17X25CM 6M",
+    "COL009 - COLUNA PESADA 10MM 7X14X25CM 6M","COL010 - COLUNA PESADA 10MM 7X17X25CM 6M"
+  ],
+  "Vergalhoes": [
+    "VRG001 - Vergalhão CA60 4.2MM Feixe 50 Barras","VRG002 - Vergalhão CA60 5MM Feixe 35 Barras",
+    "VRG003 - Vergalhão CA50 6.3MM Feixe 25 Barras","VRG004 - Vergalhão CA50 8MM Feixe 15 Barras",
+    "VRG005 - Vergalhão CA50 10MM Feixe 10 Barras","VRG006 - Vergalhão CA50 12.5MM Feixe 6 Barras",
+    "VRG007 - Vergalhão CA50 16MM Feixe 3 Barras","VRG008 - Vergalhão CA50 20MM Feixe 3 Barras"
+  ]
 };
 
-let carrinho=[];
+let carrinho = [];
 let orcamentoInterno = [];
 let clientes = JSON.parse(localStorage.getItem("clientesCRM")) || [];
 let clienteEditando = -1;
 let clienteSelecionado = null;
 let usarClienteNoPDF = false;
 
-
-
-
-function abrirCRM(){
-
-let senha = prompt("Digite sua senha:");
-
-if(senha !== "hot#"){
-alert("Senha incorreta");
-return;
+/* ── Tabs CRM ── */
+function mostrarTab(tab, btn) {
+  document.getElementById("tab-clientes").style.display = tab === "clientes" ? "block" : "none";
+  document.getElementById("tab-orcamento").style.display = tab === "orcamento" ? "block" : "none";
+  document.querySelectorAll(".crm-tab").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+  if (tab === "orcamento") {
+    carregarProdutosOrcamento();
+    mostrarOrcamento();
+  }
 }
 
-document.getElementById("crmArea").style.display = "block";
-carregarProdutosOrcamento();
-mostrarClientes();
-
+/* ── Abrir CRM ── */
+function abrirCRM() {
+  let senha = prompt("Digite sua senha:");
+  if (senha !== "hot#") { alert("Senha incorreta"); return; }
+  document.getElementById("crmArea").style.display = "block";
+  carregarProdutosOrcamento();
+  mostrarClientes();
 }
 
-
-function salvarCliente(){
-
-let cliente = {
-
-tipo: document.getElementById("tipoCliente").value,
-
-nomeFantasia: document.getElementById("nomeFantasia").value,
-
-razaoSocial: document.getElementById("razaoSocial").value,
-
-cpfCnpj: document.getElementById("cpfCnpj").value,
-
-comprador: document.getElementById("comprador").value,
-
-telefone: document.getElementById("telefoneCliente").value,
-
-email: document.getElementById("emailCliente").value,
-
-estado: document.getElementById("estadoCliente").value,
-
-endereco: document.getElementById("enderecoCliente").value,
-
-bairro: document.getElementById("bairroCliente").value,
-
-cep: document.getElementById("cepCliente").value,
-
-cidade: document.getElementById("cidadeCliente").value,
-
-grupo: document.getElementById("grupoCliente").value,
-
-concorrentePrincipal: document.getElementById("concorrentePrincipal").value,
-
-outrosConcorrentes: document.getElementById("outrosConcorrentes").value,
-
-classificacao: document.getElementById("classificacao").value,
-
-compraDesde: document.getElementById("compraDesde").value,
-
-obs: document.getElementById("obsCliente").value
-
-};
-
-if(clienteEditando >= 0){
-
-clientes[clienteEditando] = cliente;
-clienteEditando = -1;
-
-}else{
-
-clientes.push(cliente);
-
+/* ── Salvar Cliente ── */
+function salvarCliente() {
+  let cliente = {
+    tipo: document.getElementById("tipoCliente").value,
+    nomeFantasia: document.getElementById("nomeFantasia").value,
+    razaoSocial: document.getElementById("razaoSocial").value,
+    cpfCnpj: document.getElementById("cpfCnpj").value,
+    comprador: document.getElementById("comprador").value,
+    telefone: document.getElementById("telefoneCliente").value,
+    email: document.getElementById("emailCliente").value,
+    estado: document.getElementById("estadoCliente").value,
+    endereco: document.getElementById("enderecoCliente").value,
+    bairro: document.getElementById("bairroCliente").value,
+    cep: document.getElementById("cepCliente").value,
+    cidade: document.getElementById("cidadeCliente").value,
+    grupo: document.getElementById("grupoCliente").value,
+    concorrentePrincipal: document.getElementById("concorrentePrincipal").value,
+    outrosConcorrentes: document.getElementById("outrosConcorrentes").value,
+    classificacao: document.getElementById("classificacao").value,
+    compraDesde: document.getElementById("compraDesde").value,
+    obs: document.getElementById("obsCliente").value
+  };
+  if (clienteEditando >= 0) {
+    clientes[clienteEditando] = cliente;
+    clienteEditando = -1;
+  } else {
+    clientes.push(cliente);
+  }
+  localStorage.setItem("clientesCRM", JSON.stringify(clientes));
+  mostrarClientes();
+  carregarClientesSelect();
+  limparCampos();
+  document.getElementById("areaCadastroCliente").style.display = "none";
 }
 
-localStorage.setItem(
-"clientesCRM",
-JSON.stringify(clientes)
-);
+/* ── Mostrar Clientes ── */
+function mostrarClientes() {
+  let area = document.getElementById("listaClientes");
+  let filtro = document.getElementById("pesquisaCliente").value.toLowerCase();
 
-mostrarClientes();
-carregarClientesSelect();
+  let cf = clientes.filter(c => {
+    let t = `${c.nomeFantasia} ${c.razaoSocial} ${c.cpfCnpj} ${c.telefone} ${c.email} ${c.estado} ${c.cidade} ${c.grupo} ${c.concorrentePrincipal||""} ${c.outrosConcorrentes||""}`.toLowerCase();
+    return t.includes(filtro);
+  }).filter(c => c.nomeFantasia && c.nomeFantasia.trim() !== "");
 
+  if (cf.length === 0) {
+    area.innerHTML = `<div class="empty-state"><span class="empty-state-icon">👥</span>Nenhum cliente encontrado</div>`;
+    return;
+  }
 
-limparCampos();
+  function badgeClass(c) {
+    const m = { "Ouro":"ouro","Prata":"prata","Bronze":"bronze","Potencial":"potencial" };
+    return "badge-" + (m[c] || "potencial");
+  }
 
-document.getElementById("areaCadastroCliente").style.display = "none";
-
+  area.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table class="clientes-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Localização</th>
+            <th>Contato</th>
+            <th>Grupo</th>
+            <th>Concorrente</th>
+            <th>Classificação</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${cf.map((c, i) => `
+            <tr>
+              <td class="cliente-nome">
+                <strong>${c.nomeFantasia}</strong>
+                <small>${c.razaoSocial || ''}</small>
+                <small style="color:var(--text-dim)">${c.cpfCnpj || ''}</small>
+              </td>
+              <td style="font-size:12px;color:var(--text-muted);">${c.cidade || '-'}${c.estado ? ' - ' + c.estado : ''}</td>
+              <td>
+                ${c.telefone ? `<a class="whatsapp-link" href="https://wa.me/${c.telefone}" target="_blank">📲 WhatsApp</a>` : '-'}
+                ${c.email ? `<div style="font-size:11px;color:var(--text-dim);margin-top:3px;">${c.email}</div>` : ''}
+              </td>
+              <td style="font-size:12px;color:var(--text-muted);">${c.grupo || '-'}</td>
+              <td style="font-size:12px;color:var(--text-muted);">${c.concorrentePrincipal || '-'}</td>
+              <td><span class="badge ${badgeClass(c.classificacao)}">${c.classificacao || '-'}</span></td>
+              <td>
+                <button class="btn-edit" onclick="editarCliente(${clientes.indexOf(c)})">Editar</button>
+                <button class="btn-del" onclick="removerCliente(${clientes.indexOf(c)})">Remover</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
+/* ── Editar Cliente ── */
+function editarCliente(index) {
+  let c = clientes[index];
+  clienteEditando = index;
+  document.getElementById("tipoCliente").value = c.tipo || "";
+  document.getElementById("nomeFantasia").value = c.nomeFantasia || "";
+  document.getElementById("razaoSocial").value = c.razaoSocial || "";
+  document.getElementById("cpfCnpj").value = c.cpfCnpj || "";
+  document.getElementById("comprador").value = c.comprador || "";
+  document.getElementById("telefoneCliente").value = c.telefone || "";
+  document.getElementById("emailCliente").value = c.email || "";
+  document.getElementById("estadoCliente").value = c.estado || "";
+  document.getElementById("enderecoCliente").value = c.endereco || "";
+  document.getElementById("bairroCliente").value = c.bairro || "";
+  document.getElementById("cepCliente").value = c.cep || "";
+  document.getElementById("cidadeCliente").value = c.cidade || "";
+  document.getElementById("grupoCliente").value = c.grupo || "";
+  document.getElementById("concorrentePrincipal").value = c.concorrentePrincipal || "";
+  document.getElementById("outrosConcorrentes").value = c.outrosConcorrentes || "";
+  document.getElementById("classificacao").value = c.classificacao || "";
+  document.getElementById("compraDesde").value = c.compraDesde || "";
+  document.getElementById("obsCliente").value = c.obs || "";
+  document.getElementById("areaCadastroCliente").style.display = "block";
+  window.scrollTo({ top: document.getElementById("areaCadastroCliente").offsetTop - 50, behavior: "smooth" });
+}
 
+/* ── Remover Cliente ── */
+function removerCliente(index) {
+  if (!confirm("Remover este cliente?")) return;
+  clientes.splice(index, 1);
+  localStorage.setItem("clientesCRM", JSON.stringify(clientes));
+  mostrarClientes();
+}
 
+/* ── Toggle Cadastro ── */
+function toggleCadastroCliente() {
+  let area = document.getElementById("areaCadastroCliente");
+  area.style.display = area.style.display === "none" ? "block" : "none";
+}
 
-function mostrarClientes(){
+/* ── Limpar Campos ── */
+function limparCampos() {
+  ["nomeFantasia","razaoSocial","cpfCnpj","comprador","telefoneCliente",
+   "emailCliente","estadoCliente","cidadeCliente","grupoCliente","compraDesde","obsCliente"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+}
 
-let area = document.getElementById("listaClientes");
+/* ── Carregar Categorias ── */
+function carregarCategorias() {
+  let area = document.getElementById("categorias");
+  area.innerHTML = "";
+  for (let c in catalogo) {
+    area.innerHTML += `<div class="categoria" onclick="abrirCategoria('${c}', this)">${c}</div>`;
+  }
+}
 
-let filtro = document
-.getElementById("pesquisaCliente")
-.value
-.toLowerCase();
+/* ── Abrir Categoria ── */
+function abrirCategoria(cat, el) {
+  document.querySelectorAll(".categoria").forEach(c => c.classList.remove("ativo"));
+  if (el) el.classList.add("ativo");
+  let area = document.getElementById("produtos");
+  area.innerHTML = "";
+  catalogo[cat].forEach(p => {
+    area.innerHTML += `
+      <tr>
+        <td>${p}</td>
+        <td><input type="number" id="${p}" min="1" placeholder="0"></td>
+        <td><button class="btnAdd" onclick="add('${p}')">+ Adicionar</button></td>
+      </tr>`;
+  });
+}
 
-area.innerHTML = "";
+/* ── Buscar Produto ── */
+function buscarProduto() {
+  let termo = document.getElementById("busca").value.toLowerCase();
+  let area = document.getElementById("produtos");
+  area.innerHTML = "";
 
-let clientesFiltrados = clientes.filter(c => {
+  let filtro = document.getElementById("pesquisaProdutoOrcamento")?.value.toLowerCase() || "";
 
-let textoBusca = `
-${c.nomeFantasia}
-${c.razaoSocial}
-${c.cpfCnpj}
-${c.telefone}
-${c.email}
-${c.estado}
-${c.cidade}
-${c.grupo}
-${c.concorrentePrincipal || ""}
-${c.outrosConcorrentes || ""}
-`.toLowerCase();
+  for (let categoria in catalogo) {
+    let produtosFiltrados = catalogo[categoria].filter(produto => produto.toLowerCase().includes(filtro));
+    if (produtosFiltrados.length === 0) continue;
+    produtosFiltrados.forEach(produto => {
+      if (produto.toLowerCase().includes(termo)) {
+        area.innerHTML += `
+          <tr>
+            <td>${produto}</td>
+            <td><input type="number" id="${produto}" min="1" placeholder="0"></td>
+            <td><button class="btnAdd" onclick="add('${produto}')">+ Adicionar</button></td>
+          </tr>`;
+      }
+    });
+  }
+}
 
-return textoBusca.includes(filtro);
+/* ── Adicionar ao Carrinho ── */
+function add(prod) {
+  let q = document.getElementById(prod).value;
+  if (!q) return;
+  carrinho.push(prod + " - " + q);
+  mostrarCarrinho();
+}
 
+/* ── Mostrar Carrinho ── */
+function mostrarCarrinho() {
+  let lista = document.getElementById("listaCarrinho");
+  lista.innerHTML = "";
+  if (carrinho.length === 0) {
+    lista.innerHTML = `<div class="empty-state"><span class="empty-state-icon">📦</span>Nenhum produto adicionado</div>`;
+  } else {
+    carrinho.forEach((i, index) => {
+      lista.innerHTML += `
+        <div class="itemCarrinho">
+          <span>${i}</span>
+          <button class="remover" onclick="remover(${index})">✕</button>
+        </div>`;
+    });
+  }
+  document.getElementById("contador").innerText = carrinho.length;
+}
+
+/* ── Remover do Carrinho ── */
+function remover(i) {
+  carrinho.splice(i, 1);
+  mostrarCarrinho();
+}
+
+/* ── Limpar Carrinho ── */
+function limparCarrinho() {
+  carrinho = [];
+  mostrarCarrinho();
+}
+
+/* ── Enviar WhatsApp ── */
+function enviar() {
+  let obs = document.getElementById("obs").value;
+  let msg = "Cotação:%0A%0A";
+  carrinho.forEach(i => { msg += i + "%0A"; });
+  msg += "%0AObservação:%0A" + obs;
+  window.open("https://wa.me/" + numero + "?text=" + msg);
+}
+
+/* ── Carregar Produtos Orçamento ── */
+function carregarProdutosOrcamento() {
+  let area = document.getElementById("listaOrcamentoProdutos");
+  if (!area) return;
+  area.innerHTML = "";
+  for (let categoria in catalogo) {
+    area.innerHTML += `<div class="categoria-header-orcamento">${categoria}</div>`;
+    catalogo[categoria].forEach(produto => {
+      area.innerHTML += `
+        <div class="produto-card-orcamento">
+          <div class="nome-produto">${produto}</div>
+          <button onclick="adicionarOrcamento('${produto}')"
+            class="btn-block btn-primary"
+            style="padding:8px;font-size:13px;">
+            + Adicionar
+          </button>
+        </div>`;
+    });
+  }
+}
+
+/* ── Adicionar ao Orçamento ── */
+function adicionarOrcamento(produto) {
+  let qtd = prompt("Quantidade:");
+  if (!qtd) return;
+  let preco = prompt("Preço Unitário:");
+  if (!preco) return;
+  preco = preco.toString().trim();
+  if (preco.includes(",") && preco.includes(".")) {
+    if (preco.lastIndexOf(",") > preco.lastIndexOf(".")) {
+      preco = preco.replace(/\./g, "").replace(",", ".");
+    } else {
+      preco = preco.replace(/,/g, "");
+    }
+  } else if (preco.includes(",")) {
+    preco = preco.replace(",", ".");
+  }
+  preco = parseFloat(preco);
+  let total = qtd * preco;
+  orcamentoInterno.push({ produto, qtd, preco, total });
+  mostrarOrcamento();
+}
+
+/* ── Mostrar Orçamento ── */
+function mostrarOrcamento() {
+  let area = document.getElementById("itensOrcamento");
+  area.innerHTML = "";
+  let totalGeral = 0;
+
+  if (orcamentoInterno.length === 0) {
+    area.innerHTML = `<div class="empty-state"><span class="empty-state-icon">📋</span>Nenhum produto adicionado ao orçamento</div>`;
+  } else {
+    orcamentoInterno.forEach((item, index) => {
+      totalGeral += item.total;
+      area.innerHTML += `
+        <div class="orcamento-item-card">
+          <strong>${item.produto}</strong>
+          <div class="meta">
+            <span>Qtd: <strong>${item.qtd}</strong></span>
+            <span>Unit.: <strong>R$ ${item.preco.toFixed(2)}</strong></span>
+            <span>Total: <strong>R$ ${item.total.toFixed(2)}</strong></span>
+          </div>
+          <button onclick="removerOrcamento(${index})"
+            class="btn-del"
+            style="margin-top:10px;width:auto;display:inline-flex;align-items:center;gap:4px;">
+            ✕ Remover
+          </button>
+        </div>`;
+    });
+  }
+
+  let frete = parseFloat(document.getElementById("freteValor").value) || 0;
+  totalGeral += frete;
+  document.getElementById("totalGeral").innerText = "TOTAL: R$ " + totalGeral.toFixed(2).replace(".", ",");
+}
+
+/* ── Remover do Orçamento ── */
+function removerOrcamento(index) {
+  orcamentoInterno.splice(index, 1);
+  mostrarOrcamento();
+}
+
+/* ── Orçamento WhatsApp ── */
+function gerarOrcamentoWhats() {
+  let msg = "ORÇAMENTO:%0A%0A";
+  orcamentoInterno.forEach(item => {
+    msg += item.produto + "%0A";
+    msg += "Qtd: " + item.qtd + "%0A";
+    msg += "Preço: R$ " + item.preco.toFixed(2) + "%0A";
+    msg += "Total: R$ " + item.total.toFixed(2) + "%0A%0A";
+  });
+  let frete = parseFloat(document.getElementById("freteValor").value) || 0;
+  let total = 0;
+  orcamentoInterno.forEach(item => { total += item.total; });
+  total += frete;
+  msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
+  msg += "TOTAL GERAL: R$ " + total.toFixed(2);
+  window.open("https://wa.me/" + numero + "?text=" + msg);
+}
+
+/* ── Frete listener ── */
+document.addEventListener("input", function(e) {
+  if (e.target.id === "freteValor") { mostrarOrcamento(); }
 });
 
-area.innerHTML = `
-
-<div style="
-overflow-x:auto;
-max-height:200px;
-overflow-y:auto;
-">
-
-
-
-<table style="
-width:100%;
-border-collapse:collapse;
-background:white;
-border-radius:10px;
-overflow:hidden;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-">
-
-<thead>
-
-<tr style="
-background:#2c3e50;
-color:white;
-">
-
-
-<th style="padding:12px">Cliente</th>
-<th style="padding:12px">Cidade</th>
-<th style="padding:12px">WhatsApp</th>
-<th style="padding:12px">E-mail</th>
-<th style="padding:12px">Grupo</th>
-<th style="padding:12px">Concorrente</th>
-<th style="padding:12px">Classificação</th>
-<th style="padding:12px">Ações</th>
-
-
-</tr>
-
-</thead>
-
-<tbody>
-
-
-${clientesFiltrados
-.filter(c => c.nomeFantasia && c.nomeFantasia.trim() !== "")
-.map((c,index)=>`
-
-
-
-<tr style="border-bottom:1px solid #eee;">
-
-<td style="padding:12px">
-
-<b>${c.nomeFantasia}</b><br>
-
-<small>${c.razaoSocial}</small><br>
-
-<small>${c.cpfCnpj}</small>
-
-</td>
-
-<td style="padding:12px">
-
-${c.cidade} - ${c.estado}
-
-</td>
-
-
-<td style="padding:12px">
-
-<a href="https://wa.me/${c.telefone}" target="_blank">
-
-WhatsApp
-
-
-</a>
-
-</td>
-
-
-<td style="padding:12px">
-
-${c.email}
-
-</td>
-
-<td style="padding:12px">
-
-${c.grupo}
-
-</td>
-
-<td style="padding:12px">
-
-${c.concorrentePrincipal || "-"}
-
-</td>
-
-<td style="padding:12px">
-
-${c.classificacao}
-
-</td>
-
-<td style="padding:12px">
-
-<button onclick="editarCliente(${index})"
-style="
-background:#f39c12;
-color:white;
-border:none;
-padding:6px 10px;
-border-radius:5px;
-cursor:pointer;
-margin-bottom:5px;
-">
-
-Editar
-
-</button>
-
-<br>
-
-<button onclick="removerCliente(${index})"
-style="
-background:#e74c3c;
-color:white;
-border:none;
-padding:6px 10px;
-border-radius:5px;
-cursor:pointer;
-">
-
-Remover
-
-</button>
-
-</td>
-
-</tr>
-
-`).join("")}
-
-</tbody>
-
-</table>
-
-</div>
-
-`;
-
+/* ── Filtrar Produtos Orçamento ── */
+function filtrarProdutosOrcamento() {
+  let termo = document.getElementById("pesquisaProdutoOrcamento").value.toLowerCase();
+  let area = document.getElementById("listaOrcamentoProdutos");
+  area.innerHTML = "";
+  for (let categoria in catalogo) {
+    let pf = catalogo[categoria].filter(p => p.toLowerCase().includes(termo));
+    if (pf.length > 0) {
+      area.innerHTML += `<div class="categoria-header-orcamento">${categoria}</div>`;
+      pf.forEach(produto => {
+        area.innerHTML += `
+          <div class="produto-card-orcamento">
+            <div class="nome-produto">${produto}</div>
+            <button onclick="adicionarOrcamento('${produto}')"
+              class="btn-block btn-primary"
+              style="padding:8px;font-size:13px;">
+              + Adicionar
+            </button>
+          </div>`;
+      });
+    }
+  }
 }
 
+/* ── Gerar PDF ── */
+function gerarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const logo = new Image();
+  logo.src = "logo_512.png";
+  let data = new Date();
+  let dataAtual = data.toLocaleDateString("pt-BR");
+  let cliente = "SEM CLIENTE";
+  if (usarClienteNoPDF && clienteSelecionado) {
+    cliente = clienteSelecionado.nomeFantasia;
+  }
+  let total = 0;
+  doc.addImage(logo, "PNG", 150, 10, 40, 40);
+  doc.setFontSize(22);
+  doc.setTextColor(44, 62, 80);
+  doc.text("MULTIPLA COTAÇÃO", 20, 20);
+  doc.setFontSize(12);
+  doc.setTextColor(100);
+  doc.text("Data: " + dataAtual, 20, 35);
+  doc.text("Cliente: " + cliente, 20, 43);
+  doc.setDrawColor(200);
+  doc.line(20, 48, 190, 48);
+  let y = 60;
+  orcamentoInterno.forEach(item => {
+    doc.setFontSize(12);
+    doc.setTextColor(40);
+    doc.text(item.produto, 20, y);
+    y += 7;
+    doc.text("Qtd: " + item.qtd + " | Unitário: R$ " + item.preco.toFixed(2) + " | Total: R$ " + item.total.toFixed(2), 20, y);
+    y += 12;
+    total += item.total;
+  });
+  let frete = parseFloat(document.getElementById("freteValor").value) || 0;
+  total += frete;
+  doc.setDrawColor(180);
+  doc.line(20, y, 190, y);
+  y += 15;
+  doc.setFontSize(16);
+  doc.setTextColor(39, 174, 96);
+  doc.text("TOTAL GERAL: R$ " + total.toFixed(2), 20, y);
+  doc.save("orcamento.pdf");
+}
 
+/* ── Toggle Cliente PDF ── */
+function toggleClientePDF() {
+  usarClienteNoPDF = document.getElementById("usarClientePDF").checked;
+}
 
-function editarCliente(index){
-
-let c = clientes[index];
-
-clienteEditando = index;
-
-document.getElementById("tipoCliente").value = c.tipo || "";
-
-document.getElementById("nomeFantasia").value = c.nomeFantasia || "";
-
-document.getElementById("razaoSocial").value = c.razaoSocial || "";
-
-document.getElementById("cpfCnpj").value = c.cpfCnpj || "";
-
-document.getElementById("comprador").value = c.comprador || "";
-
-document.getElementById("telefoneCliente").value = c.telefone || "";
-
-document.getElementById("emailCliente").value = c.email || "";
-
-document.getElementById("estadoCliente").value = c.estado || "";
-
-document.getElementById("enderecoCliente").value = c.endereco || "";
-
-document.getElementById("bairroCliente").value = c.bairro || "";
-
-document.getElementById("cepCliente").value = c.cep || "";
-
-document.getElementById("cidadeCliente").value = c.cidade || "";
-
-document.getElementById("grupoCliente").value = c.grupo || "";
-
-document.getElementById("concorrentePrincipal").value = c.concorrentePrincipal || "";
-
-document.getElementById("outrosConcorrentes").value = c.outrosConcorrentes || "";
-
-document.getElementById("classificacao").value = c.classificacao || "";
-
-document.getElementById("compraDesde").value = c.compraDesde || "";
-
-document.getElementById("obsCliente").value = c.obs || "";
-
-document.getElementById("areaCadastroCliente").style.display = "block";
-
-window.scrollTo({
-top: document.getElementById("areaCadastroCliente").offsetTop - 50,
-behavior: "smooth"
+/* ── Change listener cliente ── */
+document.addEventListener("change", function(e) {
+  if (e.target.id === "clienteOrcamento") {
+    let index = e.target.value;
+    clienteSelecionado = (index === "") ? null : clientes[index];
+  }
 });
 
+/* ── Pesquisar Cliente Orçamento ── */
+function pesquisarClienteOrcamento() {
+  let termo = document.getElementById("clienteOrcamento").value.toLowerCase();
+  let area = document.getElementById("resultadoClienteOrcamento");
+  area.innerHTML = "";
+  if (termo.length < 2) return;
+  clientes.forEach(cliente => {
+    if (cliente.nomeFantasia.toLowerCase().includes(termo)) {
+      area.innerHTML += `
+        <div onclick='selecionarClienteOrcamento(${JSON.stringify(cliente)})'>
+          ${cliente.nomeFantasia}
+        </div>`;
+    }
+  });
 }
 
-
-
-function removerCliente(index){
-
-clientes.splice(index,1);
-
-localStorage.setItem(
-"clientesCRM",
-JSON.stringify(clientes)
-);
-
-mostrarClientes();
-
-}
-function toggleCadastroCliente(){
-
-let area = document.getElementById("areaCadastroCliente");
-
-if(area.style.display === "none"){
-
-area.style.display = "block";
-
-}else{
-
-area.style.display = "none";
-
+/* ── Selecionar Cliente Orçamento ── */
+function selecionarClienteOrcamento(cliente) {
+  clienteSelecionado = cliente;
+  document.getElementById("clienteOrcamento").value = cliente.nomeFantasia;
+  document.getElementById("resultadoClienteOrcamento").innerHTML = "";
 }
 
-}
-function limparCampos(){
+/* ── Placeholder function para compatibilidade ── */
+function carregarClientesSelect() {}
 
-document.getElementById("nomeFantasia").value = "";
-
-document.getElementById("razaoSocial").value = "";
-
-document.getElementById("cpfCnpj").value = "";
-
-document.getElementById("comprador").value = "";
-
-document.getElementById("telefoneCliente").value = "";
-
-document.getElementById("emailCliente").value = "";
-
-document.getElementById("estadoCliente").value = "";
-
-document.getElementById("cidadeCliente").value = "";
-
-document.getElementById("grupoCliente").value = "";
-
-document.getElementById("compraDesde").value = "";
-
-document.getElementById("obsCliente").value = "";
-
-}
-
-function carregarCategorias(){
-
-let area=document.getElementById("categorias");
-
-area.innerHTML="";
-
-for(let c in catalogo){
-
-area.innerHTML += `
-<div class="categoria" onclick="abrirCategoria('${c}')">
-${c}
-</div>
-`;
-
-}
-
-}
-
-function abrirCategoria(cat){
-
-let area=document.getElementById("produtos");
-
-area.innerHTML="";
-
-catalogo[cat].forEach(p=>{
-
-area.innerHTML += `
-<tr>
-
-<td>${p}</td>
-
-<td>
-<input type="number" id="${p}">
-</td>
-
-<td>
-<button class="btnAdd" onclick="add('${p}')">
-Adicionar
-</button>
-</td>
-
-</tr>
-`;
-
-});
-
-}
-
-function buscarProduto(){
-
-let termo=document
-.getElementById("busca")
-.value
-.toLowerCase();
-
-let area=document.getElementById("produtos");
-
-area.innerHTML="";
-let filtro = document
-.getElementById("pesquisaProdutoOrcamento")
-?.value
-.toLowerCase() || "";
-
-
-for(let categoria in catalogo){
-
-let produtosFiltrados = catalogo[categoria]
-.filter(produto =>
-produto.toLowerCase().includes(filtro)
-);
-
-if(produtosFiltrados.length === 0){
-continue;
-}
-
-
-
-produtosFiltrados.forEach(produto=>{
-
-
-
-
-
-if(produto.toLowerCase().includes(termo)){
-
-area.innerHTML += `
-<tr>
-
-<td>${produto}</td>
-
-<td>
-<input type="number" id="${produto}">
-</td>
-
-<td>
-<button class="btnAdd" onclick="add('${produto}')">
-Adicionar
-</button>
-</td>
-
-</tr>
-`;
-
-}
-
-});
-
-}
-
-}
-
-function add(prod){
-
-let q=document.getElementById(prod).value;
-
-if(!q)return;
-
-carrinho.push(prod+" - "+q);
-
-mostrarCarrinho();
-
-}
-
-function mostrarCarrinho(){
-
-let lista=document.getElementById("listaCarrinho");
-
-lista.innerHTML="";
-
-carrinho.forEach((i,index)=>{
-
-lista.innerHTML += `
-<div class="itemCarrinho">
-
-${i}
-
-<button class="remover" onclick="remover(${index})">
-X
-</button>
-
-</div>
-`;
-
-});
-
-document.getElementById("contador").innerText=carrinho.length;
-
-}
-
-function remover(i){
-
-carrinho.splice(i,1);
-
-mostrarCarrinho();
-
-}
-
-function limparCarrinho(){
-
-carrinho=[];
-
-mostrarCarrinho();
-
-}
-
-function enviar(){
-
-let obs=document.getElementById("obs").value;
-
-let msg="Cotação:%0A%0A";
-
-carrinho.forEach(i=>{
-
-msg += i+"%0A";
-
-});
-
-msg += "%0AObservação:%0A"+obs;
-
-window.open(
-"https://wa.me/"+numero+"?text="+msg
-);
-
-}
-
-
-function carregarProdutosOrcamento(){
-
-let area = document.getElementById("listaOrcamentoProdutos");
-
-if(!area) return;
-
-area.innerHTML = "";
-
-for(let categoria in catalogo){
-
-area.innerHTML += `
-
-<div style="
-grid-column:span 2;
-margin-top:25px;
-margin-bottom:10px;
-padding:10px;
-background:#2c3e50;
-color:white;
-font-size:20px;
-font-weight:bold;
-border-radius:10px;
-">
-${categoria}
-</div>
-
-`;
-
-catalogo[categoria].forEach(produto=>{
-
-area.innerHTML += `
-
-<div style="
-background:white;
-border:1px solid #ddd;
-
-padding:10px;
-border-radius:10px;
-display:flex;
-flex-direction:column;
-gap:10px;
-box-shadow:0 2px 4px rgba(0,0,0,0.08);
-">
-
-<div style="
-font-size:14px;
-font-weight:bold;
-line-height:1.4;
-color:#2c3e50;
-">
-${produto}
-</div>
-
-<button onclick="adicionarOrcamento('${produto}')"
-style="
-background:#2980b9;
-color:white;
-border:none;
-padding:8px;
-border-radius:8px;
-cursor:pointer;
-font-size:15px;
-font-weight:bold;
-box-shadow:0 2px 5px rgba(0,0,0,0.2);
-width:100%;
-">
-
-+ Adicionar
-
-</button>
-
-</div>
-
-`;
-
-});
-
-}
-
-}
-function adicionarOrcamento(produto){
-
-let qtd = prompt("Quantidade:");
-
-if(!qtd) return;
-
-let preco = prompt("Preço Unitário:");
-
-if(!preco) return;
-
-
-preco = preco.toString().trim();
-
-if(preco.includes(",") && preco.includes(".")){
-
-if(preco.lastIndexOf(",") > preco.lastIndexOf(".")){
-
-preco = preco
-.replace(/\./g,"")
-.replace(",", ".");
-
-}else{
-
-preco = preco.replace(/,/g,"");
-
-}
-
-}else if(preco.includes(",")){
-
-preco = preco.replace(",", ".");
-
-}
-
-preco = parseFloat(preco);
-
-
-
-
-
-let total = qtd * preco;
-
-orcamentoInterno.push({
-produto,
-qtd,
-preco,
-total
-});
-
-mostrarOrcamento();
-
-}
-
-function mostrarOrcamento(){
-
-let area = document.getElementById("itensOrcamento");
-
-area.innerHTML = "";
-
-let totalGeral = 0;
-
-orcamentoInterno.forEach((item,index)=>{
-
-totalGeral += item.total;
-
-area.innerHTML += `
-
-<div style="
-background:white;
-padding:15px;
-margin-bottom:10px;
-border-radius:10px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-">
-
-<b>${item.produto}</b><br><br>
-
-Qtd: ${item.qtd}<br>
-
-Preço: R$ ${item.preco.toFixed(2)}<br>
-
-Total: R$ ${item.total.toFixed(2)}
-
-<br><br>
-
-<button onclick="removerOrcamento(${index})"
-style="
-background:#e74c3c;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:6px;
-cursor:pointer;
-">
-Remover
-</button>
-
-</div>
-
-`;
-
-});
-
-let frete = parseFloat(
-document.getElementById("freteValor").value
-) || 0;
-
-totalGeral += frete;
-
-document.getElementById("totalGeral")
-.innerText =
-"TOTAL: R$ " + totalGeral.toFixed(2);
-
-}
-
-function removerOrcamento(index){
-
-orcamentoInterno.splice(index,1);
-
-mostrarOrcamento();
-
-}
-function gerarOrcamentoWhats(){
-
-let msg = "ORÇAMENTO:%0A%0A";
-
-orcamentoInterno.forEach(item=>{
-
-msg += item.produto + "%0A";
-
-msg += "Qtd: " + item.qtd + "%0A";
-
-msg += "Preço: R$ " + item.preco.toFixed(2) + "%0A";
-
-msg += "Total: R$ " + item.total.toFixed(2) + "%0A%0A";
-
-});
-
-let frete = parseFloat(
-document.getElementById("freteValor").value
-) || 0;
-
-let total = 0;
-
-orcamentoInterno.forEach(item=>{
-total += item.total;
-});
-
-total += frete;
-
-msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
-
-msg += "TOTAL GERAL: R$ " + total.toFixed(2);
-
-window.open(
-"https://wa.me/" + numero + "?text=" + msg
-);
-
-}
-document.addEventListener("input", function(e){
-
-if(e.target.id === "freteValor"){
-mostrarOrcamento();
-}
-
-});
-function filtrarProdutosOrcamento(){
-
-let termo = document
-.getElementById("pesquisaProdutoOrcamento")
-.value
-.toLowerCase();
-
-let area = document.getElementById("listaOrcamentoProdutos");
-
-area.innerHTML = "";
-
-for(let categoria in catalogo){
-
-let produtosFiltrados = catalogo[categoria].filter(produto =>
-produto.toLowerCase().includes(termo)
-);
-
-if(produtosFiltrados.length > 0){
-
-area.innerHTML += `
-
-<div style="
-grid-column:span 2;
-margin-top:25px;
-margin-bottom:10px;
-padding:10px;
-background:#2c3e50;
-color:white;
-font-size:20px;
-font-weight:bold;
-border-radius:10px;
-">
-${categoria}
-</div>
-
-`;
-
-produtosFiltrados.forEach(produto=>{
-
-area.innerHTML += `
-
-<div style="
-background:white;
-border:1px solid #ddd;
-padding:10px;
-border-radius:10px;
-display:flex;
-flex-direction:column;
-gap:10px;
-box-shadow:0 2px 4px rgba(0,0,0,0.08);
-">
-
-<div style="
-font-size:14px;
-font-weight:bold;
-line-height:1.4;
-color:#2c3e50;
-">
-${produto}
-</div>
-
-<button onclick="adicionarOrcamento('${produto}')"
-style="
-background:#2980b9;
-color:white;
-border:none;
-padding:8px;
-border-radius:8px;
-cursor:pointer;
-font-size:15px;
-font-weight:bold;
-width:100%;
-">
-
-+ Adicionar
-
-</button>
-
-</div>
-
-`;
-
-});
-
-}
-
-}
-
-}  
-function gerarPDF(){
-
-const { jsPDF } = window.jspdf;
-
-const doc = new jsPDF();
-const logo = new Image();
-
-logo.src = "logo_512.png";
-let data = new Date();
-
-let dataAtual =
-data.toLocaleDateString("pt-BR");
-
-
-let cliente = "SEM CLIENTE";
-
-if(
-usarClienteNoPDF &&
-clienteSelecionado
-){
-
-cliente = clienteSelecionado.nomeFantasia;
-
-}
-
-
-
-let total = 0;
-doc.addImage(logo, "PNG", 150, 10, 40, 40);
-
-doc.setFontSize(22);
-doc.setTextColor(44,62,80);
-doc.text("MULTIPLA COTAÇÃO", 20, 20);
-
-doc.setFontSize(12);
-doc.setTextColor(100);
-
-doc.text("Data: " + dataAtual, 20, 35);
-
-doc.text("Cliente: " + cliente, 20, 43);
-
-doc.setDrawColor(200);
-doc.line(20, 48, 190, 48);
-
-let y = 60;
-
-orcamentoInterno.forEach(item=>{
-
-doc.setFontSize(12);
-
-doc.setTextColor(40);
-
-doc.text(item.produto, 20, y);
-
-y += 7;
-
-doc.text(
-"Qtd: " + item.qtd +
-" | Unitário: R$ " +
-item.preco.toFixed(2) +
-" | Total: R$ " +
-item.total.toFixed(2),
-20,
-y
-);
-
-y += 12;
-
-total += item.total;
-
-});
-
-let frete = parseFloat(
-document.getElementById("freteValor").value
-) || 0;
-
-total += frete;
-
-doc.setDrawColor(180);
-
-doc.line(20, y, 190, y);
-
-y += 15;
-
-doc.setFontSize(16);
-
-doc.setTextColor(39,174,96);
-
-doc.text(
-"TOTAL GERAL: R$ " + total.toFixed(2),
-20,
-y
-);
-
-doc.save("orcamento.pdf");
-
-}
-
-
-
-function toggleClientePDF(){
-
-usarClienteNoPDF =
-document.getElementById("usarClientePDF").checked;
-
-}
-
-document.addEventListener("change", function(e){
-
-if(e.target.id === "clienteOrcamento"){
-
-let index = e.target.value;
-
-if(index === ""){
-
-clienteSelecionado = null;
-
-}else{
-
-clienteSelecionado = clientes[index];
-
-}
-
-}
-
-});
-
-  
-
-function pesquisarClienteOrcamento(){
-
-let termo = document
-.getElementById("clienteOrcamento")
-.value
-.toLowerCase();
-
-let area = document.getElementById(
-"resultadoClienteOrcamento"
-);
-
-area.innerHTML = "";
-
-if(termo.length < 2){
-return;
-}
-
-clientes.forEach((cliente)=>{
-
-if(
-cliente.nomeFantasia
-.toLowerCase()
-.includes(termo)
-){
-
-area.innerHTML += `
-
-<div onclick='selecionarClienteOrcamento(${JSON.stringify(cliente)})'
-style="
-padding:10px;
-border-bottom:1px solid #eee;
-cursor:pointer;
-">
-
-${cliente.nomeFantasia}
-
-</div>
-
-`;
-
-}
-
-});
-
-}
-
-function selecionarClienteOrcamento(cliente){
-
-clienteSelecionado = cliente;
-
-document.getElementById(
-"clienteOrcamento"
-).value = cliente.nomeFantasia;
-
-document.getElementById(
-"resultadoClienteOrcamento"
-).innerHTML = "";
-
-}
-
-
+/* ── Init ── */
 carregarCategorias();
 
-
-
-
+/* ── PWA Install ── */
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById("installBtn").style.display = "block";
+});
+document.getElementById("installBtn").addEventListener("click", async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    if (outcome === "accepted") {
+      document.getElementById("installBtn").style.display = "none";
+    }
+  }
+});
 
 </script>
-
 </body>
 </html>
