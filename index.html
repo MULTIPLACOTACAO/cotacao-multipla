@@ -542,7 +542,11 @@ margin-bottom:10px;
 Cliente no Orçamento
 </h3>
 
-<select id="clienteOrcamento"
+
+<input
+id="clienteOrcamento"
+placeholder="Pesquisar cliente para o orçamento"
+oninput="pesquisarClienteOrcamento()"
 style="
 width:100%;
 padding:12px;
@@ -551,9 +555,18 @@ border:1px solid #ccc;
 margin-bottom:10px;
 ">
 
-<option value="">SEM CLIENTE</option>
+<div id="resultadoClienteOrcamento"
+style="
+max-height:150px;
+overflow-y:auto;
+border:1px solid #ddd;
+border-radius:8px;
+background:white;
+margin-bottom:10px;
+">
+</div>
 
-</select>
+
 
 <label style="
 display:flex;
@@ -1793,28 +1806,6 @@ doc.save("orcamento.pdf");
 
 
 
-function carregarClientesSelect(){
-
-let select = document.getElementById("clienteOrcamento");
-
-if(!select) return;
-
-select.innerHTML = `
-<option value="">SEM CLIENTE</option>
-`;
-
-clientes.forEach((cliente,index)=>{
-
-select.innerHTML += `
-<option value="${index}">
-${cliente.nomeFantasia}
-</option>
-`;
-
-});
-
-}
-
 function toggleClientePDF(){
 
 usarClienteNoPDF =
@@ -1844,9 +1835,70 @@ clienteSelecionado = clientes[index];
 
   
 
+function pesquisarClienteOrcamento(){
+
+let termo = document
+.getElementById("clienteOrcamento")
+.value
+.toLowerCase();
+
+let area = document.getElementById(
+"resultadoClienteOrcamento"
+);
+
+area.innerHTML = "";
+
+if(termo.length < 2){
+return;
+}
+
+clientes.forEach((cliente)=>{
+
+if(
+cliente.nomeFantasia
+.toLowerCase()
+.includes(termo)
+){
+
+area.innerHTML += `
+
+<div onclick='selecionarClienteOrcamento(${JSON.stringify(cliente)})'
+style="
+padding:10px;
+border-bottom:1px solid #eee;
+cursor:pointer;
+">
+
+${cliente.nomeFantasia}
+
+</div>
+
+`;
+
+}
+
+});
+
+}
+
+function selecionarClienteOrcamento(cliente){
+
+clienteSelecionado = cliente;
+
+document.getElementById(
+"clienteOrcamento"
+).value = cliente.nomeFantasia;
+
+document.getElementById(
+"resultadoClienteOrcamento"
+).innerHTML = "";
+
+}
+
+
 carregarCategorias();
 
-carregarClientesSelect();
+
 
 
 
