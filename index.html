@@ -527,6 +527,52 @@ margin-bottom:20px;
 ORÇAMENTO INTERNO
 </h3>
 <div style="
+background:#f8f9fa;
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
+border:1px solid #ddd;
+">
+
+<h3 style="
+margin-top:0;
+color:#2c3e50;
+margin-bottom:10px;
+">
+Cliente no Orçamento
+</h3>
+
+<select id="clienteOrcamento"
+style="
+width:100%;
+padding:12px;
+border-radius:8px;
+border:1px solid #ccc;
+margin-bottom:10px;
+">
+
+<option value="">SEM CLIENTE</option>
+
+</select>
+
+<label style="
+display:flex;
+align-items:center;
+gap:10px;
+font-weight:bold;
+color:#2c3e50;
+">
+
+<input
+type="checkbox"
+id="usarClientePDF"
+onchange="toggleClientePDF()"
+>
+
+Inserir cliente
+
+  
+<div style="
 display:flex;
 gap:10px;
 margin-bottom:15px;
@@ -743,6 +789,9 @@ let orcamentoInterno = [];
 let clientes = JSON.parse(localStorage.getItem("clientesCRM")) || [];
 let clienteEditando = -1;
 let clienteSelecionado = null;
+let usarClienteNoPDF = false;
+
+
 
 
 function abrirCRM(){
@@ -820,6 +869,8 @@ JSON.stringify(clientes)
 );
 
 mostrarClientes();
+carregarClientesSelect();
+
 
 limparCampos();
 
@@ -1655,8 +1706,19 @@ let data = new Date();
 let dataAtual =
 data.toLocaleDateString("pt-BR");
 
-let cliente =
-document.getElementById("nomeFantasia").value || "Cliente";
+
+let cliente = "SEM CLIENTE";
+
+if(
+usarClienteNoPDF &&
+clienteSelecionado
+){
+
+cliente = clienteSelecionado.nomeFantasia;
+
+}
+
+
 
 let total = 0;
 doc.addImage(logo, "PNG", 150, 10, 40, 40);
@@ -1730,8 +1792,63 @@ doc.save("orcamento.pdf");
 }
 
 
+
+function carregarClientesSelect(){
+
+let select = document.getElementById("clienteOrcamento");
+
+if(!select) return;
+
+select.innerHTML = `
+<option value="">SEM CLIENTE</option>
+`;
+
+clientes.forEach((cliente,index)=>{
+
+select.innerHTML += `
+<option value="${index}">
+${cliente.nomeFantasia}
+</option>
+`;
+
+});
+
+}
+
+function toggleClientePDF(){
+
+usarClienteNoPDF =
+document.getElementById("usarClientePDF").checked;
+
+}
+
+document.addEventListener("change", function(e){
+
+if(e.target.id === "clienteOrcamento"){
+
+let index = e.target.value;
+
+if(index === ""){
+
+clienteSelecionado = null;
+
+}else{
+
+clienteSelecionado = clientes[index];
+
+}
+
+}
+
+});
+
   
+
 carregarCategorias();
+
+carregarClientesSelect();
+
+
 
 </script>
 
