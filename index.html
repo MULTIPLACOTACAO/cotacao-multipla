@@ -1426,11 +1426,9 @@ function mostrarTab(tab, btn) {
 
 /* ── Abrir CRM ── */
 function abrirCRM() {
-  let senha = prompt("Digite sua senha:");
-  if (senha !== "hot#") { alert("Senha incorreta"); return; }
-  document.getElementById("crmArea").style.display = "block";
-  carregarProdutosOrcamento();
-  mostrarClientes();
+
+  document.getElementById("loginCRM").style.display = "block";
+
 }
 
 /* ── Salvar Cliente ── */
