@@ -1072,10 +1072,11 @@ select.input-premium { cursor: pointer; appearance: none; }
         placeholder="Digite a senha">
     </div>
 
-    <button
-      class="btn-block btn-primary">
-      Entrar
-    </button>
+  <button
+  onclick="fazerLogin()"
+  class="btn-block btn-primary">
+  Entrar
+</button>
 
   </div>
 
@@ -1430,7 +1431,38 @@ function abrirCRM() {
   document.getElementById("loginCRM").style.display = "block";
 
 }
+function fazerLogin() {
 
+  let usuario =
+    document.getElementById("loginUsuario").value.trim();
+
+  let senha =
+    document.getElementById("loginSenha").value.trim();
+
+  let encontrado = usuarios.find(u =>
+    u.usuario === usuario &&
+    u.senha === senha
+  );
+
+  if (!encontrado) {
+    alert("Usuário ou senha inválidos");
+    return;
+  }
+
+  usuarioLogado = encontrado;
+
+  document.getElementById("loginCRM").style.display = "none";
+
+  document.getElementById("crmArea").style.display = "block";
+
+  carregarProdutosOrcamento();
+  mostrarClientes();
+
+  alert(
+    "Bem-vindo, " +
+    encontrado.nome
+  );
+}
 /* ── Salvar Cliente ── */
 function salvarCliente() {
   let cliente = {
