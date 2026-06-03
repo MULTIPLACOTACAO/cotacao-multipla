@@ -1366,7 +1366,19 @@ let clientes = JSON.parse(localStorage.getItem("clientesCRM")) || [];
 let clienteEditando = -1;
 let clienteSelecionado = null;
 let usarClienteNoPDF = false;
+let usuarioLogado = null;
 
+let usuarios = JSON.parse(
+  localStorage.getItem("usuariosCRM")
+) || [
+  {
+    id: 1,
+    nome: "Administrador",
+    usuario: "admin",
+    senha: "123456",
+    perfil: "admin"
+  }
+];
 /* ── Tabs CRM ── */
 function mostrarTab(tab, btn) {
   document.getElementById("tab-clientes").style.display = tab === "clientes" ? "block" : "none";
