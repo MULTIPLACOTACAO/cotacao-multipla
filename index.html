@@ -1084,12 +1084,19 @@ select.input-premium { cursor: pointer; appearance: none; }
     <div id="crmArea">
 
       <div class="crm-header">
-        <div class="crm-header-icon">⚙️</div>
-        <div class="crm-header-text">
-          <h2>CRM COMERCIAL</h2>
-          <p>Gestão de clientes e orçamentos internos</p>
-        </div>
-      </div>
+
+  <div class="crm-header-icon">⚙️</div>
+
+  <div class="crm-header-text">
+    <h2>CRM COMERCIAL</h2>
+    <p>Gestão de clientes e orçamentos internos</p>
+  </div>
+
+  <button onclick="logoutCRM()" class="btn-del" style="width:auto;padding:8px 14px;">
+    Sair
+  </button>
+
+</div>
 
       <div class="crm-body">
 
@@ -1427,9 +1434,21 @@ function mostrarTab(tab, btn) {
 
 /* ── Abrir CRM ── */
 function abrirCRM() {
+  const sessao = sessionStorage.getItem("usuarioLogado");
 
-  document.getElementById("loginCRM").style.display = "block";
+  if (sessao) {
+    // já está logado → abre direto o CRM
+    document.getElementById("loginCRM").style.display = "none";
+    document.getElementById("crmArea").style.display = "block";
 
+    usuarioLogado = JSON.parse(sessao);
+
+    carregarProdutosOrcamento();
+    mostrarClientes();
+  } else {
+    // não está logado → pede login
+    document.getElementById("loginCRM").style.display = "block";
+  }
 }
 function fazerLogin() {
 function verificarSessao() {
@@ -1445,6 +1464,21 @@ function verificarSessao() {
 
   carregarProdutosOrcamento();
   mostrarClientes();
+
+}
+  function logoutCRM() {
+
+  if (!confirm("Deseja sair do sistema?")) {
+    return;
+  }
+
+  sessionStorage.removeItem("usuarioLogado");
+
+  usuarioLogado = null;
+
+  document.getElementById("crmArea").style.display = "none";
+
+  alert("Sessão encerrada com sucesso.");
 
 }
   let usuario =
