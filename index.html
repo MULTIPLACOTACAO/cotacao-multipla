@@ -1407,6 +1407,7 @@ let clientes = JSON.parse(localStorage.getItem("clientesCRM")) || [];
 let clienteEditando = -1;
 let clienteSelecionado = null;
 let usarClienteNoPDF = false;
+const TEMPO_SESSAO = 30 * 60 * 1000; // 30 minutos  
 let usuarioLogado = null;
 
 let usuarios = JSON.parse(
@@ -1466,6 +1467,31 @@ function verificarSessao() {
   mostrarClientes();
 
 }
+function protegerCRM() {
+  const sessao = sessionStorage.getItem("usuarioLogado");
+
+  if (!sessao) {
+    document.getElementById("crmArea").style.display = "none";
+    document.getElementById("loginCRM").style.display = "block";
+    return false;
+  }
+
+  const dados = JSON.parse(sessao);
+  const agora = Date.now();
+
+  if (agora - dados.tempo > TEMPO_SESSAO) {
+    sessionStorage.removeItem("usuarioLogado");
+
+    document.getElementById("crmArea").style.display = "none";
+    document.getElementById("loginCRM").style.display = "block";
+
+    alert("Sua sessão expirou. Faça login novamente.");
+    return false;
+  }
+
+  usuarioLogado = dados.usuario;
+  return true;
+} 
   function logoutCRM() {
 
   if (!confirm("Deseja sair do sistema?")) {
@@ -1498,10 +1524,12 @@ function verificarSessao() {
   }
 
   usuarioLogado = encontrado;
-sessionStorage.setItem(
-  "usuarioLogado",
-  JSON.stringify(encontrado)
-);
+const sessao = {
+  usuario: encontrado,
+  tempo: Date.now()
+};
+
+sessionStorage.setItem("usuarioLogado", JSON.stringify(sessao));
   document.getElementById("loginCRM").style.display = "none";
 
   document.getElementById("crmArea").style.display = "block";
