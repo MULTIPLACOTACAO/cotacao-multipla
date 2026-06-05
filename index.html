@@ -1841,6 +1841,38 @@ mostrarUsuarios();
   alert("Usuário cadastrado com sucesso.");
 
 }  
+function mostrarUsuarios() {
+
+  let area =
+    document.getElementById("listaUsuarios");
+
+  if (!area) return;
+
+  area.innerHTML = "";
+
+  usuarios.forEach((u, index) => {
+
+    area.innerHTML += `
+      <div style="
+        background:var(--surface2);
+        border:1px solid var(--border);
+        border-radius:12px;
+        padding:12px;
+        margin-bottom:10px;">
+
+        <strong>${u.nome}</strong><br>
+
+        Usuário: ${u.usuario}<br>
+
+        Perfil: ${u.perfil}
+
+      </div>
+    `;
+
+  });
+
+}
+         
 /* ── Limpar Campos ── */
 function limparCampos() {
   ["nomeFantasia","razaoSocial","cpfCnpj","comprador","telefoneCliente",
