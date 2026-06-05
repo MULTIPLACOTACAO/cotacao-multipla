@@ -1336,10 +1336,35 @@ select.input-premium { cursor: pointer; appearance: none; }
         <!-- ====== TAB USUÁRIOS ====== -->
         <div id="tab-usuarios" style="display:none;">
 
-          <div class="empty-state">
-            <span class="empty-state-icon">🔐</span>
-            Módulo de usuários em construção
-          </div>
+          <div style="margin-bottom:20px;">
+
+  <button
+    onclick="toggleCadastroUsuario()"
+    class="btn-block btn-primary">
+
+    + Novo Usuário
+
+  </button>
+
+</div>
+
+<div id="areaCadastroUsuario" style="display:none;">
+
+  <div style="background:var(--surface2);
+              border:1px solid var(--border);
+              border-radius:var(--radius-lg);
+              padding:20px;
+              margin-bottom:16px;">
+
+    <h3 style="margin-bottom:16px;">
+      Cadastro de Usuário
+    </h3>
+
+  </div>
+
+</div>
+
+<div id="listaUsuarios"></div>
 
         </div>
         <!-- fim tab-usuarios -->
@@ -1709,7 +1734,16 @@ function toggleCadastroCliente() {
   let area = document.getElementById("areaCadastroCliente");
   area.style.display = area.style.display === "none" ? "block" : "none";
 }
+function toggleCadastroUsuario() {
 
+  let area =
+    document.getElementById("areaCadastroUsuario");
+
+  area.style.display =
+    area.style.display === "none"
+      ? "block"
+      : "none";
+}
 /* ── Limpar Campos ── */
 function limparCampos() {
   ["nomeFantasia","razaoSocial","cpfCnpj","comprador","telefoneCliente",
