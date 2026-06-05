@@ -1405,6 +1405,14 @@ select.input-premium { cursor: pointer; appearance: none; }
   </div>
 
 </div>
+ <button
+  onclick="salvarUsuario()"
+  class="btn-block btn-success"
+  style="margin-top:16px;">
+
+  ✓ Salvar Usuário
+
+</button>   
   </div>
 
 </div>
@@ -1789,6 +1797,50 @@ function toggleCadastroUsuario() {
       ? "block"
       : "none";
 }
+function salvarUsuario() {
+
+  let nome =
+    document.getElementById("nomeUsuario").value.trim();
+
+  let usuario =
+    document.getElementById("usuarioCadastro").value.trim();
+
+  let senha =
+    document.getElementById("senhaUsuario").value.trim();
+
+  let perfil =
+    document.getElementById("perfilUsuario").value;
+
+  if (!nome || !usuario || !senha) {
+    alert("Preencha todos os campos.");
+    return;
+  }
+
+  let existe = usuarios.find(u =>
+    u.usuario.toLowerCase() === usuario.toLowerCase()
+  );
+
+  if (existe) {
+    alert("Este usuário já existe.");
+    return;
+  }
+
+  usuarios.push({
+    id: Date.now(),
+    nome,
+    usuario,
+    senha,
+    perfil
+  });
+
+  localStorage.setItem(
+    "usuariosCRM",
+    JSON.stringify(usuarios)
+  );
+mostrarUsuarios();
+  alert("Usuário cadastrado com sucesso.");
+
+}  
 /* ── Limpar Campos ── */
 function limparCampos() {
   ["nomeFantasia","razaoSocial","cpfCnpj","comprador","telefoneCliente",
