@@ -1860,16 +1860,32 @@ function mostrarUsuarios() {
         padding:12px;
         margin-bottom:10px;">
 
-        <strong>${u.nome}</strong><br>
+   <strong>${u.nome}</strong><br>
 
-        Usuário: ${u.usuario}<br>
+Usuário: ${u.usuario}<br>
 
-        Perfil: ${u.perfil}
+Perfil: ${u.perfil}<br><br>
 
-      </div>
-    `;
+<button
+  onclick="editarUsuario(${index})"
+  class="btn-edit">
 
-  });
+  Editar
+
+</button>
+
+<button
+  onclick="removerUsuario(${index})"
+  class="btn-del">
+
+  Remover
+
+</button>
+
+</div>
+`;
+
+});
 
 }
          
