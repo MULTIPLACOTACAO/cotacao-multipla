@@ -1531,10 +1531,14 @@ function mostrarTab(tab, btn) {
 
   if (btn) btn.classList.add("active");
 
-  if (tab === "orcamento") {
-    carregarProdutosOrcamento();
-    mostrarOrcamento();
-  }
+if (tab === "orcamento") {
+  carregarProdutosOrcamento();
+  mostrarOrcamento();
+}
+
+if (tab === "usuarios") {
+  mostrarUsuarios();
+}
 }
 
 /* ── Abrir CRM ── */
