@@ -1106,8 +1106,7 @@ select.input-premium { cursor: pointer; appearance: none; }
 
   <button class="crm-tab" onclick="mostrarTab('orcamento', this)">📋 Orçamento</button>
 
-  <button class="crm-tab" onclick="mostrarTab('usuarios', this)">🔐 Usuários</button>
-</div>
+<button id="btnUsuarios" class="crm-tab" onclick="mostrarTab('usuarios', this)">🔐 Usuários</button>
 
         <!-- ====== TAB CLIENTES ====== -->
         <div id="tab-clientes">
@@ -1649,11 +1648,23 @@ sessionStorage.setItem("usuarioLogado", JSON.stringify(sessao));
 
   carregarProdutosOrcamento();
   mostrarClientes();
+if (encontrado.perfil !== "admin") {
 
-  alert(
-    "Bem-vindo, " +
-    encontrado.nome
-  );
+  document.getElementById("btnUsuarios").style.display =
+    "none";
+
+} else {
+
+  document.getElementById("btnUsuarios").style.display =
+    "block";
+
+}
+alert(
+  "Bem-vindo, " +
+  encontrado.nome +
+  " | Perfil: " +
+  encontrado.perfil
+);
 }
 /* ── Salvar Cliente ── */
 function salvarCliente() {
