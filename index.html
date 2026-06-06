@@ -1888,7 +1888,40 @@ Perfil: ${u.perfil}<br><br>
 });
 
 }
-         
+function removerUsuario(index) {
+
+  if (!confirm("Remover este usuário?")) {
+    return;
+  }
+
+  usuarios.splice(index, 1);
+
+  localStorage.setItem(
+    "usuariosCRM",
+    JSON.stringify(usuarios)
+  );
+
+  mostrarUsuarios();
+}  
+function editarUsuario(index) {
+
+  let u = usuarios[index];
+
+  document.getElementById("nomeUsuario").value =
+    u.nome;
+
+  document.getElementById("usuarioCadastro").value =
+    u.usuario;
+
+  document.getElementById("senhaUsuario").value =
+    u.senha;
+
+  document.getElementById("perfilUsuario").value =
+    u.perfil;
+
+  document.getElementById("areaCadastroUsuario").style.display =
+    "block";
+}  
 /* ── Limpar Campos ── */
 function limparCampos() {
   ["nomeFantasia","razaoSocial","cpfCnpj","comprador","telefoneCliente",
