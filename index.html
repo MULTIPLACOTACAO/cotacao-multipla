@@ -1055,21 +1055,23 @@ select.input-premium { cursor: pointer; appearance: none; }
       🔐 Login CRM
     </div>
 
-    <div class="form-group" style="margin-bottom:12px;">
-      <label class="form-label">Usuário</label>
-      <input
-        id="loginUsuario"
-        class="input-premium"
-        placeholder="Digite o usuário">
-    </div>
+ <div class="form-group" style="margin-bottom:12px;">
+  <label class="form-label">Usuário</label>
+  <input
+    id="loginUsuario"
+    class="input-premium"
+    autocomplete="off"
+    placeholder="Digite o usuário">
+</div>
 
     <div class="form-group" style="margin-bottom:16px;">
       <label class="form-label">Senha</label>
-      <input
-        id="loginSenha"
-        type="password"
-        class="input-premium"
-        placeholder="Digite a senha">
+     <input
+  id="loginSenha"
+  type="password"
+  class="input-premium"
+  autocomplete="new-password"
+  placeholder="Digite a senha">
     </div>
 
   <button
