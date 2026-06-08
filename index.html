@@ -1612,7 +1612,11 @@ function protegerCRM() {
   usuarioLogado = null;
 
   document.getElementById("crmArea").style.display = "none";
+document.getElementById("loginUsuario").value = "";
 
+document.getElementById("loginSenha").value = "";
+
+document.getElementById("loginCRM").style.display = "block";
   alert("Sessão encerrada com sucesso.");
 
 }
