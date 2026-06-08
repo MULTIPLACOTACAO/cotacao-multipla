@@ -1093,7 +1093,14 @@ select.input-premium { cursor: pointer; appearance: none; }
     <h2>CRM COMERCIAL</h2>
     <p>Gestão de clientes e orçamentos internos</p>
   </div>
+<button
+  onclick="abrirAlterarSenha()"
+  class="btn-edit"
+  style="width:auto;padding:8px 14px;margin-right:8px;">
 
+  🔑 Alterar Senha
+
+</button>
   <button onclick="logoutCRM()" class="btn-del" style="width:auto;padding:8px 14px;">
     Sair
   </button>
@@ -1419,7 +1426,50 @@ select.input-premium { cursor: pointer; appearance: none; }
 </div>
 
 <div id="listaUsuarios"></div>
+<div
+  id="areaAlterarSenha"
+  style="display:none;
+         background:var(--surface2);
+         border:1px solid var(--border);
+         border-radius:12px;
+         padding:20px;
+         margin-top:16px;">
 
+  <h3>Alterar Senha</h3>
+
+  <div class="form-group">
+    <label class="form-label">Senha Atual</label>
+    <input
+      type="password"
+      id="senhaAtual"
+      class="input-premium">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Nova Senha</label>
+    <input
+      type="password"
+      id="novaSenha"
+      class="input-premium">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Confirmar Nova Senha</label>
+    <input
+      type="password"
+      id="confirmarNovaSenha"
+      class="input-premium">
+  </div>
+
+  <button
+    onclick="salvarNovaSenha()"
+    class="btn-success">
+
+    Salvar Nova Senha
+
+  </button>
+
+</div>
         </div>
         <!-- fim tab-usuarios -->
 
@@ -1818,6 +1868,16 @@ function toggleCadastroUsuario() {
       ? "block"
       : "none";
 }
+function abrirAlterarSenha() {
+
+  let area =
+    document.getElementById("areaAlterarSenha");
+
+  area.style.display =
+    area.style.display === "none"
+      ? "block"
+      : "none";
+}  
 function salvarUsuario() {
 
   let nome =
