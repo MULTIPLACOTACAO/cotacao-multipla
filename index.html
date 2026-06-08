@@ -1886,6 +1886,67 @@ function abrirAlterarSenha() {
       ? "block"
       : "none";
 }  
+function salvarNovaSenha() {
+
+  let atual =
+    document.getElementById("senhaAtual").value;
+
+  let nova =
+    document.getElementById("novaSenha").value;
+
+  let confirmar =
+    document.getElementById("confirmarNovaSenha").value;
+
+  if (!atual || !nova || !confirmar) {
+    alert("Preencha todos os campos.");
+    return;
+  }
+
+  if (nova !== confirmar) {
+    alert("A confirmação da senha não confere.");
+    return;
+  }
+
+  if (usuarioLogado.senha !== atual) {
+    alert("Senha atual incorreta.");
+    return;
+  }
+
+  let index = usuarios.findIndex(
+    u => u.id === usuarioLogado.id
+  );
+
+  if (index < 0) {
+    alert("Usuário não encontrado.");
+    return;
+  }
+
+  usuarios[index].senha = nova;
+
+  usuarioLogado = usuarios[index];
+
+  localStorage.setItem(
+    "usuariosCRM",
+    JSON.stringify(usuarios)
+  );
+
+  sessionStorage.setItem(
+    "usuarioLogado",
+    JSON.stringify({
+      usuario: usuarioLogado,
+      tempo: Date.now()
+    })
+  );
+
+  alert("Senha alterada com sucesso.");
+
+  document.getElementById("senhaAtual").value = "";
+  document.getElementById("novaSenha").value = "";
+  document.getElementById("confirmarNovaSenha").value = "";
+
+  document.getElementById("areaAlterarSenha").style.display =
+    "none";
+}  
 function salvarUsuario() {
 
   let nome =
