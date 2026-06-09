@@ -1570,7 +1570,16 @@ let usuarios = JSON.parse(
 ];
 /* ── Tabs CRM ── */
 function mostrarTab(tab, btn) {
+if (
+  tab === "usuarios" &&
+  usuarioLogado &&
+  usuarioLogado.perfil !== "admin"
+) {
 
+  alert("Acesso permitido apenas para administradores.");
+
+  return;
+}
   document.getElementById("tab-clientes").style.display =
     tab === "clientes" ? "block" : "none";
 
