@@ -1119,7 +1119,14 @@ select.input-premium { cursor: pointer; appearance: none; }
   <button class="crm-tab" onclick="mostrarTab('orcamento', this)">📋 Orçamento</button>
 
 <button id="btnUsuarios" class="crm-tab" onclick="mostrarTab('usuarios', this)">🔐 Usuários</button>
+<button
+  id="btnAuditoria"
+  class="crm-tab"
+  onclick="mostrarTab('auditoria', this)">
 
+  📜 Auditoria
+
+</button>
         <!-- ====== TAB CLIENTES ====== -->
         <div id="tab-clientes">
 
@@ -1473,9 +1480,29 @@ select.input-premium { cursor: pointer; appearance: none; }
   </button>
 
 </div>
-        </div>
-        <!-- fim tab-usuarios -->
+   
+<!-- ====== TAB AUDITORIA ====== -->
+<div id="tab-auditoria" style="display:none;">
 
+  <div class="orcamento-section">
+
+    <div class="orcamento-section-title">
+      📜 Auditoria do Sistema
+    </div>
+
+    <div id="listaAuditoria">
+
+      <div class="empty-state">
+        <span class="empty-state-icon">📜</span>
+        Nenhum registro encontrado
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- fim tab-auditoria -->
       </div><!-- fim crm-body -->
     </div><!-- fim crmArea -->
 
@@ -1671,13 +1698,17 @@ function protegerCRM() {
 } 
   function logoutCRM() {
 
-  if (!confirm("Deseja sair do sistema?")) {
-    return;
-  }
+if (!confirm("Deseja sair do sistema?")) {
+  return;
+}
 
-  sessionStorage.removeItem("usuarioLogado");
+registrarAuditoria(
+  "Realizou logout"
+);
 
-  usuarioLogado = null;
+sessionStorage.removeItem("usuarioLogado");
+
+usuarioLogado = null;
 
   document.getElementById("crmArea").style.display = "none";
 document.getElementById("loginUsuario").value = "";
@@ -1732,6 +1763,9 @@ const sessao = {
 };
 
 sessionStorage.setItem("usuarioLogado", JSON.stringify(sessao));
+ registrarAuditoria(
+  "Realizou login"
+); 
   document.getElementById("loginCRM").style.display = "none";
 
   document.getElementById("crmArea").style.display = "block";
@@ -1963,7 +1997,9 @@ function salvarNovaSenha() {
       tempo: Date.now()
     })
   );
-
+registrarAuditoria(
+  "Alterou a própria senha"
+);
   alert("Senha alterada com sucesso.");
 
   document.getElementById("senhaAtual").value = "";
