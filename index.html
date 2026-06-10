@@ -1557,6 +1557,10 @@ let usarClienteNoPDF = false;
 let usuarioLogado = null;
 let usuarioEditando = -1;
 let usuarioSelecionado = null;
+ let auditoriaUsuarios =
+  JSON.parse(
+    localStorage.getItem("auditoriaUsuarios")
+  ) || []; 
 let usuarios = JSON.parse(
   localStorage.getItem("usuariosCRM")
 ) || [
@@ -1684,7 +1688,25 @@ document.getElementById("loginCRM").style.display = "block";
   alert("Sessão encerrada com sucesso.");
 
 }
+function registrarAuditoria(acao) {
 
+  auditoriaUsuarios.unshift({
+
+    data: new Date().toLocaleString("pt-BR"),
+
+    usuario:
+      usuarioLogado?.usuario || "Sistema",
+
+    acao: acao
+
+  });
+
+  localStorage.setItem(
+    "auditoriaUsuarios",
+    JSON.stringify(auditoriaUsuarios)
+  );
+
+}
 function fazerLogin() {
 
   let usuario =
@@ -1986,7 +2008,9 @@ function salvarUsuario() {
     senha,
     perfil
   });
-
+registrarAuditoria(
+  "Criou usuário: " + usuario
+);
   localStorage.setItem(
     "usuariosCRM",
     JSON.stringify(usuarios)
@@ -2047,7 +2071,12 @@ function removerUsuario(index) {
   if (!confirm("Remover este usuário?")) {
     return;
   }
+ let usuarioRemovido =
+    usuarios[index].usuario;
 
+  registrarAuditoria(
+    "Removeu usuário: " + usuarioRemovido
+  );
   usuarios.splice(index, 1);
 
   localStorage.setItem(
