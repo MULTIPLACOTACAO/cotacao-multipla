@@ -1481,6 +1481,7 @@ select.input-premium { cursor: pointer; appearance: none; }
   </button>
 
 </div>
+</div><!-- fim tab-usuarios -->          
    
 <!-- ====== TAB AUDITORIA ====== -->
 <div id="tab-auditoria" style="display:none;">
@@ -1602,7 +1603,6 @@ let usuarios = JSON.parse(
 ];
 /* ── Tabs CRM ── */
 function mostrarTab(tab, btn) {
- alert("TAB: " + tab); 
 if (
   tab === "usuarios" &&
   usuarioLogado &&
@@ -1617,14 +1617,10 @@ if (
     tab === "clientes" ? "block" : "none";
 if (tab === "auditoria") {
 
-  alert("ENTROU NA AUDITORIA");
 
   mostrarAuditoria();
 
-}
- alert(
-  document.getElementById("tab-auditoria")
-); 
+
   document.getElementById("tab-orcamento").style.display =
     tab === "orcamento" ? "block" : "none";
 
