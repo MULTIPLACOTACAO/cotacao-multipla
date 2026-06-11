@@ -1621,7 +1621,8 @@ if (tab === "auditoria") {
 
   document.getElementById("tab-usuarios").style.display =
     tab === "usuarios" ? "block" : "none";
-
+document.getElementById("tab-auditoria").style.display =
+  tab === "auditoria" ? "block" : "none";
   document.querySelectorAll(".crm-tab")
     .forEach(b => b.classList.remove("active"));
 
