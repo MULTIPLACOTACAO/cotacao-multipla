@@ -1603,46 +1603,46 @@ let usuarios = JSON.parse(
 ];
 /* ── Tabs CRM ── */
 function mostrarTab(tab, btn) {
-if (
-  tab === "usuarios" &&
-  usuarioLogado &&
-  usuarioLogado.perfil !== "admin"
-) {
 
-  alert("Acesso permitido apenas para administradores.");
+  if (
+    tab === "usuarios" &&
+    usuarioLogado &&
+    usuarioLogado.perfil !== "admin"
+  ) {
+    alert("Acesso permitido apenas para administradores.");
+    return;
+  }
 
-  return;
-}
   document.getElementById("tab-clientes").style.display =
     tab === "clientes" ? "block" : "none";
-if (tab === "auditoria") {
-
-
-  mostrarAuditoria();
-
 
   document.getElementById("tab-orcamento").style.display =
     tab === "orcamento" ? "block" : "none";
 
   document.getElementById("tab-usuarios").style.display =
     tab === "usuarios" ? "block" : "none";
-document.getElementById("tab-auditoria").style.display =
-  tab === "auditoria" ? "block" : "none";
+
+  document.getElementById("tab-auditoria").style.display =
+    tab === "auditoria" ? "block" : "none";
+
   document.querySelectorAll(".crm-tab")
     .forEach(b => b.classList.remove("active"));
 
   if (btn) btn.classList.add("active");
 
-if (tab === "orcamento") {
-  carregarProdutosOrcamento();
-  mostrarOrcamento();
-}
+  if (tab === "orcamento") {
+    carregarProdutosOrcamento();
+    mostrarOrcamento();
+  }
 
-if (tab === "usuarios") {
-  mostrarUsuarios();
-}
-}
+  if (tab === "usuarios") {
+    mostrarUsuarios();
+  }
 
+  if (tab === "auditoria") {
+    mostrarAuditoria();
+  }
+}
 /* ── Abrir CRM ── */
 function abrirCRM() {
 
