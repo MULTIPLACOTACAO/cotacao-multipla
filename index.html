@@ -1613,7 +1613,9 @@ if (
 }
   document.getElementById("tab-clientes").style.display =
     tab === "clientes" ? "block" : "none";
-
+if (tab === "auditoria") {
+  mostrarAuditoria();
+}
   document.getElementById("tab-orcamento").style.display =
     tab === "orcamento" ? "block" : "none";
 
@@ -2053,6 +2055,51 @@ registrarAuditoria(
   );
 mostrarUsuarios();
   alert("Usuário cadastrado com sucesso.");
+
+}  
+function mostrarAuditoria() {
+
+  let area =
+    document.getElementById("listaAuditoria");
+
+  if (!area) return;
+
+  area.innerHTML = "";
+
+  if (auditoriaUsuarios.length === 0) {
+
+    area.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-state-icon">📜</span>
+        Nenhum registro encontrado
+      </div>`;
+
+    return;
+  }
+
+  auditoriaUsuarios.forEach(item => {
+
+    area.innerHTML += `
+
+      <div class="orcamento-item-card">
+
+        <strong>${item.usuario}</strong>
+
+        <div class="meta">
+
+          <span>${item.data}</span>
+
+        </div>
+
+        <div style="margin-top:8px;">
+          ${item.acao}
+        </div>
+
+      </div>
+
+    `;
+
+  });
 
 }  
 function mostrarUsuarios() {
