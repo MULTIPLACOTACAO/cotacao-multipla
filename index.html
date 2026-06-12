@@ -2513,9 +2513,13 @@ function carregarClientesSelect() {}
 
 /* ── Init ── */
 carregarCategorias();
+
+verificarSessao();
+
 setInterval(() => {
   protegerCRM();
 }, 60000);
+
 /* ── PWA Install ── */
 let deferredPrompt;
 window.addEventListener("beforeinstallprompt", (e) => {
