@@ -1686,9 +1686,15 @@ function mostrarTab(tab, btn) {
     mostrarOrcamento();
   }
 
-  if (tab === "usuarios") {
-    mostrarUsuarios();
-  }
+if (tab === "usuarios") {
+
+  document.getElementById(
+    "areaCadastroUsuario"
+  ).style.display = "none";
+
+  mostrarUsuarios();
+
+}
 
   if (tab === "auditoria") {
     mostrarAuditoria();
