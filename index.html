@@ -1500,6 +1500,26 @@ select.input-premium { cursor: pointer; appearance: none; }
     oninput="mostrarAuditoria()">
 
 </div>
+ <div
+  style="
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+    flex-wrap:wrap;">
+
+  <input
+    type="date"
+    id="dataInicialAuditoria"
+    class="input-premium"
+    onchange="mostrarAuditoria()">
+
+  <input
+    type="date"
+    id="dataFinalAuditoria"
+    class="input-premium"
+    onchange="mostrarAuditoria()">
+
+</div>   
     <div
   id="listaAuditoria"
   style="
@@ -2088,15 +2108,55 @@ function mostrarAuditoria() {
     document.getElementById("pesquisaAuditoria")?.value
       .toLowerCase() || "";
 
+  let dataInicial =
+    document.getElementById("dataInicialAuditoria")?.value || "";
+
+  let dataFinal =
+    document.getElementById("dataFinalAuditoria")?.value || "";
+
   area.innerHTML = "";
 
   let registros = auditoriaUsuarios.filter(item => {
 
-    return (
+    let textoOk =
       item.usuario.toLowerCase().includes(filtro) ||
       item.acao.toLowerCase().includes(filtro) ||
-      item.data.toLowerCase().includes(filtro)
-    );
+      item.data.toLowerCase().includes(filtro);
+
+    if (!textoOk) return false;
+
+    if (!dataInicial && !dataFinal)
+      return true;
+
+    let partes =
+      item.data.split(" ")[0].split("/");
+
+    let dataRegistro =
+      new Date(
+        partes[2],
+        partes[1] - 1,
+        partes[0]
+      );
+
+    if (dataInicial) {
+
+      let inicio = new Date(dataInicial);
+
+      if (dataRegistro < inicio)
+        return false;
+    }
+
+    if (dataFinal) {
+
+      let fim = new Date(dataFinal);
+
+      fim.setHours(23,59,59,999);
+
+      if (dataRegistro > fim)
+        return false;
+    }
+
+    return true;
 
   });
 
