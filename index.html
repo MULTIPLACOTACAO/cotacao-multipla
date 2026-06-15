@@ -2084,9 +2084,23 @@ function mostrarAuditoria() {
 
   if (!area) return;
 
+  let filtro =
+    document.getElementById("pesquisaAuditoria")?.value
+      .toLowerCase() || "";
+
   area.innerHTML = "";
 
-  if (auditoriaUsuarios.length === 0) {
+  let registros = auditoriaUsuarios.filter(item => {
+
+    return (
+      item.usuario.toLowerCase().includes(filtro) ||
+      item.acao.toLowerCase().includes(filtro) ||
+      item.data.toLowerCase().includes(filtro)
+    );
+
+  });
+
+  if (registros.length === 0) {
 
     area.innerHTML = `
       <div class="empty-state">
@@ -2097,7 +2111,7 @@ function mostrarAuditoria() {
     return;
   }
 
-  auditoriaUsuarios.forEach(item => {
+  registros.forEach(item => {
 
     area.innerHTML += `
 
@@ -2106,9 +2120,7 @@ function mostrarAuditoria() {
         <strong>${item.usuario}</strong>
 
         <div class="meta">
-
           <span>${item.data}</span>
-
         </div>
 
         <div style="margin-top:8px;">
@@ -2121,7 +2133,7 @@ function mostrarAuditoria() {
 
   });
 
-}  
+} 
  console.log("SCRIPT CRM CARREGADO"); 
 function mostrarUsuarios() {
 
