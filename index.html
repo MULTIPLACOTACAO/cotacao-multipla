@@ -2281,7 +2281,9 @@ function mostrarUsuarios() {
     document.getElementById("listaUsuarios");
 
   if (!area) return;
-
+document.getElementById(
+  "areaCadastroUsuario"
+).style.display = "none";
   area.innerHTML = "";
 
   usuarios.forEach((u, index) => {
