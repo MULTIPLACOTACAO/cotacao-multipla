@@ -2112,14 +2112,28 @@ function salvarUsuario() {
 registrarAuditoria(
   "Criou usuário: " + usuario
 );
-  localStorage.setItem(
-    "usuariosCRM",
-    JSON.stringify(usuarios)
-  );
-mostrarUsuarios();
-  alert("Usuário cadastrado com sucesso.");
+localStorage.setItem(
+  "usuariosCRM",
+  JSON.stringify(usuarios)
+);
 
-}  
+document.getElementById("nomeUsuario").value = "";
+document.getElementById("usuarioCadastro").value = "";
+document.getElementById("senhaUsuario").value = "";
+
+document.getElementById(
+  "perfilUsuario"
+).selectedIndex = 0;
+
+document.getElementById(
+  "areaCadastroUsuario"
+).style.display = "none";
+
+mostrarUsuarios();
+
+alert("Usuário cadastrado com sucesso.");
+
+}
 function mostrarAuditoria() {
 
   let area =
