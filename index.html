@@ -1520,7 +1520,24 @@ select.input-premium { cursor: pointer; appearance: none; }
     onchange="mostrarAuditoria()">
 
 </div>   
-    <div
+  
+  <button
+  onclick="limparAuditoria()"
+  class="btn-del"
+  style="margin-bottom:12px;">
+
+  🗑 Limpar Auditoria
+
+</button>   
+ <button
+  onclick="limparAuditoriaFiltrada()"
+  class="btn-del"
+  style="margin-bottom:12px; margin-left:10px;">
+
+  🗑 Limpar Resultados Filtrados
+
+</button>   
+ <div
   id="listaAuditoria"
   style="
     max-height:500px;
@@ -2194,6 +2211,69 @@ function mostrarAuditoria() {
   });
 
 } 
+function limparAuditoria() {
+
+  if (!confirm(
+    "Deseja realmente apagar toda a auditoria?"
+  )) {
+    return;
+  }
+
+  auditoriaUsuarios = [];
+
+  localStorage.setItem(
+    "auditoriaUsuarios",
+    JSON.stringify(auditoriaUsuarios)
+  );
+
+  mostrarAuditoria();
+
+  alert("Auditoria limpa com sucesso.");
+
+}  
+function limparAuditoriaFiltrada() {
+
+  let filtro =
+    document.getElementById("pesquisaAuditoria")?.value
+      .toLowerCase() || "";
+
+  if (!filtro) {
+
+    alert(
+      "Digite algo na pesquisa antes de usar este botão."
+    );
+
+    return;
+  }
+
+  if (!confirm(
+    "Deseja apagar todos os registros encontrados pelo filtro atual?"
+  )) {
+    return;
+  }
+
+  auditoriaUsuarios = auditoriaUsuarios.filter(item => {
+
+    return !(
+      item.usuario.toLowerCase().includes(filtro) ||
+      item.acao.toLowerCase().includes(filtro) ||
+      item.data.toLowerCase().includes(filtro)
+    );
+
+  });
+
+  localStorage.setItem(
+    "auditoriaUsuarios",
+    JSON.stringify(auditoriaUsuarios)
+  );
+
+  mostrarAuditoria();
+
+  alert(
+    "Registros filtrados removidos com sucesso."
+  );
+
+}  
  console.log("SCRIPT CRM CARREGADO"); 
 function mostrarUsuarios() {
 
