@@ -1128,42 +1128,36 @@ select.input-premium { cursor: pointer; appearance: none; }
 
 </button>
 </div>      
- <div id="dashboardCRM" style="
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:12px;
-  margin:15px 0;
+<div id="dashboardCRM"
+style="
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+padding:10px 15px;
+margin:10px 0;
+background:var(--surface2);
+border:1px solid var(--border);
+border-radius:12px;
+font-weight:600;
 ">
 
-  <div class="orcamento-item-card">
-    <strong>👥 Clientes</strong>
-    <div id="dashClientes" style="font-size:22px;margin-top:8px;">
-      0
-    </div>
-  </div>
+  <span>
+    👥 <span id="dashClientes">0</span> Clientes
+  </span>
 
-  <div class="orcamento-item-card">
-    <strong>📋 Orçamentos</strong>
-    <div id="dashOrcamentos" style="font-size:22px;margin-top:8px;">
-      0
-    </div>
-  </div>
+  <span>
+    📋 <span id="dashOrcamentos">0</span> Orçamentos
+  </span>
 
-  <div class="orcamento-item-card">
-    <strong>🔐 Usuários</strong>
-    <div id="dashUsuarios" style="font-size:22px;margin-top:8px;">
-      0
-    </div>
-  </div>
+  <span>
+    🔐 <span id="dashUsuarios">0</span> Usuários
+  </span>
 
-  <div class="orcamento-item-card">
-    <strong>📜 Auditoria</strong>
-    <div id="dashAuditoria" style="font-size:22px;margin-top:8px;">
-      0
-    </div>
-  </div>
+  <span>
+    📜 <span id="dashAuditoria">0</span> Registros
+  </span>
 
-</div>       
+</div>    
         <!-- ====== TAB CLIENTES ====== -->
         <div id="tab-clientes">
 
