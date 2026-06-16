@@ -1878,10 +1878,12 @@ sessionStorage.setItem("usuarioLogado", JSON.stringify(sessao));
 ); 
   document.getElementById("loginCRM").style.display = "none";
 
-  document.getElementById("crmArea").style.display = "block";
+ document.getElementById("crmArea").style.display = "block";
 
-  carregarProdutosOrcamento();
-  mostrarClientes();
+carregarProdutosOrcamento();
+mostrarClientes();
+
+atualizarDashboard();
 if (encontrado.perfil !== "admin") {
 
   document.getElementById("btnUsuarios").style.display =
