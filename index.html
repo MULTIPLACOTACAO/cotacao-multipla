@@ -2101,14 +2101,35 @@ function salvarUsuario() {
     return;
   }
 
-  let existe = usuarios.find(u =>
-    u.usuario.toLowerCase() === usuario.toLowerCase()
+let existe = usuarios.findIndex(u =>
+  u.usuario.toLowerCase() === usuario.toLowerCase()
+);
+
+if (
+  existe !== -1 &&
+  existe !== usuarioEditando
+) {
+  alert("Este usuário já existe.");
+  return;
+}
+
+if (usuarioEditando >= 0) {
+
+  usuarios[usuarioEditando] = {
+    ...usuarios[usuarioEditando],
+    nome,
+    usuario,
+    senha,
+    perfil
+  };
+
+  registrarAuditoria(
+    "Editou usuário: " + usuario
   );
 
-  if (existe) {
-    alert("Este usuário já existe.");
-    return;
-  }
+  usuarioEditando = -1;
+
+} else {
 
   usuarios.push({
     id: Date.now(),
@@ -2117,6 +2138,8 @@ function salvarUsuario() {
     senha,
     perfil
   });
+
+}
 registrarAuditoria(
   "Criou usuário: " + usuario
 );
@@ -2429,7 +2452,7 @@ function removerUsuario(index) {
 function editarUsuario(index) {
 
   let u = usuarios[index];
-
+usuarioEditando = index;
   document.getElementById("nomeUsuario").value =
     u.nome;
 
