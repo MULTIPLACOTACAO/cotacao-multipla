@@ -1123,7 +1123,13 @@ select.input-premium { cursor: pointer; appearance: none; }
   id="btnAuditoria"
   class="crm-tab"
   onclick="mostrarTab('auditoria', this)">
+<button
+  class="crm-tab"
+  onclick="mostrarTab('pedidos', this)">
 
+  📥 Pedidos
+
+</button>
   📜 Auditoria
 
 </button>
@@ -1666,6 +1672,11 @@ const catalogo = {
 };
 
 let carrinho = [];
+
+let pedidosRecebidos =
+  JSON.parse(
+    localStorage.getItem("pedidosRecebidos")
+  ) || [];
 let orcamentoInterno = [];
 let clientes = JSON.parse(localStorage.getItem("clientesCRM")) || [];
 let clienteEditando = -1;
@@ -2627,11 +2638,41 @@ function limparCarrinho() {
 
 /* ── Enviar WhatsApp ── */
 function enviar() {
-  let obs = document.getElementById("obs").value;
+
+  let obs =
+    document.getElementById("obs").value;
+
   let msg = "Cotação:%0A%0A";
-  carrinho.forEach(i => { msg += i + "%0A"; });
+
+  carrinho.forEach(i => {
+    msg += i + "%0A";
+  });
+
   msg += "%0AObservação:%0A" + obs;
-  window.open("https://wa.me/" + numero + "?text=" + msg);
+
+  pedidosRecebidos.push({
+
+    id: Date.now(),
+
+    data: new Date().toLocaleString(),
+
+    itens: [...carrinho],
+
+    observacao: obs,
+
+    status: "pendente"
+
+  });
+
+  localStorage.setItem(
+    "pedidosRecebidos",
+    JSON.stringify(pedidosRecebidos)
+  );
+
+  window.open(
+    "https://wa.me/" + numero + "?text=" + msg
+  );
+
 }
 
 /* ── Carregar Produtos Orçamento ── */
