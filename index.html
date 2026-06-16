@@ -1529,6 +1529,14 @@ select.input-premium { cursor: pointer; appearance: none; }
   🗑 Limpar Auditoria
 
 </button>   
+  <button
+  onclick="exportarAuditoriaPDF()"
+  class="btn-primary"
+  style="margin-bottom:12px; margin-left:10px;">
+
+  📄 Exportar Auditoria PDF
+
+</button>  
  <button
   onclick="limparAuditoriaFiltrada()"
   class="btn-del"
@@ -2292,6 +2300,46 @@ function limparAuditoriaFiltrada() {
   alert(
     "Registros filtrados removidos com sucesso."
   );
+
+}  
+function exportarAuditoriaPDF() {
+
+  if (auditoriaUsuarios.length === 0) {
+
+    alert("Não existem registros para exportar.");
+
+    return;
+  }
+
+  let texto = "AUDITORIA DO SISTEMA\n\n";
+
+  auditoriaUsuarios.forEach(item => {
+
+    texto +=
+      item.data +
+      " | " +
+      item.usuario +
+      " | " +
+      item.acao +
+      "\n";
+
+  });
+
+  let blob = new Blob(
+    [texto],
+    { type: "text/plain" }
+  );
+
+  let link =
+    document.createElement("a");
+
+  link.href =
+    URL.createObjectURL(blob);
+
+  link.download =
+    "Auditoria_CRM.txt";
+
+  link.click();
 
 }  
  console.log("SCRIPT CRM CARREGADO"); 
