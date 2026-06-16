@@ -2394,15 +2394,28 @@ Perfil: ${u.perfil}<br><br>
 }
 function removerUsuario(index) {
 
+  if (
+    usuarios[index].usuario.toLowerCase() === "admin"
+  ) {
+
+    alert(
+      "O usuário administrador principal não pode ser removido."
+    );
+
+    return;
+  }
+
   if (!confirm("Remover este usuário?")) {
     return;
   }
- let usuarioRemovido =
+
+  let usuarioRemovido =
     usuarios[index].usuario;
 
   registrarAuditoria(
     "Removeu usuário: " + usuarioRemovido
   );
+
   usuarios.splice(index, 1);
 
   localStorage.setItem(
@@ -2411,7 +2424,8 @@ function removerUsuario(index) {
   );
 
   mostrarUsuarios();
-}  
+
+}
 function editarUsuario(index) {
 
   let u = usuarios[index];
