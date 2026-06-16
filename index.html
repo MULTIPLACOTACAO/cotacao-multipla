@@ -1127,7 +1127,43 @@ select.input-premium { cursor: pointer; appearance: none; }
   📜 Auditoria
 
 </button>
-</div>          
+</div>      
+ <div id="dashboardCRM" style="
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+  margin:15px 0;
+">
+
+  <div class="orcamento-item-card">
+    <strong>👥 Clientes</strong>
+    <div id="dashClientes" style="font-size:22px;margin-top:8px;">
+      0
+    </div>
+  </div>
+
+  <div class="orcamento-item-card">
+    <strong>📋 Orçamentos</strong>
+    <div id="dashOrcamentos" style="font-size:22px;margin-top:8px;">
+      0
+    </div>
+  </div>
+
+  <div class="orcamento-item-card">
+    <strong>🔐 Usuários</strong>
+    <div id="dashUsuarios" style="font-size:22px;margin-top:8px;">
+      0
+    </div>
+  </div>
+
+  <div class="orcamento-item-card">
+    <strong>📜 Auditoria</strong>
+    <div id="dashAuditoria" style="font-size:22px;margin-top:8px;">
+      0
+    </div>
+  </div>
+
+</div>       
         <!-- ====== TAB CLIENTES ====== -->
         <div id="tab-clientes">
 
@@ -1743,6 +1779,7 @@ function verificarSessao() {
 
   carregarProdutosOrcamento();
   mostrarClientes();
+  atualizarDashboard();
 }
 function protegerCRM() {
   const sessao = sessionStorage.getItem("usuarioLogado");
@@ -2363,6 +2400,35 @@ function exportarAuditoriaPDF() {
     "Auditoria_CRM.txt";
 
   link.click();
+
+}  
+function atualizarDashboard() {
+
+  let clientesTotal =
+    clientes.length;
+
+  let usuariosTotal =
+    usuarios.length;
+
+  let auditoriaTotal =
+    auditoriaUsuarios.length;
+
+  let orcamentosTotal =
+    JSON.parse(
+      localStorage.getItem("orcamentosCRM")
+    )?.length || 0;
+
+  document.getElementById("dashClientes").innerText =
+    clientesTotal;
+
+  document.getElementById("dashUsuarios").innerText =
+    usuariosTotal;
+
+  document.getElementById("dashAuditoria").innerText =
+    auditoriaTotal;
+
+  document.getElementById("dashOrcamentos").innerText =
+    orcamentosTotal;
 
 }  
  console.log("SCRIPT CRM CARREGADO"); 
