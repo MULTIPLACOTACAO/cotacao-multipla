@@ -1120,9 +1120,14 @@ select.input-premium { cursor: pointer; appearance: none; }
 
 <button id="btnUsuarios" class="crm-tab" onclick="mostrarTab('usuarios', this)">🔐 Usuários</button>
 <button
-  id="btnAuditoria"
+  id="btnUsuarios"
   class="crm-tab"
-  onclick="mostrarTab('auditoria', this)">
+  onclick="mostrarTab('usuarios', this)">
+
+  🔐 Usuários
+
+</button>
+
 <button
   class="crm-tab"
   onclick="mostrarTab('pedidos', this)">
@@ -1130,6 +1135,12 @@ select.input-premium { cursor: pointer; appearance: none; }
   📥 Pedidos
 
 </button>
+
+<button
+  id="btnAuditoria"
+  class="crm-tab"
+  onclick="mostrarTab('auditoria', this)">
+
   📜 Auditoria
 
 </button>
@@ -1600,6 +1611,28 @@ font-weight:600;
 
 </div>
 <!-- fim tab-auditoria -->
+<!-- ====== TAB PEDIDOS ====== -->
+<div id="tab-pedidos" style="display:none;">
+
+  <div class="orcamento-section">
+
+    <div class="orcamento-section-title">
+      📥 Pedidos Recebidos
+    </div>
+
+    <div id="listaPedidos">
+
+      <div class="empty-state">
+        <span class="empty-state-icon">📥</span>
+        Nenhum pedido recebido
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- fim tab-pedidos -->        
       </div><!-- fim crm-body -->
     </div><!-- fim crmArea -->
 
@@ -1721,7 +1754,8 @@ function mostrarTab(tab, btn) {
 
   document.getElementById("tab-usuarios").style.display =
     tab === "usuarios" ? "block" : "none";
-
+document.getElementById("tab-pedidos").style.display =
+  tab === "pedidos" ? "block" : "none";
   document.getElementById("tab-auditoria").style.display =
     tab === "auditoria" ? "block" : "none";
 
