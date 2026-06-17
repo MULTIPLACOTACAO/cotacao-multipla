@@ -2944,9 +2944,26 @@ function mostrarOrcamento() {
         <div class="orcamento-item-card">
           <strong>${item.produto}</strong>
           <div class="meta">
-            <span>Qtd: <strong>${item.qtd}</strong></span>
-            <span>Unit.: <strong>R$ ${item.preco.toFixed(2)}</strong></span>
-            <span>Total: <strong>R$ ${item.total.toFixed(2)}</strong></span>
+            <span>
+  Qtd:
+  <strong>${item.qtd}</strong>
+</span>
+
+<div style="margin-top:10px;">
+  Preço Unitário:
+
+  <input
+    type="number"
+    value="${item.preco}"
+    onchange="alterarPreco(${index}, this.value)"
+    class="input-premium"
+    style="margin-top:5px;">
+</div>
+
+<span>
+  Total:
+  <strong>R$ ${item.total.toFixed(2)}</strong>
+</span>
           </div>
           <button onclick="removerOrcamento(${index})"
             class="btn-del"
@@ -2961,6 +2978,20 @@ function mostrarOrcamento() {
   totalGeral += frete;
   document.getElementById("totalGeral").innerText = "TOTAL: R$ " + totalGeral.toFixed(2).replace(".", ",");
 }
+function alterarPreco(index, valor) {
+
+  valor = parseFloat(valor) || 0;
+
+  orcamentoInterno[index].preco =
+    valor;
+
+  orcamentoInterno[index].total =
+    orcamentoInterno[index].qtd *
+    valor;
+
+  mostrarOrcamento();
+
+}  
 
 /* ── Remover do Orçamento ── */
 function removerOrcamento(index) {
