@@ -1222,6 +1222,16 @@ font-weight:600;
                 <div class="form-group">
                   <label class="form-label">CPF / CNPJ</label>
                   <input id="cpfCnpj" class="input-premium" placeholder="CPF ou CNPJ">
+                  <div class="form-group">
+  <label class="form-label">
+    Inscrição Estadual
+  </label>
+
+  <input
+    id="inscricaoEstadual"
+    class="input-premium"
+    placeholder="Inscrição Estadual">
+</div>
                 </div>
                 <div class="form-group">
                   <label class="form-label">Comprador</label>
@@ -1954,6 +1964,10 @@ function salvarCliente() {
     nomeFantasia: document.getElementById("nomeFantasia").value,
     razaoSocial: document.getElementById("razaoSocial").value,
     cpfCnpj: document.getElementById("cpfCnpj").value,
+    inscricaoEstadual:
+  document.getElementById(
+    "inscricaoEstadual"
+  ).value,
     comprador: document.getElementById("comprador").value,
     telefone: document.getElementById("telefoneCliente").value,
     email: document.getElementById("emailCliente").value,
@@ -2384,9 +2398,13 @@ function mostrarPedidos() {
         padding:12px;
         margin-bottom:10px;">
 
-        <strong>Pedido #${index + 1}</strong><br>
+       <strong>Pedido #${index + 1}</strong><br>
 
-        Data: ${pedido.data}<br><br>
+Status:
+${pedido.status || "pendente"}<br>
+
+Data:
+${pedido.data}<br><br>
 
         ${itensHTML}
 
@@ -2394,12 +2412,33 @@ function mostrarPedidos() {
 
         <strong>Observação:</strong><br>
         ${pedido.observacao || "-"}
+<br><br>
 
+<button
+  onclick="arquivarPedido(${index})"
+  class="btn-edit">
+
+  🗄 Arquivar
+
+</button>
       </div>
 
     `;
 
   });
+
+}  
+function arquivarPedido(index) {
+
+  pedidosRecebidos[index].status =
+    "arquivado";
+
+  localStorage.setItem(
+    "pedidosRecebidos",
+    JSON.stringify(pedidosRecebidos)
+  );
+
+  mostrarPedidos();
 
 }  
 function limparAuditoria() {
@@ -2639,8 +2678,20 @@ usuarioEditando = index;
 }  
 /* ── Limpar Campos ── */
 function limparCampos() {
-  ["nomeFantasia","razaoSocial","cpfCnpj","comprador","telefoneCliente",
-   "emailCliente","estadoCliente","cidadeCliente","grupoCliente","compraDesde","obsCliente"].forEach(id => {
+  [
+    "nomeFantasia",
+    "razaoSocial",
+    "cpfCnpj",
+    "inscricaoEstadual",
+    "comprador",
+    "telefoneCliente",
+    "emailCliente",
+    "estadoCliente",
+    "cidadeCliente",
+    "grupoCliente",
+    "compraDesde",
+    "obsCliente"
+  ].forEach(id => {
     document.getElementById(id).value = "";
   });
 }
