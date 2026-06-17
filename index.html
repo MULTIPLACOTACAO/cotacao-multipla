@@ -2401,7 +2401,16 @@ function mostrarPedidos() {
        <strong>Pedido #${index + 1}</strong><br>
 
 Status:
-${pedido.status || "pendente"}<br>
+<span style="
+font-weight:bold;
+color:${
+pedido.status === "arquivado"
+  ? "#888"
+  : "#f39c12"
+};
+">
+${pedido.status || "pendente"}
+</span><br>
 
 Data:
 ${pedido.data}<br><br>
@@ -2409,10 +2418,19 @@ ${pedido.data}<br><br>
         ${itensHTML}
 
         <br>
+<strong>Observação:</strong><br>
+${pedido.observacao || "-"}
 
-        <strong>Observação:</strong><br>
-        ${pedido.observacao || "-"}
 <br><br>
+
+<button
+  onclick="orcamentarPedido(${index})"
+  class="btn-primary"
+  style="margin-right:8px;">
+
+  📝 Orçar
+
+</button>
 
 <button
   onclick="arquivarPedido(${index})"
@@ -2441,6 +2459,52 @@ function arquivarPedido(index) {
   mostrarPedidos();
 
 }  
+ function orcamentarPedido(index) {
+
+  let pedido =
+    pedidosRecebidos[index];
+
+  orcamentoInterno = [];
+
+  pedido.itens.forEach(item => {
+
+    let partes = item.split(" - ");
+
+    if (partes.length >= 3) {
+
+      let codigo = partes[0];
+
+      let produto = partes[1];
+
+      let qtd =
+        parseFloat(partes[2]) || 1;
+
+      orcamentoInterno.push({
+
+        produto:
+          codigo + " - " + produto,
+
+        qtd: qtd,
+
+        preco: 0,
+
+        total: 0
+
+      });
+
+    }
+
+  });
+
+  mostrarOrcamento();
+
+  mostrarTab("orcamento");
+
+  alert(
+    "Pedido carregado no orçamento.\nAgora informe os preços."
+  );
+
+} 
 function limparAuditoria() {
 
   if (!confirm(
