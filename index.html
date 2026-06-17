@@ -1782,6 +1782,12 @@ if (tab === "usuarios") {
   if (tab === "auditoria") {
     mostrarAuditoria();
   }
+  if (tab === "pedidos") {
+  mostrarPedidos();
+}
+  if (tab === "pedidos") {
+  mostrarPedidos();
+}
 }
 /* ── Abrir CRM ── */
 function abrirCRM() {
@@ -2340,6 +2346,62 @@ function mostrarAuditoria() {
   });
 
 } 
+function mostrarPedidos() {
+
+  let area =
+    document.getElementById("listaPedidos");
+
+  if (!area) return;
+
+  area.innerHTML = "";
+
+  if (pedidosRecebidos.length === 0) {
+
+    area.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-state-icon">📥</span>
+        Nenhum pedido recebido
+      </div>
+    `;
+
+    return;
+  }
+
+  pedidosRecebidos.forEach((pedido, index) => {
+
+    let itensHTML = "";
+
+    pedido.itens.forEach(item => {
+      itensHTML += item + "<br>";
+    });
+
+    area.innerHTML += `
+
+      <div style="
+        background:var(--surface2);
+        border:1px solid var(--border);
+        border-radius:12px;
+        padding:12px;
+        margin-bottom:10px;">
+
+        <strong>Pedido #${index + 1}</strong><br>
+
+        Data: ${pedido.data}<br><br>
+
+        ${itensHTML}
+
+        <br>
+
+        <strong>Observação:</strong><br>
+        ${pedido.observacao || "-"}
+
+      </div>
+
+    `;
+
+  });
+
+}  
 function limparAuditoria() {
 
   if (!confirm(
