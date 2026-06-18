@@ -3072,37 +3072,48 @@ function gerarPDF() {
   doc.line(20, 48, 190, 48);
   let y = 60;
   alert("Quantidade de itens no PDF: " + orcamentoInterno.length);
-  orcamentoInterno.forEach(item => {
-    doc.setFontSize(12);
-    doc.setTextColor(40);
-    doc.text(item.produto, 20, y);
-    y += 7;
-    doc.text("Qtd: " + item.qtd + " | Unitário: R$ " + item.preco.toFixed(2) + " | Total: R$ " + item.total.toFixed(2), 20, y);
-    y += 12;
-    total += item.total;
-  });
-  let frete = parseFloat(document.getElementById("freteValor").value) || 0;
-  total += frete;
+orcamentoInterno.forEach(item => {
+
   doc.setFontSize(12);
-doc.setTextColor(40);
+  doc.setTextColor(40);
 
-y += 10;
+  doc.text(
+    String(item.produto || "").substring(0, 100),
+    20,
+    y
+  );
 
-doc.text(
-  "Frete: R$ " + frete.toFixed(2),
-  20,
-  y
-);
-  doc.setDrawColor(180);
-  doc.line(20, y, 190, y);
-y += 20;
+  y += 8;
 
-doc.setFontSize(16);
-  doc.setTextColor(39, 174, 96);
-  doc.text("TOTAL GERAL: R$ " + total.toFixed(2), 20, y);
-  console.log(orcamentoInterno);
-  doc.save("orcamento.pdf");
-}
+  doc.text(
+    "Qtd: " + item.qtd,
+    20,
+    y
+  );
+
+  y += 6;
+
+  doc.text(
+    "Preço Unitário: R$ " +
+    item.preco.toFixed(2),
+    20,
+    y
+  );
+
+  y += 6;
+
+  doc.text(
+    "Total: R$ " +
+    item.total.toFixed(2),
+    20,
+    y
+  );
+
+  y += 12;
+
+  total += item.total;
+
+});
 
 /* ── Toggle Cliente PDF ── */
 function toggleClientePDF() {
