@@ -3087,6 +3087,7 @@ function gerarPDF() {
   doc.setFontSize(16);
   doc.setTextColor(39, 174, 96);
   doc.text("TOTAL GERAL: R$ " + total.toFixed(2), 20, y);
+  console.log(orcamentoInterno);
   doc.save("orcamento.pdf");
 }
 
