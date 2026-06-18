@@ -3071,6 +3071,7 @@ function gerarPDF() {
   doc.setDrawColor(200);
   doc.line(20, 48, 190, 48);
   let y = 60;
+  alert("Quantidade de itens no PDF: " + orcamentoInterno.length);
   orcamentoInterno.forEach(item => {
     doc.setFontSize(12);
     doc.setTextColor(40);
