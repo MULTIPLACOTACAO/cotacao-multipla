@@ -3114,22 +3114,10 @@ orcamentoInterno.forEach(item => {
 
   y += 12;
 
-  total += item.total;
+total += item.total;
 
 });
 
-/* ── Toggle Cliente PDF ── */
-function toggleClientePDF() {
-  usarClienteNoPDF = document.getElementById("usarClientePDF").checked;
-}
-
-/* ── Change listener cliente ── */
-document.addEventListener("change", function(e) {
-  if (e.target.id === "clienteOrcamento") {
-    let index = e.target.value;
-    clienteSelecionado = (index === "") ? null : clientes[index];
-  }
-});
 let frete =
   parseFloat(
     document.getElementById("freteValor").value
@@ -3176,15 +3164,23 @@ doc.text(
   y
 );
 
-console.log(
-  orcamentoInterno
-);
-
-doc.save(
-  "orcamento.pdf"
-);
+doc.save("orcamento.pdf");
 
 }
+
+/* ── Toggle Cliente PDF ── */
+function toggleClientePDF() {
+  usarClienteNoPDF = document.getElementById("usarClientePDF").checked;
+}
+
+/* ── Change listener cliente ── */
+document.addEventListener("change", function(e) {
+  if (e.target.id === "clienteOrcamento") {
+    let index = e.target.value;
+    clienteSelecionado = (index === "") ? null : clientes[index];
+  }
+});
+
 /* ── Pesquisar Cliente Orçamento ── */
 function pesquisarClienteOrcamento() {
   let termo = document.getElementById("clienteOrcamento").value.toLowerCase();
