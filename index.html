@@ -3018,24 +3018,7 @@ function gerarOrcamentoWhats() {
   msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
   msg += "TOTAL GERAL: R$ " + total.toFixed(2);
   window.open("https://wa.me/" + numero + "?text=" + msg);
-  if (
-  typeof pedidoAtualOrcamento !==
-  "undefined"
-) {
 
-  pedidosRecebidos[
-    pedidoAtualOrcamento
-  ].status = "orcado";
-
-  localStorage.setItem(
-    "pedidosRecebidos",
-    JSON.stringify(
-      pedidosRecebidos
-    )
-  );
-
-  mostrarPedidos();
-}
 }
 
 /* ── Frete listener ── */
@@ -3189,6 +3172,24 @@ doc.text(
   20,
   y
 );
+  if (
+  typeof pedidoAtualOrcamento !==
+  "undefined"
+) {
+
+  pedidosRecebidos[
+    pedidoAtualOrcamento
+  ].status = "orcado";
+
+  localStorage.setItem(
+    "pedidosRecebidos",
+    JSON.stringify(
+      pedidosRecebidos
+    )
+  );
+
+  mostrarPedidos();
+}  
 doc.save("orcamento.pdf");
 
 }
