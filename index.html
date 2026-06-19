@@ -2382,7 +2382,10 @@ function mostrarPedidos() {
   }
 
   pedidosRecebidos.forEach((pedido, index) => {
-
+if (
+  pedido.status ===
+  "orcado"
+) return;
     let itensHTML = "";
 
     pedido.itens.forEach(item => {
@@ -2460,7 +2463,7 @@ function arquivarPedido(index) {
 
 }  
  function orcamentarPedido(index) {
-
+pedidoAtualOrcamento = index;
   let pedido =
     pedidosRecebidos[index];
 
@@ -3015,6 +3018,24 @@ function gerarOrcamentoWhats() {
   msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
   msg += "TOTAL GERAL: R$ " + total.toFixed(2);
   window.open("https://wa.me/" + numero + "?text=" + msg);
+  if (
+  typeof pedidoAtualOrcamento !==
+  "undefined"
+) {
+
+  pedidosRecebidos[
+    pedidoAtualOrcamento
+  ].status = "orcado";
+
+  localStorage.setItem(
+    "pedidosRecebidos",
+    JSON.stringify(
+      pedidosRecebidos
+    )
+  );
+
+  mostrarPedidos();
+}
 }
 
 /* ── Frete listener ── */
