@@ -3157,11 +3157,16 @@ doc.setTextColor(
   96
 );
 
+if (y > 250) {
+  doc.addPage();
+  y = 30;
+}
+
 doc.text(
   "TOTAL GERAL: R$ " +
   total.toFixed(2),
   20,
-  260
+  y
 );
 doc.save("orcamento.pdf");
 
