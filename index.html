@@ -1135,7 +1135,13 @@ select.input-premium { cursor: pointer; appearance: none; }
   📥 Pedidos
 
 </button>
+<button
+  class="crm-tab"
+  onclick="mostrarTab('orcados', this)">
 
+  📝 Orçados
+
+</button>
 <button
   id="btnAuditoria"
   class="crm-tab"
@@ -1642,7 +1648,29 @@ font-weight:600;
   </div>
 
 </div>
-<!-- fim tab-pedidos -->        
+<!-- fim tab-pedidos -->   
+ <!-- ====== TAB ORÇADOS ====== -->
+<div id="tab-orcados" style="display:none;">
+
+  <div class="orcamento-section">
+
+    <div class="orcamento-section-title">
+      📝 Orçados
+    </div>
+
+    <div id="listaOrcados">
+
+      <div class="empty-state">
+        <span class="empty-state-icon">📄</span>
+        Nenhum orçamento enviado
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- fim tab-orcados -->       
       </div><!-- fim crm-body -->
     </div><!-- fim crmArea -->
 
