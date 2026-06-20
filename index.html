@@ -1794,6 +1794,8 @@ function mostrarTab(tab, btn) {
     tab === "usuarios" ? "block" : "none";
 document.getElementById("tab-pedidos").style.display =
   tab === "pedidos" ? "block" : "none";
+  document.getElementById("tab-orcados").style.display =
+  tab === "orcados" ? "block" : "none";
   document.getElementById("tab-auditoria").style.display =
     tab === "auditoria" ? "block" : "none";
 
@@ -1823,8 +1825,8 @@ if (tab === "usuarios") {
   if (tab === "pedidos") {
   mostrarPedidos();
 }
-  if (tab === "pedidos") {
-  mostrarPedidos();
+if (tab === "orcados") {
+  mostrarOrcados();
 }
 }
 /* ── Abrir CRM ── */
@@ -2477,6 +2479,101 @@ ${pedido.observacao || "-"}
   });
 
 }  
+ function mostrarOrcados() {
+
+  let area =
+    document.getElementById(
+      "listaOrcados"
+    );
+
+  if (!area) return;
+
+  area.innerHTML = "";
+
+  let encontrados = 0;
+
+  pedidosRecebidos.forEach(
+    (pedido, index) => {
+
+    if (
+      pedido.status !==
+      "orcado"
+    ) return;
+
+    encontrados++;
+
+    let itensHTML = "";
+
+    pedido.itens.forEach(
+      item => {
+
+      itensHTML +=
+        item + "<br>";
+
+    });
+
+    area.innerHTML += `
+
+      <div style="
+        background:var(--surface2);
+        border:1px solid var(--border);
+        border-radius:12px;
+        padding:12px;
+        margin-bottom:10px;">
+
+        <strong>
+          Pedido #${index + 1}
+        </strong><br>
+
+        Status:
+        <span style="
+          color:#27ae60;
+          font-weight:bold;">
+
+          ORÇADO
+
+        </span><br>
+
+        Data:
+        ${pedido.data}<br><br>
+
+        ${itensHTML}
+
+        <br>
+
+        <strong>
+          Observação:
+        </strong><br>
+
+        ${pedido.observacao || "-"}
+
+      </div>
+
+    `;
+
+  });
+
+  if (encontrados === 0) {
+
+    area.innerHTML = `
+
+      <div class="empty-state">
+
+        <span class="empty-state-icon">
+
+          📄
+
+        </span>
+
+        Nenhum orçamento enviado
+
+      </div>
+
+    `;
+
+  }
+
+} 
 function arquivarPedido(index) {
 
   pedidosRecebidos[index].status =
