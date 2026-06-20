@@ -2546,7 +2546,15 @@ ${pedido.observacao || "-"}
         </strong><br>
 
         ${pedido.observacao || "-"}
+<br><br>
 
+<button
+  onclick="arquivarPedido(${index})"
+  class="btn-del">
+
+  📦 Arquivar
+
+</button>
       </div>
 
     `;
@@ -2574,6 +2582,27 @@ ${pedido.observacao || "-"}
   }
 
 } 
+function arquivarPedido(index) {
+
+  if (
+    !confirm(
+      "Arquivar este pedido?"
+    )
+  ) return;
+
+  pedidosRecebidos[index]
+    .status = "arquivado";
+
+  localStorage.setItem(
+    "pedidosRecebidos",
+    JSON.stringify(
+      pedidosRecebidos
+    )
+  );
+
+  mostrarOrcados();
+
+}  
 function arquivarPedido(index) {
 
   pedidosRecebidos[index].status =
