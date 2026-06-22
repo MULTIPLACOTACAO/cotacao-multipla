@@ -2621,7 +2621,11 @@ function arquivarPedido(index) {
   alert(
     pedidosRecebidos[index].status
   );
-
+console.log(
+  JSON.stringify(
+    pedidosRecebidos[index]
+  )
+);
   localStorage.setItem(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
