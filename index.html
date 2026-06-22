@@ -1143,6 +1143,13 @@ select.input-premium { cursor: pointer; appearance: none; }
 
 </button>
 <button
+  class="crm-tab"
+  onclick="mostrarTab('arquivados', this)">
+
+  📦 Arquivados
+
+</button>          
+<button
   id="btnAuditoria"
   class="crm-tab"
   onclick="mostrarTab('auditoria', this)">
@@ -1670,6 +1677,28 @@ font-weight:600;
   </div>
 
 </div>
+<!-- ====== TAB ARQUIVADOS ====== -->
+<div id="tab-arquivados" style="display:none;">
+
+  <div class="orcamento-section">
+
+    <div class="orcamento-section-title">
+      📦 Arquivados
+    </div>
+
+    <div id="listaArquivados">
+
+      <div class="empty-state">
+        <span class="empty-state-icon">📦</span>
+        Nenhum pedido arquivado
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- fim tab-arquivados -->        
 <!-- fim tab-orcados -->       
       </div><!-- fim crm-body -->
     </div><!-- fim crmArea -->
