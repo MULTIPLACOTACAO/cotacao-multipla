@@ -2612,18 +2612,24 @@ function arquivarPedido(index) {
 
 }  
 function arquivarPedido(index) {
-alert("ARQUIVAR " + index);
+
+  alert("ARQUIVAR " + index);
+
   pedidosRecebidos[index].status =
     "arquivado";
+
+  alert(
+    pedidosRecebidos[index].status
+  );
 
   localStorage.setItem(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
   );
 
-mostrarOrcados();
+  mostrarOrcados();
 
-}  
+} 
  function orcamentarPedido(index) {
 pedidoAtualOrcamento = index;
   let pedido =
