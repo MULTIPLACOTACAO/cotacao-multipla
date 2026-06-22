@@ -2611,30 +2611,7 @@ function arquivarPedido(index) {
   mostrarOrcados();
 
 }  
-function arquivarPedido(index) {
 
-  alert("ARQUIVAR " + index);
-
-  pedidosRecebidos[index].status =
-    "arquivado";
-
-  alert(
-    pedidosRecebidos[index].status
-  );
-console.log(
-  JSON.stringify(
-    pedidosRecebidos[index]
-  )
-);
-  localStorage.setItem(
-    "pedidosRecebidos",
-    JSON.stringify(pedidosRecebidos)
-  );
-
-mostrarPedidos();
-mostrarOrcados();
-
-} 
  function orcamentarPedido(index) {
 pedidoAtualOrcamento = index;
   let pedido =
