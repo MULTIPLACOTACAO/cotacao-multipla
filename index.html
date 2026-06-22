@@ -1825,6 +1825,8 @@ document.getElementById("tab-pedidos").style.display =
   tab === "pedidos" ? "block" : "none";
   document.getElementById("tab-orcados").style.display =
   tab === "orcados" ? "block" : "none";
+  document.getElementById("tab-arquivados").style.display =
+  tab === "arquivados" ? "block" : "none";
   document.getElementById("tab-auditoria").style.display =
     tab === "auditoria" ? "block" : "none";
 
@@ -1857,6 +1859,9 @@ if (tab === "usuarios") {
 if (tab === "orcados") {
   mostrarOrcados();
 }
+if (tab === "arquivados") {
+  mostrarArquivados();
+}  
 }
 /* ── Abrir CRM ── */
 function abrirCRM() {
@@ -2624,6 +2629,101 @@ console.log(
   }
 
 } 
+function mostrarArquivados() {
+
+  let area =
+    document.getElementById(
+      "listaArquivados"
+    );
+
+  if (!area) return;
+
+  area.innerHTML = "";
+
+  let encontrados = 0;
+
+  pedidosRecebidos.forEach(
+    (pedido, index) => {
+
+    if (
+      pedido.status !==
+      "arquivado"
+    ) return;
+
+    encontrados++;
+
+    let itensHTML = "";
+
+    pedido.itens.forEach(
+      item => {
+
+      itensHTML +=
+        item + "<br>";
+
+    });
+
+    area.innerHTML += `
+
+      <div style="
+        background:var(--surface2);
+        border:1px solid var(--border);
+        border-radius:12px;
+        padding:12px;
+        margin-bottom:10px;">
+
+        <strong>
+          Pedido #${index + 1}
+        </strong><br>
+
+        Status:
+        <span style="
+          color:#888;
+          font-weight:bold;">
+
+          ARQUIVADO
+
+        </span><br>
+
+        Data:
+        ${pedido.data}<br><br>
+
+        ${itensHTML}
+
+        <br>
+
+        <strong>
+          Observação:
+        </strong><br>
+
+        ${pedido.observacao || "-"}
+
+      </div>
+
+    `;
+
+  });
+
+  if (encontrados === 0) {
+
+    area.innerHTML = `
+
+      <div class="empty-state">
+
+        <span class="empty-state-icon">
+
+          📦
+
+        </span>
+
+        Nenhum pedido arquivado
+
+      </div>
+
+    `;
+
+  }
+
+}  
 function arquivarPedido(index) {
 
   if (
