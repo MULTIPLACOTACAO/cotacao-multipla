@@ -2499,7 +2499,12 @@ ${pedido.observacao || "-"}
       pedido.status !==
       "orcado"
     ) return;
-
+console.log(
+  "STATUS:",
+  pedido.status,
+  "INDEX:",
+  index
+);
     encontrados++;
 
     let itensHTML = "";
