@@ -2444,7 +2444,10 @@ function mostrarPedidos() {
 
     return;
   }
-
+console.log(
+  "PEDIDOS:",
+  pedidosRecebidos
+);
   pedidosRecebidos.forEach((pedido, index) => {
 if (
   pedido.status === "orcado" ||
