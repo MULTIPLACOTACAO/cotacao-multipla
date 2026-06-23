@@ -3155,7 +3155,9 @@ alert("ENTROU NA FUNÇÃO ENVIAR");
   });
 
   msg += "%0AObservação:%0A" + obs;
-
+alert(
+  JSON.stringify(carrinho)
+);
   pedidosRecebidos.push({
 
     id: Date.now(),
