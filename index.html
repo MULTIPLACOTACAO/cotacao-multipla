@@ -1777,6 +1777,10 @@ let pedidosRecebidos =
   JSON.parse(
     localStorage.getItem("pedidosRecebidos")
   ) || [];
+console.log(
+  "PEDIDOS CARREGADOS:",
+  pedidosRecebidos
+);  
 let orcamentoInterno = [];
 let clientes = JSON.parse(localStorage.getItem("clientesCRM")) || [];
 let clienteEditando = -1;
