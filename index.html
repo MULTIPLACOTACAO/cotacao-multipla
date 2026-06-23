@@ -2447,8 +2447,8 @@ function mostrarPedidos() {
 
   pedidosRecebidos.forEach((pedido, index) => {
 if (
-  pedido.status ===
-  "orcado"
+  pedido.status === "orcado" ||
+  pedido.status === "arquivado"
 ) return;
     let itensHTML = "";
 
