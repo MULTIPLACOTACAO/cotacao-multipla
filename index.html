@@ -3165,7 +3165,10 @@ function enviar() {
     observacao: obs,
     status: "pendente"
   });
-
+alert(
+  "PEDIDOS NO ARRAY: " +
+  pedidosRecebidos.length
+);
   localStorage.setItem(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
