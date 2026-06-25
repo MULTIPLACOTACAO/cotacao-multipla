@@ -3290,27 +3290,38 @@ function removerOrcamento(index) {
 
 /* ── Orçamento WhatsApp ── */
 function gerarOrcamentoWhats() {
+
+  alert("ENTROU EM GERAR ORÇAMENTO");
+
   let msg = "ORÇAMENTO:%0A%0A";
+
   orcamentoInterno.forEach(item => {
     msg += item.produto + "%0A";
     msg += "Qtd: " + item.qtd + "%0A";
     msg += "Preço: R$ " + item.preco.toFixed(2) + "%0A";
     msg += "Total: R$ " + item.total.toFixed(2) + "%0A%0A";
   });
-  let frete = parseFloat(document.getElementById("freteValor").value) || 0;
+
+  let frete =
+    parseFloat(
+      document.getElementById("freteValor").value
+    ) || 0;
+
   let total = 0;
-  orcamentoInterno.forEach(item => { total += item.total; });
+
+  orcamentoInterno.forEach(item => {
+    total += item.total;
+  });
+
   total += frete;
+
   msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
   msg += "TOTAL GERAL: R$ " + total.toFixed(2);
-  window.open("https://wa.me/" + numero + "?text=" + msg);
 
+  window.open(
+    "https://wa.me/" + numero + "?text=" + msg
+  );
 }
-
-/* ── Frete listener ── */
-document.addEventListener("input", function(e) {
-  if (e.target.id === "freteValor") { mostrarOrcamento(); }
-});
 
 /* ── Filtrar Produtos Orçamento ── */
 function filtrarProdutosOrcamento() {
