@@ -3142,13 +3142,13 @@ function limparCarrinho() {
   mostrarCarrinho();
 }
 
-/* ── Enviar WhatsApp ── */
-alert("TESTE 123");  
+/* ── Enviar WhatsApp ── */ 
 function enviar() {
 
-  alert("FUNCIONOU");
+  alert("ENTROU NA FUNÇÃO ENVIAR");
 
-}
+  let obs =
+    document.getElementById("obs").value;
 
   let msg = "Cotação:%0A%0A";
 
@@ -3157,35 +3157,15 @@ function enviar() {
   });
 
   msg += "%0AObservação:%0A" + obs;
-alert(
-  JSON.stringify(carrinho)
-);
+
   pedidosRecebidos.push({
-
     id: Date.now(),
-
     data: new Date().toLocaleString(),
-
     itens: [...carrinho],
-
     observacao: obs,
-
     status: "pendente"
-
   });
- alert(
-  JSON.stringify(
-    pedidosRecebidos[
-      pedidosRecebidos.length - 1
-    ],
-    null,
-    2
-  )
-); 
-alert(
-  "PEDIDOS NO ARRAY: " +
-  pedidosRecebidos.length
-);
+
   localStorage.setItem(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
@@ -3196,8 +3176,6 @@ alert(
   );
 
 }
-
-/* ── Carregar Produtos Orçamento ── */
 function carregarProdutosOrcamento() {
   let area = document.getElementById("listaOrcamentoProdutos");
   if (!area) return;
