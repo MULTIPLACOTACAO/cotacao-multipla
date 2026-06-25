@@ -3173,7 +3173,9 @@ alert(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
   );
-
+alert(
+  localStorage.getItem("pedidosRecebidos")
+);
   window.open(
     "https://wa.me/" + numero + "?text=" + msg
   );
