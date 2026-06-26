@@ -2548,15 +2548,33 @@ console.log(
 );
     encontrados++;
 
-    let itensHTML = "";
+let itensHTML = "";
 
-    pedido.itens.forEach(
-      item => {
+if (pedido.orcamento && pedido.orcamento.length > 0) {
 
-      itensHTML +=
-        item + "<br>";
+  pedido.orcamento.forEach(item => {
 
-    });
+    itensHTML += `
+      <b>${item.produto}</b><br>
+      Quantidade: ${item.qtd}<br>
+      Valor Unitário: R$ ${Number(item.preco).toFixed(2)}<br>
+      Total: R$ ${Number(item.total).toFixed(2)}<br><br>
+    `;
+
+  });
+
+  itensHTML += `
+    <b>Frete:</b> R$ ${Number(pedido.frete || 0).toFixed(2)}<br>
+    <b>TOTAL GERAL:</b> R$ ${Number(pedido.valorTotal || 0).toFixed(2)}<br><br>
+  `;
+
+} else {
+
+  pedido.itens.forEach(item => {
+    itensHTML += item + "<br>";
+  });
+
+}   
 
     area.innerHTML += `
 
@@ -3320,12 +3338,32 @@ function gerarOrcamentoWhats() {
 
   total += frete;
 
-  msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
-  msg += "TOTAL GERAL: R$ " + total.toFixed(2);
+msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
+msg += "TOTAL GERAL: R$ " + total.toFixed(2);
 
-  window.open(
-    "https://wa.me/" + numero + "?text=" + msg
+/* SALVA O ORÇAMENTO NO PEDIDO */
+if (typeof pedidoAtualOrcamento !== "undefined") {
+
+  pedidosRecebidos[pedidoAtualOrcamento].orcamento = [...orcamentoInterno];
+
+  pedidosRecebidos[pedidoAtualOrcamento].frete = frete;
+
+  pedidosRecebidos[pedidoAtualOrcamento].valorTotal = total;
+
+  pedidosRecebidos[pedidoAtualOrcamento].status = "orcado";
+
+  localStorage.setItem(
+    "pedidosRecebidos",
+    JSON.stringify(pedidosRecebidos)
   );
+
+  mostrarPedidos();
+  mostrarOrcados();
+}
+
+window.open(
+  "https://wa.me/" + numero + "?text=" + msg
+);
 }
 
 /* ── Filtrar Produtos Orçamento ── */
@@ -3475,24 +3513,30 @@ doc.text(
   20,
   y
 );
-  if (
-  typeof pedidoAtualOrcamento !==
-  "undefined"
+if (
+  typeof pedidoAtualOrcamento !== "undefined"
 ) {
 
-  pedidosRecebidos[
-    pedidoAtualOrcamento
-  ].status = "orcado";
+  pedidosRecebidos[pedidoAtualOrcamento].orcamento =
+    [...orcamentoInterno];
+
+  pedidosRecebidos[pedidoAtualOrcamento].frete =
+    frete;
+
+  pedidosRecebidos[pedidoAtualOrcamento].valorTotal =
+    total;
+
+  pedidosRecebidos[pedidoAtualOrcamento].status =
+    "orcado";
 
   localStorage.setItem(
     "pedidosRecebidos",
-    JSON.stringify(
-      pedidosRecebidos
-    )
+    JSON.stringify(pedidosRecebidos)
   );
 
   mostrarPedidos();
-}  
+  mostrarOrcados();
+} 
 doc.save(
   "orcamento_" +
   Date.now() +
