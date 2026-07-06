@@ -3529,10 +3529,10 @@ if (
   pedidosRecebidos[pedidoAtualOrcamento].status =
     "orcado";
 
-  localStorage.setItem(
-  pedidosRecebidos
-    JSON.stringify(pedidosRecebidos)
-  );
+localStorage.setItem(
+  "pedidosRecebidos",
+  JSON.stringify(pedidosRecebidos)
+);
 
   mostrarPedidos();
   mostrarOrcados();
