@@ -1983,7 +1983,7 @@ function fazerLogin() {
     u.usuario === usuario &&
     u.senha === senha
   );
-alert(JSON.stringify(usuarios));
+
   if (!encontrado) {
     alert("Usuário ou senha inválidos");
     return;
@@ -3163,7 +3163,6 @@ function limparCarrinho() {
 /* ── Enviar WhatsApp ── */ 
 function enviar() {
 
-  alert("ENTROU NA FUNÇÃO ENVIAR");
 
   let obs =
     document.getElementById("obs").value;
@@ -3183,17 +3182,12 @@ function enviar() {
     observacao: obs,
     status: "pendente"
   });
-alert(
-  "PEDIDOS NO ARRAY: " +
-  pedidosRecebidos.length
-);
+
   localStorage.setItem(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
   );
-alert(
-  localStorage.getItem("pedidosRecebidos")
-);
+
   window.open(
     "https://wa.me/" + numero + "?text=" + msg
   );
@@ -3314,7 +3308,6 @@ function removerOrcamento(index) {
 /* ── Orçamento WhatsApp ── */
 function gerarOrcamentoWhats() {
 
-  alert("ENTROU EM GERAR ORÇAMENTO");
 
   let msg = "ORÇAMENTO:%0A%0A";
 
@@ -3392,8 +3385,7 @@ function filtrarProdutosOrcamento() {
 
 /* ── Gerar PDF ── */
 function gerarPDF() {
-
-  console.log("ORCAMENTO PDF", orcamentoInterno);
+  
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   const logo = new Image();
@@ -3416,10 +3408,7 @@ function gerarPDF() {
   doc.setDrawColor(200);
   doc.line(20, 48, 190, 48);
   let y = 60;
-console.log(
-  "ITENS PDF:",
-  JSON.stringify(orcamentoInterno)
-);
+;
 orcamentoInterno.forEach(item => {
 
   doc.setFontSize(12);
