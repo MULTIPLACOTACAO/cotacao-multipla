@@ -1983,7 +1983,7 @@ function fazerLogin() {
     u.usuario === usuario &&
     u.senha === senha
   );
-
+alert(JSON.stringify(usuarios));
   if (!encontrado) {
     alert("Usuário ou senha inválidos");
     return;
