@@ -1770,7 +1770,7 @@ const catalogo = {
     "VRG007 - Vergalhão CA50 16MM Feixe 3 Barras","VRG008 - Vergalhão CA50 20MM Feixe 3 Barras"
   ]
 };
-
+let categoriasAbertas = {};
 let carrinho = [];
 
 let pedidosRecebidos =
@@ -3194,25 +3194,86 @@ function enviar() {
 
 }
 function carregarProdutosOrcamento() {
-  let area = document.getElementById("listaOrcamentoProdutos");
-  if (!area) return;
-  area.innerHTML = "";
-  for (let categoria in catalogo) {
-    area.innerHTML += `<div class="categoria-header-orcamento">${categoria}</div>`;
-    catalogo[categoria].forEach(produto => {
-      area.innerHTML += `
-        <div class="produto-card-orcamento">
-          <div class="nome-produto">${produto}</div>
-          <button onclick="adicionarOrcamento('${produto}')"
-            class="btn-block btn-primary"
-            style="padding:8px;font-size:13px;">
-            + Adicionar
-          </button>
-        </div>`;
-    });
-  }
-}
 
+  let area =
+    document.getElementById("listaOrcamentoProdutos");
+
+  if (!area) return;
+
+  area.innerHTML = "";
+
+  for (let categoria in catalogo) {
+
+    let aberta =
+      categoriasAbertas[categoria] || false;
+
+    area.innerHTML += `
+
+      <div
+        onclick="toggleCategoria('${categoria}')"
+        style="
+          background:#1f2937;
+          color:white;
+          padding:12px;
+          margin-top:10px;
+          border-radius:8px;
+          cursor:pointer;
+          font-weight:bold;
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+        ">
+
+        <span>📦 ${categoria}</span>
+
+        <span>${aberta ? "▲" : "▼"}</span>
+
+      </div>
+
+    `;
+
+    if (aberta) {
+
+      catalogo[categoria].forEach(produto => {
+
+        area.innerHTML += `
+
+          <div class="produto-card-orcamento">
+
+            <div class="nome-produto">
+
+              ${produto}
+
+            </div>
+
+            <button
+              onclick="adicionarOrcamento('${produto}')"
+              class="btn-block btn-primary"
+              style="padding:8px;font-size:13px;">
+
+              + Adicionar
+
+            </button>
+
+          </div>
+
+        `;
+
+      });
+
+    }
+
+  }
+
+}
+function toggleCategoria(categoria) {
+
+  categoriasAbertas[categoria] =
+    !categoriasAbertas[categoria];
+
+  carregarProdutosOrcamento();
+
+}  
 /* ── Adicionar ao Orçamento ── */
 function adicionarOrcamento(produto) {
   let qtd = prompt("Quantidade:");
