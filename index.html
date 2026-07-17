@@ -564,29 +564,66 @@ flex-wrap: wrap;
 .crm-body { padding: 24px; }
 
 /* ── CRM Tabs ── */
-.crm-tabs {
-  display: flex;
-  gap: 6px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 5px;
-  margin-bottom: 24px;
+.crm-tabs-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px;
+  margin-bottom:24px;
 }
 
-.crm-tab {
-  flex: 1;
-  padding: 10px;
-  background: none;
-  border: none;
-  border-radius: 9px;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.2s;
-  text-align: center;
+.crm-tab{
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  gap:8px;
+
+  padding:18px 12px;
+
+  background:var(--surface2);
+
+  border:1px solid var(--border);
+
+  border-radius:14px;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+  color:var(--text);
+
+  font-weight:600;
+
+  min-height:88px;
+
+}
+
+.crm-tab:hover{
+
+  transform:translateY(-2px);
+
+  border-color:var(--primary);
+
+  box-shadow:0 6px 18px rgba(0,0,0,.18);
+
+}
+
+.crm-tab span{
+
+  font-size:13px;
+
+}
+
+.crm-tab.active{
+
+  background:var(--primary);
+
+  color:white;
+
+  border-color:var(--primary);
+
 }
 .crm-tab:hover { color: var(--text); background: var(--surface3); }
 .crm-tab.active {
@@ -1113,81 +1150,58 @@ select.input-premium { cursor: pointer; appearance: none; }
       <div class="crm-body">
 
         <!-- Tabs -->
-        <div class="crm-tabs">
-  <button class="crm-tab active" onclick="mostrarTab('clientes', this)">👥 Clientes</button>
+<div class="crm-tabs-grid">
 
-  <button class="crm-tab" onclick="mostrarTab('orcamento', this)">📋 Orçamento</button>
+  <button class="crm-tab active"
+    onclick="mostrarTab('clientes', this)">
+    👥
+    <span>Clientes</span>
+  </button>
 
+  <button class="crm-tab"
+    onclick="mostrarTab('orcamento', this)">
+    📋
+    <span>Orçamento</span>
+  </button>
 
-<button
-  id="btnUsuarios"
-  class="crm-tab"
-  onclick="mostrarTab('usuarios', this)">
+  <button
+    id="btnUsuarios"
+    class="crm-tab"
+    onclick="mostrarTab('usuarios', this)">
+    🔐
+    <span>Usuários</span>
+  </button>
 
-  🔐 Usuários
+  <button
+    class="crm-tab"
+    onclick="mostrarTab('pedidos', this)">
+    📥
+    <span>Pedidos</span>
+  </button>
 
-</button>
+  <button
+    class="crm-tab"
+    onclick="mostrarTab('orcados', this)">
+    📝
+    <span>Orçados</span>
+  </button>
 
-<button
-  class="crm-tab"
-  onclick="mostrarTab('pedidos', this)">
+  <button
+    class="crm-tab"
+    onclick="mostrarTab('arquivados', this)">
+    📦
+    <span>Arquivados</span>
+  </button>
 
-  📥 Pedidos
+  <button
+    id="btnAuditoria"
+    class="crm-tab"
+    onclick="mostrarTab('auditoria', this)">
+    📜
+    <span>Auditoria</span>
+  </button>
 
-</button>
-<button
-  class="crm-tab"
-  onclick="mostrarTab('orcados', this)">
-
-  📝 Orçados
-
-</button>
-<button
-  class="crm-tab"
-  onclick="mostrarTab('arquivados', this)">
-
-  📦 Arquivados
-
-</button>          
-<button
-  id="btnAuditoria"
-  class="crm-tab"
-  onclick="mostrarTab('auditoria', this)">
-
-  📜 Auditoria
-
-</button>
-</div>      
-<div id="dashboardCRM"
-style="
-display:flex;
-flex-wrap:wrap;
-gap:15px;
-padding:10px 15px;
-margin:10px 0;
-background:var(--surface2);
-border:1px solid var(--border);
-border-radius:12px;
-font-weight:600;
-">
-
-  <span>
-    👥 <span id="dashClientes">0</span> Clientes
-  </span>
-
-  <span>
-    📋 <span id="dashOrcamentos">0</span> Orçamentos
-  </span>
-
-  <span>
-    🔐 <span id="dashUsuarios">0</span> Usuários
-  </span>
-
-  <span>
-    📜 <span id="dashAuditoria">0</span> Registros
-  </span>
-
-</div>    
+</div>   
         <!-- ====== TAB CLIENTES ====== -->
         <div id="tab-clientes">
 
