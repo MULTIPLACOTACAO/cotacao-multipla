@@ -3432,8 +3432,28 @@ if (typeof pedidoAtualOrcamento !== "undefined") {
 window.open(
   "https://wa.me/" + numero + "?text=" + msg
 );
-}
 
+limparOrcamento();
+}
+function limparOrcamento() {
+
+  orcamentoInterno = [];
+
+  pedidoAtualOrcamento = undefined;
+
+  document.getElementById("freteValor").value = "";
+
+  document.getElementById("clienteOrcamento").value = "";
+
+  document.getElementById("resultadoClienteOrcamento").innerHTML = "";
+
+  document.getElementById("pesquisaProdutoOrcamento").value = "";
+
+  mostrarOrcamento();
+
+  carregarProdutosOrcamento();
+
+}
 /* ── Filtrar Produtos Orçamento ── */
 function filtrarProdutosOrcamento() {
   let termo = document.getElementById("pesquisaProdutoOrcamento").value.toLowerCase();
