@@ -566,8 +566,9 @@ flex-wrap: wrap;
 /* ── CRM Tabs ── */
 .crm-tabs-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  grid-template-columns:1fr 1fr;
   gap:12px;
+  width:100%;
   margin-bottom:24px;
 }
 
@@ -3467,7 +3468,7 @@ function limparOrcamento() {
   if (typeof carregarProdutosOrcamento === "function") {
     carregarProdutosOrcamento();
   }
-alert("Orçamento limpo!");
+
 }
 /* ── Filtrar Produtos Orçamento ── */
 function filtrarProdutosOrcamento() {
