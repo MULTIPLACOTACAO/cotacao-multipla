@@ -3441,17 +3441,25 @@ function limparOrcamento() {
 
   pedidoAtualOrcamento = undefined;
 
-  document.getElementById("freteValor").value = "";
+  const frete = document.getElementById("freteValor");
+  if (frete) frete.value = "";
 
-  document.getElementById("clienteOrcamento").value = "";
+  const cliente = document.getElementById("clienteOrcamento");
+  if (cliente) cliente.value = "";
 
-  document.getElementById("resultadoClienteOrcamento").innerHTML = "";
+  const resultado = document.getElementById("resultadoClienteOrcamento");
+  if (resultado) resultado.innerHTML = "";
 
-  document.getElementById("pesquisaProdutoOrcamento").value = "";
+  const pesquisa = document.getElementById("pesquisaProdutoOrcamento");
+  if (pesquisa) pesquisa.value = "";
 
-  mostrarOrcamento();
+  if (typeof mostrarOrcamento === "function") {
+    mostrarOrcamento();
+  }
 
-  carregarProdutosOrcamento();
+  if (typeof carregarProdutosOrcamento === "function") {
+    carregarProdutosOrcamento();
+  }
 
 }
 /* ── Filtrar Produtos Orçamento ── */
