@@ -854,7 +854,19 @@ select.input-premium { cursor: pointer; appearance: none; }
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+.categoria-grid{
 
+  display:grid;
+
+  grid-template-columns:repeat(2,1fr);
+
+  gap:12px;
+
+  margin-top:12px;
+
+  margin-bottom:18px;
+
+}
 /* ── Itens Orçamento (lista) ── */
 .orcamento-item-card {
   background: var(--surface);
@@ -3226,8 +3238,7 @@ function enviar() {
 }
 function carregarProdutosOrcamento() {
 
-  let area =
-    document.getElementById("listaOrcamentoProdutos");
+  let area = document.getElementById("listaOrcamentoProdutos");
 
   if (!area) return;
 
@@ -3235,64 +3246,53 @@ function carregarProdutosOrcamento() {
 
   for (let categoria in catalogo) {
 
-    let aberta =
-      categoriasAbertas[categoria] || false;
+    const aberta = categoriasAbertas[categoria];
 
     area.innerHTML += `
 
-      <div
-        onclick="toggleCategoria('${categoria}')"
-        style="
-          background:#1f2937;
-          color:white;
-          padding:12px;
-          margin-top:10px;
-          border-radius:8px;
-          cursor:pointer;
-          font-weight:bold;
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-        ">
+      <div class="categoria-orcamento">
 
-        <span>📦 ${categoria}</span>
+        <button
+          class="categoria-header-orcamento"
+          onclick="toggleCategoria('${categoria}')">
 
-        <span>${aberta ? "▲" : "▼"}</span>
+          ${aberta ? "▼" : "►"} ${categoria}
+
+        </button>
+
+        <div
+          class="categoria-grid"
+
+          style="display:${aberta ? "grid" : "none"};">
+
+          ${catalogo[categoria].map(produto => `
+
+            <div class="produto-card-orcamento">
+
+              <div class="nome-produto">
+
+                ${produto}
+
+              </div>
+
+              <button
+                onclick="adicionarOrcamento('${produto}')"
+
+                class="btn-block btn-primary">
+
+                + Adicionar
+
+              </button>
+
+            </div>
+
+          `).join("")}
+
+        </div>
 
       </div>
 
     `;
-
-    if (aberta) {
-
-      catalogo[categoria].forEach(produto => {
-
-        area.innerHTML += `
-
-          <div class="produto-card-orcamento">
-
-            <div class="nome-produto">
-
-              ${produto}
-
-            </div>
-
-            <button
-              onclick="adicionarOrcamento('${produto}')"
-              class="btn-block btn-primary"
-              style="padding:8px;font-size:13px;">
-
-              + Adicionar
-
-            </button>
-
-          </div>
-
-        `;
-
-      });
-
-    }
 
   }
 
