@@ -2769,6 +2769,29 @@ function mostrarArquivados() {
 </div>
 
 `;  
+  });
+
+  if (encontrados === 0) {
+
+    area.innerHTML = `
+
+      <div class="empty-state">
+
+        <span class="empty-state-icon">
+
+          📦
+
+        </span>
+
+        Nenhum pedido arquivado
+
+      </div>
+
+    `;
+
+  }
+
+}      
 function arquivarPedido(index) {
 
   if (
