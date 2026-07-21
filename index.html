@@ -2730,68 +2730,45 @@ function mostrarArquivados() {
 
     });
 
-    area.innerHTML += `
+ area.innerHTML += `
 
-      <div style="
-        background:var(--surface2);
-        border:1px solid var(--border);
-        border-radius:12px;
-        padding:12px;
-        margin-bottom:10px;">
+<div class="pedido-card">
 
-        <strong>
-          Pedido #${index + 1}
-        </strong><br>
+  <div class="pedido-header">
 
-        Status:
-        <span style="
-          color:#888;
-          font-weight:bold;">
+    <div>
 
-          ARQUIVADO
+      <strong>📦 Pedido #${index + 1}</strong><br>
 
-        </span><br>
+      <small>${pedido.data}</small>
 
-        Data:
-        ${pedido.data}<br><br>
+    </div>
 
-        ${itensHTML}
+    <span class="status-arquivado">
 
-        <br>
+      ARQUIVADO
 
-        <strong>
-          Observação:
-        </strong><br>
+    </span>
 
-        ${pedido.observacao || "-"}
+  </div>
 
-      </div>
+  <div class="pedido-itens">
 
-    `;
+    ${itensHTML}
 
-  });
+  </div>
 
-  if (encontrados === 0) {
+  <div class="pedido-observacao">
 
-    area.innerHTML = `
+    <strong>Observação:</strong><br>
 
-      <div class="empty-state">
+    ${pedido.observacao || "-"}
 
-        <span class="empty-state-icon">
+  </div>
 
-          📦
+</div>
 
-        </span>
-
-        Nenhum pedido arquivado
-
-      </div>
-
-    `;
-
-  }
-
-}  
+`;  
 function arquivarPedido(index) {
 
   if (
