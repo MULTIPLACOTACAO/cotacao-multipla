@@ -1030,29 +1030,7 @@ select.input-premium { cursor: pointer; appearance: none; }
 /* ── Install button ── */
 .install { display: none; }
 #installBtn { display: none; }
-.pedido-card{
 
-  background:var(--surface);
-
-  border:1px solid var(--border);
-
-  border-radius:14px;
-
-  padding:16px;
-
-  margin-bottom:14px;
-
-  transition:.25s;
-
-}
-
-.pedido-card:hover{
-
-  border-color:var(--primary);
-
-  box-shadow:0 6px 18px rgba(0,0,0,.18);
-
-}
 
 .pedido-header{
 
@@ -1099,8 +1077,31 @@ select.input-premium { cursor: pointer; appearance: none; }
   border-top:1px solid var(--border);
 
 }
+.pedido-card{
 
-</style>
+  background:var(--surface2);
+
+  border:1px solid var(--border);
+
+  border-radius:14px;
+
+  padding:16px;
+
+  margin-bottom:14px;
+
+  transition:.25s;
+
+}
+
+.pedido-card:hover{
+
+  border-color:var(--primary);
+
+  box-shadow:0 8px 22px rgba(0,0,0,.22);
+
+  transform:translateY(-2px);
+
+}
 </style>
 </head>
 <body>
@@ -2578,12 +2579,7 @@ if (
 
     area.innerHTML += `
 
-      <div style="
-        background:var(--surface2);
-        border:1px solid var(--border);
-        border-radius:12px;
-        padding:12px;
-        margin-bottom:10px;">
+   <div class="pedido-card">
 
        <strong>Pedido #${index + 1}</strong><br>
 
