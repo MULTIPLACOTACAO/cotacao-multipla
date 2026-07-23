@@ -2609,28 +2609,38 @@ if (
 
    <div class="pedido-card">
 
-       <strong>Pedido #${index + 1}</strong><br>
+<div class="pedido-header">
 
-Status:
-<span style="
-font-weight:bold;
-color:${
-pedido.status === "arquivado"
-  ? "#888"
-  : "#f39c12"
-};
-">
-${pedido.status || "pendente"}
-</span><br>
+  <div>
 
-Data:
-${pedido.data}<br><br>
+    <strong>📦 Pedido #${index + 1}</strong><br>
 
-        ${itensHTML}
+    <small>${pedido.data}</small>
+
+  </div>
+
+  <span class="status-pendente">
+
+    ${pedido.status || "PENDENTE"}
+
+  </span>
+
+</div>
+
+<div class="pedido-itens">
+
+  ${itensHTML}
+
+</div>
 
         <br>
-<strong>Observação:</strong><br>
-${pedido.observacao || "-"}
+<div class="pedido-observacao">
+
+  <strong>📝 Observação</strong><br>
+
+  ${pedido.observacao || "-"}
+
+</div>
 
 <br><br>
 
