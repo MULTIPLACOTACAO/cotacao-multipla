@@ -801,13 +801,17 @@ select.input-premium { cursor: pointer; appearance: none; }
   gap: 8px;
 }
 
-#listaOrcamentoProdutos {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-top: 16px;
-}
+#listaOrcamentoProdutos{
 
+  display:flex;
+
+  flex-direction:column;
+
+  gap:18px;
+
+  margin-top:16px;
+
+}
 .produto-card-orcamento{
 
   background:var(--surface);
