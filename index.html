@@ -867,6 +867,11 @@ select.input-premium { cursor: pointer; appearance: none; }
   margin-bottom:18px;
 
 }
+.categoria-grid.aberta{
+
+  animation:fadeUp .25s ease;
+
+}  
 /* ── Itens Orçamento (lista) ── */
 .orcamento-item-card {
   background: var(--surface);
@@ -3326,10 +3331,10 @@ function carregarProdutosOrcamento() {
 
         </button>
 
-        <div
-          class="categoria-grid"
+       <div
+  class="categoria-grid ${aberta ? "aberta" : ""}"
 
-          style="display:${aberta ? "grid" : "none"};">
+  style="display:${aberta ? "grid" : "none"};">
 
           ${catalogo[categoria].map(produto => `
 
