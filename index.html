@@ -3370,12 +3370,21 @@ function carregarProdutosOrcamento() {
 }
 function toggleCategoria(categoria) {
 
-  categoriasAbertas[categoria] =
-    !categoriasAbertas[categoria];
+  // Descobre se a categoria clicada já estava aberta
+  const estavaAberta = categoriasAbertas[categoria];
+
+  // Fecha todas as categorias
+  for (let cat in categoriasAbertas) {
+    categoriasAbertas[cat] = false;
+  }
+
+  // Se ela estava fechada, abre.
+  // Se já estava aberta, continua fechada.
+  categoriasAbertas[categoria] = !estavaAberta;
 
   carregarProdutosOrcamento();
 
-}  
+}
 /* ── Adicionar ao Orçamento ── */
 function adicionarOrcamento(produto) {
   let qtd = prompt("Quantidade:");
