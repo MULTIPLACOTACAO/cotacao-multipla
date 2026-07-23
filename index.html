@@ -3394,11 +3394,15 @@ function carregarProdutosOrcamento() {
 
             <div class="produto-card-orcamento">
 
-              <div class="nome-produto">
+           <div class="icone-produto">📦</div>
 
-                ${produto}
+<div class="codigo-produto">
+  ${produto.split(" - ")[0]}
+</div>
 
-              </div>
+<div class="nome-produto">
+  ${produto.split(" - ")[1] || produto}
+</div>
 
               <button
                 onclick="adicionarOrcamento('${produto}')"
