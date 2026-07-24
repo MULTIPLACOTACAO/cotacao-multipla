@@ -1054,31 +1054,8 @@ select.input-premium { cursor: pointer; appearance: none; }
   .form-grid { grid-template-columns: 1fr; }
   .form-grid.triple { grid-template-columns: 1fr; }
 
- #listaOrcamentoProdutos{
-
-  display:flex;
-
-  flex-direction:column;
-
-  gap:18px;
-
-}
-
-.categoria-grid{
-
-  display:grid !important;
-
-  grid-template-columns:repeat(2,1fr);
-
-  gap:10px;
-
-}
-
-.categoria-header-orcamento{
-
-  width:100%;
-
-}
+#listaOrcamentoProdutos { grid-template-columns: 1fr; }
+.categoria-header-orcamento { grid-column: span 1; }
 
   .crm-tabs { flex-direction: column; }
   .crm-tab { text-align: center; }
