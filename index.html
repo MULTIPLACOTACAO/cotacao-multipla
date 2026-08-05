@@ -1363,8 +1363,119 @@ overflow:hidden;
     📜
     <span>Auditoria</span>
   </button>
-
+<button
+    id="btnProdutos"
+    class="crm-tab"
+    onclick="mostrarTab('produtos', this)">
+    📦
+    <span>Produtos</span>
+</button>
 </div>   
+ <!-- ====== TAB PRODUTOS ====== -->
+
+<div id="tab-produtos" style="display:none;">
+
+  <div class="orcamento-section">
+
+    <div class="orcamento-section-title">
+      📦 Cadastro de Produtos
+    </div>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label class="form-label">Nome do Produto</label>
+        <input id="produtoNome" class="input-premium">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Categoria</label>
+        <input id="produtoCategoria" class="input-premium">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Unidade</label>
+        <input id="produtoUnidade" class="input-premium"
+               placeholder="kg, un, m², m³...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Preço de Venda</label>
+        <input id="produtoPreco"
+               type="number"
+               step="0.01"
+               class="input-premium">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Custo</label>
+        <input id="produtoCusto"
+               type="number"
+               step="0.01"
+               class="input-premium">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Código Interno</label>
+        <input id="produtoCodigo" class="input-premium">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Foto (URL)</label>
+        <input id="produtoFoto" class="input-premium">
+      </div>
+
+      <div class="form-group single">
+        <label class="form-label">Descrição</label>
+
+        <textarea
+          id="produtoDescricao"
+          class="input-premium"></textarea>
+
+      </div>
+
+      <div class="form-group">
+
+        <label>
+
+          <input
+            id="produtoAtivo"
+            type="checkbox"
+            checked>
+
+          Produto Ativo
+
+        </label>
+
+      </div>
+
+    </div>
+
+    <button
+      onclick="salvarProduto()"
+      class="btn-block btn-success">
+
+      💾 Salvar Produto
+
+    </button>
+
+    <hr>
+
+    <div id="listaProdutos">
+
+      <div class="empty-state">
+
+        <span class="empty-state-icon">📦</span>
+
+        Nenhum produto cadastrado
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>       
         <!-- ====== TAB CLIENTES ====== -->
         <div id="tab-clientes">
 
