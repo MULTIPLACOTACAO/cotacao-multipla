@@ -167,3 +167,155 @@ function salvarProduto() {
     mostrarProdutos();
 
 }
+/* ==========================================
+   MOSTRAR PRODUTOS
+========================================== */
+
+function mostrarProdutos() {
+
+    const lista = document.getElementById("listaProdutos");
+
+    if (!lista) return;
+
+    if (produtos.length === 0) {
+
+        lista.innerHTML = `
+            <div class="empty-state">
+                <span class="empty-state-icon">📦</span>
+                Nenhum produto cadastrado
+            </div>
+        `;
+
+        return;
+    }
+
+    lista.innerHTML = "";
+
+    produtos
+    .sort((a,b)=>a.nome.localeCompare(b.nome))
+    .forEach((produto,index)=>{
+
+        lista.innerHTML += `
+
+        <div class="cliente-card">
+
+            <div class="cliente-header">
+
+                <strong>${produto.nome}</strong>
+
+                <span>
+                    R$ ${produto.preco.toFixed(2)}
+                </span>
+
+            </div>
+
+            <div class="cliente-info">
+
+                Categoria:
+                ${produto.categoria}
+
+                <br>
+
+                Unidade:
+                ${produto.unidade}
+
+                <br>
+
+                Código:
+                ${produto.codigo || "-"}
+
+            </div>
+
+            <div
+              style="
+                display:flex;
+                gap:8px;
+                margin-top:12px;">
+
+                <button
+                  class="btn-edit"
+                  onclick="editarProduto(${index})">
+
+                    ✏️ Editar
+
+                </button>
+
+                <button
+                  class="btn-del"
+                  onclick="excluirProduto(${index})">
+
+                    🗑 Excluir
+
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+/* ==========================================
+   EDITAR PRODUTO
+========================================== */
+
+function editarProduto(index){
+
+    produtoEditando = index;
+
+    const produto = produtos[index];
+
+    document.getElementById("produtoNome").value = produto.nome;
+    document.getElementById("produtoCategoria").value = produto.categoria;
+    document.getElementById("produtoUnidade").value = produto.unidade;
+    document.getElementById("produtoPreco").value = produto.preco;
+    document.getElementById("produtoCusto").value = produto.custo;
+    document.getElementById("produtoCodigo").value = produto.codigo;
+    document.getElementById("produtoDescricao").value = produto.descricao;
+    document.getElementById("produtoFoto").value = produto.foto;
+    document.getElementById("produtoAtivo").checked = produto.ativo;
+
+}
+
+/* ==========================================
+   EXCLUIR PRODUTO
+========================================== */
+
+function excluirProduto(index){
+
+    if(!confirm("Deseja realmente excluir este produto?"))
+        return;
+
+    produtos.splice(index,1);
+
+    salvarProdutos();
+
+    mostrarProdutos();
+
+}
+
+/* ==========================================
+   DUPLICAR PRODUTO
+========================================== */
+
+function duplicarProduto(index){
+
+    let novo = {
+
+        ...produtos[index],
+
+        id: gerarIdProduto(),
+
+        nome: produtos[index].nome + " (Cópia)"
+
+    };
+
+    produtos.push(novo);
+
+    salvarProdutos();
+
+    mostrarProdutos();
+
+}
