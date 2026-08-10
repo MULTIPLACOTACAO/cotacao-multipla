@@ -436,3 +436,99 @@ window.addEventListener("load", function () {
     }, 500);
 
 });
+/* ======================================================
+   MIGRAR PRODUTOS ANTIGOS DO CATÁLOGO PARA O CADASTRO
+====================================================== */
+
+function migrarProdutosAntigos() {
+
+    if (typeof catalogo === "undefined") {
+
+        alert("Catálogo antigo não encontrado.");
+
+        return;
+
+    }
+
+    let produtosAtuais =
+        JSON.parse(localStorage.getItem("produtosCRM")) || [];
+
+    let quantidadeAdicionada = 0;
+
+    Object.keys(catalogo).forEach(function(categoria) {
+
+        catalogo[categoria].forEach(function(item) {
+
+            const separador = item.indexOf(" - ");
+
+            if (separador === -1) {
+                return;
+            }
+
+            const codigo =
+                item.substring(0, separador).trim();
+
+            const nome =
+                item.substring(separador + 3).trim();
+
+            /* Evita cadastrar duas vezes */
+
+            const jaExiste = produtosAtuais.some(function(produto) {
+
+                return produto.codigo === codigo;
+
+            });
+
+            if (jaExiste) {
+                return;
+            }
+
+            produtosAtuais.push({
+
+                id:
+                    Date.now() +
+                    Math.floor(Math.random() * 100000),
+
+                nome: nome,
+
+                categoria: categoria,
+
+                unidade: "un",
+
+                preco: 0,
+
+                custo: 0,
+
+                codigo: codigo,
+
+                foto: "",
+
+                descricao: "",
+
+                ativo: true
+
+            });
+
+            quantidadeAdicionada++;
+
+        });
+
+    });
+
+    localStorage.setItem(
+        "produtosCRM",
+        JSON.stringify(produtosAtuais)
+    );
+
+    produtos = produtosAtuais;
+
+    if (typeof mostrarProdutos === "function") {
+        mostrarProdutos();
+    }
+
+    alert(
+        quantidadeAdicionada +
+        " produtos antigos foram adicionados ao cadastro."
+    );
+
+}
