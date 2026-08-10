@@ -358,7 +358,7 @@ function salvarProduto() {
     produtos.push(produto);
 
     salvarProdutos();
-
+sincronizarProdutosComCatalogo();
     limparProduto();
 
     if (typeof mostrarProdutos === "function") {
