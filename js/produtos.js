@@ -368,3 +368,100 @@ function salvarProduto() {
     alert("Produto cadastrado com sucesso!");
 
 }
+/* ======================================================
+   INTEGRAÇÃO DOS PRODUTOS CADASTRADOS COM O CATÁLOGO
+====================================================== */
+
+function sincronizarProdutosComCatalogo() {
+
+    // Verifica se o catálogo principal já existe
+    if (typeof catalogo === "undefined") {
+        return;
+    }
+
+    // Recupera os produtos que este módulo adicionou
+    const antigos =
+        JSON.parse(
+            localStorage.getItem("produtosCatalogoNexon")
+        ) || [];
+
+    // Remove do catálogo os produtos que foram
+    // adicionados anteriormente pelo módulo
+    antigos.forEach(item => {
+
+        if (!item.categoria || !item.produto) {
+            return;
+        }
+
+        if (catalogo[item.categoria]) {
+
+            catalogo[item.categoria] =
+                catalogo[item.categoria].filter(
+                    p => p !== item.produto
+                );
+
+        }
+
+    });
+
+    const novos = [];
+
+    // Adiciona somente produtos ativos
+    produtos.forEach(produto => {
+
+        if (!produto.ativo) {
+            return;
+        }
+
+        const categoria =
+            produto.categoria.trim() || "Outros";
+
+        // Código interno
+        const codigo =
+            produto.codigo.trim() ||
+            ("PRD" + String(produto.id).slice(-6));
+
+        // Formato compatível com o catálogo atual
+        const nomeCatalogo =
+            codigo + " - " + produto.nome;
+
+        // Cria a categoria se ainda não existir
+        if (!catalogo[categoria]) {
+            catalogo[categoria] = [];
+        }
+
+        // Evita duplicação
+        if (!catalogo[categoria].includes(nomeCatalogo)) {
+
+            catalogo[categoria].push(nomeCatalogo);
+
+        }
+
+        novos.push({
+            categoria: categoria,
+            produto: nomeCatalogo
+        });
+
+    });
+
+    // Guarda somente o que foi acrescentado
+    localStorage.setItem(
+        "produtosCatalogoNexon",
+        JSON.stringify(novos)
+    );
+
+    // Atualiza a área de categorias do cliente
+    if (
+        typeof carregarCategorias === "function"
+    ) {
+        carregarCategorias();
+    }
+
+    // Atualiza a área de orçamento
+    if (
+        typeof carregarProdutosOrcamento === "function"
+    ) {
+        carregarProdutosOrcamento();
+    }
+
+}
