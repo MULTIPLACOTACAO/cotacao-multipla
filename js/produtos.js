@@ -421,3 +421,18 @@ function sincronizarProdutosComCatalogo() {
     }
 
 }
+/* ======================================================
+   SINCRONIZAÇÃO AO ABRIR O SISTEMA
+====================================================== */
+
+window.addEventListener("load", function () {
+
+    setTimeout(function () {
+
+        if (typeof sincronizarProdutosComCatalogo === "function") {
+            sincronizarProdutosComCatalogo();
+        }
+
+    }, 500);
+
+});
