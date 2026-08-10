@@ -159,12 +159,13 @@ function salvarProduto() {
 
     }
 
-    salvarProdutos();
+salvarProdutos();
 
-    limparProduto();
+sincronizarProdutosComCatalogo();
 
-    mostrarProdutos();
+limparProduto();
 
+mostrarProdutos();    
 }
 /* ==========================================
    MOSTRAR PRODUTOS
@@ -322,52 +323,7 @@ function duplicarProduto(index){
    CADASTRAR PRODUTO
 ========================================== */
 
-function salvarProduto() {
 
-    const produto = {
-
-        id: produtoEditando === -1
-            ? gerarIdProduto()
-            : produtos[produtoEditando].id,
-
-        nome: document.getElementById("produtoNome").value.trim(),
-
-        categoria: document.getElementById("produtoCategoria").value.trim(),
-
-        unidade: document.getElementById("produtoUnidade").value.trim(),
-
-        preco: parseFloat(document.getElementById("produtoPreco").value) || 0,
-
-        custo: parseFloat(document.getElementById("produtoCusto").value) || 0,
-
-        codigo: document.getElementById("produtoCodigo").value.trim(),
-
-        foto: document.getElementById("produtoFoto").value.trim(),
-
-        descricao: document.getElementById("produtoDescricao").value.trim(),
-
-        ativo: document.getElementById("produtoAtivo").checked
-
-    };
-
-    if (produto.nome === "") {
-        alert("Informe o nome do produto.");
-        return;
-    }
-
-    produtos.push(produto);
-
-    salvarProdutos();
-sincronizarProdutosComCatalogo();
-    limparProduto();
-
-    if (typeof mostrarProdutos === "function") {
-        mostrarProdutos();
-    }
-
-    alert("Produto cadastrado com sucesso!");
-
-}
 /* ======================================================
    INTEGRAÇÃO DOS PRODUTOS CADASTRADOS COM O CATÁLOGO
 ====================================================== */
