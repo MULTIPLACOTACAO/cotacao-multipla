@@ -1391,10 +1391,20 @@ overflow:hidden;
         <input id="produtoNome" class="input-premium">
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Categoria</label>
-        <input id="produtoCategoria" class="input-premium">
-      </div>
+    <div class="form-group">
+  <label class="form-label">Categoria</label>
+
+  <select
+    id="produtoCategoria"
+    class="input-premium"
+    onchange="tratarNovaCategoriaProduto()">
+
+    <option value="">
+      Selecione uma categoria
+    </option>
+
+  </select>
+</div>
 
       <div class="form-group">
         <label class="form-label">Unidade</label>
