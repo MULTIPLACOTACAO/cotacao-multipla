@@ -312,7 +312,7 @@ function mostrarProdutos() {
     const lista = document.getElementById("listaProdutos");
 
     if (!lista) return;
-
+carregarCategoriasProduto();
     if (produtos.length === 0) {
 
         lista.innerHTML = `
