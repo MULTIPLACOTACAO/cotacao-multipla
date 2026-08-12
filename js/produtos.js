@@ -52,6 +52,78 @@ function limparProduto() {
     const ativo = document.getElementById("produtoAtivo");
     if (ativo) ativo.checked = true;
 }
+function carregarCategoriasProduto() {
+
+    const select =
+        document.getElementById("produtoCategoria");
+
+    if (!select) return;
+
+    const categorias = new Set();
+
+    // Categorias existentes no catálogo antigo
+    if (typeof catalogo !== "undefined") {
+
+        Object.keys(catalogo).forEach(function(categoria) {
+
+            categorias.add(categoria);
+
+        });
+
+    }
+
+    // Categorias dos produtos cadastrados
+    if (
+        typeof produtos !== "undefined" &&
+        Array.isArray(produtos)
+    ) {
+
+        produtos.forEach(function(produto) {
+
+            if (produto.categoria) {
+
+                categorias.add(
+                    produto.categoria.trim()
+                );
+
+            }
+
+        });
+
+    }
+
+    select.innerHTML =
+        '<option value="">Selecione uma categoria</option>';
+
+    Array.from(categorias)
+        .sort(function(a, b) {
+
+            return a.localeCompare(b, "pt-BR");
+
+        })
+        .forEach(function(categoria) {
+
+            const option =
+                document.createElement("option");
+
+            option.value = categoria;
+            option.textContent = categoria;
+
+            select.appendChild(option);
+
+        });
+
+    const novaCategoria =
+        document.createElement("option");
+
+    novaCategoria.value =
+        "__NOVA_CATEGORIA__";
+
+    novaCategoria.textContent =
+        "➕ Criar nova categoria";
+
+    select.appendChild(novaCategoria);
+}
 /* ==========================================
    CADASTRAR / ATUALIZAR PRODUTO
 ========================================== */
