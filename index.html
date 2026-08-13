@@ -1428,10 +1428,23 @@ overflow:hidden;
                class="input-premium">
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Código Interno</label>
-        <input id="produtoCodigo" class="input-premium">
-      </div>
+    <div class="form-group">
+  <label class="form-label">Abreviação do Produto</label>
+  <input
+    id="produtoAbreviacao"
+    class="input-premium"
+    maxlength="5"
+    placeholder="Ex.: COL, PRE, EST">
+</div>
+
+<div class="form-group">
+  <label class="form-label">Código Interno</label>
+  <input
+    id="produtoCodigo"
+    class="input-premium"
+    readonly
+    placeholder="Gerado automaticamente">
+</div>
 
       <div class="form-group">
         <label class="form-label">Foto (URL)</label>
