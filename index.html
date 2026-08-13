@@ -1491,7 +1491,19 @@ overflow:hidden;
   🔄 Migrar Produtos Antigos
 </button>
     <hr>
+<div class="form-group" style="margin-bottom: 15px;">
 
+  <label class="form-label">
+    🔎 Pesquisar Produto
+  </label>
+
+  <input
+    id="pesquisaProdutos"
+    class="input-premium"
+    placeholder="Nome, código ou categoria..."
+    oninput="filtrarProdutosCadastro()">
+
+</div>
     <div id="listaProdutos">
 
       <div class="empty-state">
