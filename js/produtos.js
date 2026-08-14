@@ -188,6 +188,192 @@ function tratarNovaCategoriaProduto() {
 
     select.value = categoria;
 }
+function gerenciarCategoriasProduto() {
+
+    const select =
+        document.getElementById("produtoCategoria");
+
+    if (!select) return;
+
+    const categorias = Array.from(select.options)
+        .map(function(option) {
+            return option.value;
+        })
+        .filter(function(categoria) {
+            return categoria &&
+                   categoria !== "__NOVA_CATEGORIA__";
+        });
+
+    if (categorias.length === 0) {
+
+        alert("Nenhuma categoria cadastrada.");
+
+        return;
+    }
+
+    let mensagem =
+        "Digite o número da categoria que deseja gerenciar:\n\n";
+
+    categorias.forEach(function(categoria, index) {
+
+        mensagem +=
+            (index + 1) + " - " + categoria + "\n";
+
+    });
+
+    const escolha =
+        prompt(mensagem);
+
+    if (escolha === null) return;
+
+    const numero =
+        parseInt(escolha, 10);
+
+    if (
+        isNaN(numero) ||
+        numero < 1 ||
+        numero > categorias.length
+    ) {
+
+        alert("Categoria inválida.");
+
+        return;
+    }
+
+    const categoriaSelecionada =
+        categorias[numero - 1];
+
+    const acao =
+        prompt(
+            "Categoria: " +
+            categoriaSelecionada +
+            "\n\n" +
+            "Digite:\n" +
+            "1 para EDITAR\n" +
+            "2 para EXCLUIR"
+        );
+
+    if (acao === "1") {
+
+        const novoNome =
+            prompt(
+                "Novo nome da categoria:",
+                categoriaSelecionada
+            );
+
+        if (!novoNome || !novoNome.trim()) {
+            return;
+        }
+
+        const nomeNovo =
+            novoNome.trim();
+
+        if (
+            nomeNovo.toLowerCase() ===
+            categoriaSelecionada.toLowerCase()
+        ) {
+            return;
+        }
+
+        const existe =
+            categorias.some(function(categoria) {
+
+                return categoria.toLowerCase() ===
+                       nomeNovo.toLowerCase();
+
+            });
+
+        if (existe) {
+
+            alert(
+                "Essa categoria já existe."
+            );
+
+            return;
+        }
+
+        produtos.forEach(function(produto) {
+
+            if (
+                produto.categoria &&
+                produto.categoria.trim().toLowerCase() ===
+                categoriaSelecionada.toLowerCase()
+            ) {
+
+                produto.categoria = nomeNovo;
+
+            }
+
+        });
+
+        salvarProdutos();
+
+        alert(
+            "Categoria alterada com sucesso!"
+        );
+
+        carregarCategoriasProduto();
+
+        mostrarProdutos();
+
+        return;
+    }
+
+    if (acao === "2") {
+
+        const quantidadeProdutos =
+            produtos.filter(function(produto) {
+
+                return (
+                    produto.categoria &&
+                    produto.categoria.trim().toLowerCase() ===
+                    categoriaSelecionada.toLowerCase()
+                );
+
+            }).length;
+
+        if (quantidadeProdutos > 0) {
+
+            alert(
+                "Não é possível excluir esta categoria " +
+                "porque existem " +
+                quantidadeProdutos +
+                " produto(s) dentro dela.\n\n" +
+                "Primeiro altere ou exclua os produtos."
+            );
+
+            return;
+        }
+
+        const confirmar =
+            confirm(
+                'Excluir a categoria "' +
+                categoriaSelecionada +
+                '"?'
+            );
+
+        if (!confirmar) return;
+
+        if (
+            typeof catalogo !== "undefined" &&
+            catalogo[categoriaSelecionada]
+        ) {
+
+            delete catalogo[categoriaSelecionada];
+
+        }
+
+        salvarProdutos();
+
+        carregarCategoriasProduto();
+
+        mostrarProdutos();
+
+        alert(
+            "Categoria excluída com sucesso!"
+        );
+    }
+}
 /* ==========================================
    CADASTRAR / ATUALIZAR PRODUTO
 ========================================== */
