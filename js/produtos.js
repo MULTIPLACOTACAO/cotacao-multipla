@@ -306,7 +306,106 @@ mostrarProdutos();
 /* ==========================================
    MOSTRAR PRODUTOS
 ========================================== */
+function filtrarProdutosCadastro() {
 
+    const campo =
+        document.getElementById("pesquisaProdutos");
+
+    const lista =
+        document.getElementById("listaProdutos");
+
+    if (!campo || !lista) return;
+
+    const busca =
+        campo.value.trim().toLowerCase();
+
+    const resultados =
+        produtos.filter(function(produto) {
+
+            return (
+                (produto.nome || "")
+                    .toLowerCase()
+                    .includes(busca) ||
+
+                (produto.codigo || "")
+                    .toLowerCase()
+                    .includes(busca) ||
+
+                (produto.categoria || "")
+                    .toLowerCase()
+                    .includes(busca)
+            );
+
+        });
+
+    if (resultados.length === 0) {
+
+        lista.innerHTML = `
+            <div class="empty-state">
+                <span class="empty-state-icon">🔎</span>
+                Nenhum produto encontrado
+            </div>
+        `;
+
+        return;
+    }
+
+    lista.innerHTML = "";
+
+    resultados
+        .sort((a, b) =>
+            a.nome.localeCompare(b.nome)
+        )
+        .forEach(function(produto) {
+
+            const index =
+                produtos.indexOf(produto);
+
+            lista.innerHTML += `
+
+                <div class="cliente-card">
+
+                    <div class="cliente-header">
+
+                        <strong>
+                            ${produto.nome}
+                        </strong>
+
+                    </div>
+
+                    <div>
+                        <small>
+                            Código:
+                            ${produto.codigo || "-"}
+                        </small>
+                    </div>
+
+                    <div>
+                        <small>
+                            Categoria:
+                            ${produto.categoria || "-"}
+                        </small>
+                    </div>
+
+                    <div style="margin-top:10px;">
+
+                        <button
+                            onclick="editarProduto(${index})">
+                            ✏️ Editar
+                        </button>
+
+                        <button
+                            onclick="excluirProduto(${index})">
+                            🗑️ Excluir
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+        });
+}
 function mostrarProdutos() {
 
     const lista = document.getElementById("listaProdutos");
