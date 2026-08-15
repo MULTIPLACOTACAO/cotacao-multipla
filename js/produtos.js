@@ -442,7 +442,10 @@ function salvarProduto() {
 
         descricao: document.getElementById("produtoDescricao").value.trim(),
 
-   foto: "",
+        foto:
+            produtoEditando === -1
+                ? ""
+                : (produtos[produtoEditando].foto || ""),
 
         ativo: document.getElementById("produtoAtivo").checked
 
@@ -503,6 +506,51 @@ function salvarProduto() {
 
     }
 
+    /* ========= FOTO ========= */
+
+    const campoFoto =
+        document.getElementById("produtoFoto");
+
+    if (
+        campoFoto &&
+        campoFoto.files &&
+        campoFoto.files[0]
+    ) {
+
+        const arquivo =
+            campoFoto.files[0];
+
+        const leitor =
+            new FileReader();
+
+        leitor.onload = function(evento) {
+
+            produto.foto =
+                evento.target.result;
+
+            finalizarSalvamentoProduto(produto);
+
+        };
+
+        leitor.readAsDataURL(arquivo);
+
+        return;
+
+    }
+
+    /* ========= SEM NOVA FOTO ========= */
+
+    finalizarSalvamentoProduto(produto);
+
+}
+
+
+/* ==========================================
+   FINALIZAR SALVAMENTO DO PRODUTO
+========================================== */
+
+function finalizarSalvamentoProduto(produto) {
+
     /* ========= NOVO ========= */
 
     if (produtoEditando === -1) {
@@ -515,44 +563,10 @@ function salvarProduto() {
 
     else {
 
-        produtos[produtoEditando] = produto;
+        produtos[produtoEditando] =
+            produto;
 
     }
-const campoFoto =
-    document.getElementById("produtoFoto");
-
-if (
-    campoFoto &&
-    campoFoto.files &&
-    campoFoto.files[0]
-) {
-
-    const arquivo =
-        campoFoto.files[0];
-
-    const leitor =
-        new FileReader();
-
-    leitor.onload = function(evento) {
-
-        produto.foto =
-            evento.target.result;
-
-        salvarProdutos();
-
-        sincronizarProdutosComCatalogo();
-
-        limparProduto();
-
-        mostrarProdutos();
-
-    };
-
-    leitor.readAsDataURL(arquivo);
-
-} else {
-
-    produto.foto = "";
 
     salvarProdutos();
 
@@ -560,7 +574,8 @@ if (
 
     limparProduto();
 
-    mostrarProdutos();  
+    mostrarProdutos();
+
 }
 }
 /* ==========================================
