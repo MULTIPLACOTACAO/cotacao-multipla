@@ -811,32 +811,50 @@ function editarProduto(index){
 
     const produto = produtos[index];
 
-    document.getElementById("produtoNome").value = produto.nome;
-    document.getElementById("produtoCategoria").value = produto.categoria;
-    document.getElementById("produtoUnidade").value = produto.unidade;
-    document.getElementById("produtoPreco").value = produto.preco;
-    document.getElementById("produtoCusto").value = produto.custo;
-    document.getElementById("produtoCodigo").value = produto.codigo;
-    document.getElementById("produtoDescricao").value = produto.descricao;
-    document.getElementById("produtoFoto").value = produto.foto;
-    document.getElementById("produtoAtivo").checked = produto.ativo;
+    document.getElementById("produtoNome").value =
+        produto.nome || "";
 
-}
+    document.getElementById("produtoCategoria").value =
+        produto.categoria || "";
 
-/* ==========================================
-   EXCLUIR PRODUTO
-========================================== */
+    document.getElementById("produtoUnidade").value =
+        produto.unidade || "";
 
-function excluirProduto(index){
+    document.getElementById("produtoPreco").value =
+        produto.preco || "";
 
-    if(!confirm("Deseja realmente excluir este produto?"))
-        return;
+    document.getElementById("produtoCusto").value =
+        produto.custo || "";
 
-    produtos.splice(index,1);
+    document.getElementById("produtoCodigo").value =
+        produto.codigo || "";
 
-    salvarProdutos();
+    document.getElementById("produtoDescricao").value =
+        produto.descricao || "";
 
-    mostrarProdutos();
+    document.getElementById("produtoFoto").value = "";
+
+    document.getElementById("produtoAtivo").checked =
+        produto.ativo !== false;
+
+    const preview =
+        document.getElementById("previewProdutoFoto");
+
+    if (preview) {
+
+        if (produto.foto) {
+
+            preview.src = produto.foto;
+            preview.style.display = "block";
+
+        } else {
+
+            preview.src = "";
+            preview.style.display = "none";
+
+        }
+
+    }
 
 }
 
