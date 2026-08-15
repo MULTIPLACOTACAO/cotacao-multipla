@@ -374,6 +374,44 @@ function gerenciarCategoriasProduto() {
         );
     }
 }
+function mostrarPreviewProdutoFoto() {
+
+    const campo =
+        document.getElementById("produtoFoto");
+
+    const preview =
+        document.getElementById("previewProdutoFoto");
+
+    if (!campo || !preview) return;
+
+    preview.innerHTML = "";
+
+    if (!campo.files || !campo.files[0]) {
+        return;
+    }
+
+    const arquivo = campo.files[0];
+
+    if (!arquivo.type.startsWith("image/")) {
+        alert("Selecione uma imagem válida.");
+        campo.value = "";
+        return;
+    }
+
+    const imagem =
+        document.createElement("img");
+
+    imagem.src =
+        URL.createObjectURL(arquivo);
+
+    imagem.style.maxWidth = "180px";
+    imagem.style.maxHeight = "180px";
+    imagem.style.objectFit = "contain";
+    imagem.style.borderRadius = "10px";
+    imagem.style.marginTop = "8px";
+
+    preview.appendChild(imagem);
+}
 /* ==========================================
    CADASTRAR / ATUALIZAR PRODUTO
 ========================================== */
