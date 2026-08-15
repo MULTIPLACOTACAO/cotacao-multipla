@@ -442,7 +442,7 @@ function salvarProduto() {
 
         descricao: document.getElementById("produtoDescricao").value.trim(),
 
-        foto: document.getElementById("produtoFoto").value.trim(),
+   foto: "",
 
         ativo: document.getElementById("produtoAtivo").checked
 
@@ -518,14 +518,50 @@ function salvarProduto() {
         produtos[produtoEditando] = produto;
 
     }
+const campoFoto =
+    document.getElementById("produtoFoto");
 
-salvarProdutos();
+if (
+    campoFoto &&
+    campoFoto.files &&
+    campoFoto.files[0]
+) {
 
-sincronizarProdutosComCatalogo();
+    const arquivo =
+        campoFoto.files[0];
 
-limparProduto();
+    const leitor =
+        new FileReader();
 
-mostrarProdutos();    
+    leitor.onload = function(evento) {
+
+        produto.foto =
+            evento.target.result;
+
+        salvarProdutos();
+
+        sincronizarProdutosComCatalogo();
+
+        limparProduto();
+
+        mostrarProdutos();
+
+    };
+
+    leitor.readAsDataURL(arquivo);
+
+} else {
+
+    produto.foto = "";
+
+    salvarProdutos();
+
+    sincronizarProdutosComCatalogo();
+
+    limparProduto();
+
+    mostrarProdutos();  
+}
 }
 /* ==========================================
    MOSTRAR PRODUTOS
