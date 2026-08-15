@@ -694,15 +694,49 @@ carregarCategoriasProduto();
 
         <div class="cliente-card">
 
-            <div class="cliente-header">
+          <div class="cliente-header">
 
-                <strong>${produto.nome}</strong>
+    <div style="display:flex; align-items:center; gap:12px;">
 
-                <span>
-                    R$ ${produto.preco.toFixed(2)}
-                </span>
+        ${
+            produto.foto
+                ? `
+                    <img
+                        src="${produto.foto}"
+                        alt="${produto.nome}"
+                        style="
+                            width:70px;
+                            height:70px;
+                            object-fit:contain;
+                            border-radius:10px;
+                            border:1px solid #ddd;
+                            background:#fff;">
+                  `
+                : `
+                    <div
+                        style="
+                            width:70px;
+                            height:70px;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            border-radius:10px;
+                            border:1px solid #ddd;
+                            background:#f5f5f5;">
+                        📦
+                    </div>
+                  `
+        }
 
-            </div>
+        <strong>${produto.nome}</strong>
+
+    </div>
+
+    <span>
+        R$ ${produto.preco.toFixed(2)}
+    </span>
+
+</div> 
 
             <div class="cliente-info">
 
