@@ -3454,12 +3454,10 @@ function carregarCategorias() {
 
 function obterFotoProdutoCatalogo(produtoCatalogo) {
 
-    if (
-        typeof produtos === "undefined" ||
-        !Array.isArray(produtos)
-    ) {
-        return "";
-    }
+    const produtosSalvos =
+        JSON.parse(
+            localStorage.getItem("produtosCRM")
+        ) || [];
 
     const codigo =
         String(produtoCatalogo)
@@ -3467,7 +3465,7 @@ function obterFotoProdutoCatalogo(produtoCatalogo) {
             .trim();
 
     const produto =
-        produtos.find(function(p) {
+        produtosSalvos.find(function(p) {
 
             return (
                 String(p.codigo || "").trim() === codigo
@@ -3478,7 +3476,7 @@ function obterFotoProdutoCatalogo(produtoCatalogo) {
     return produto
         ? (produto.foto || "")
         : "";
-} 
+}
 function abrirCategoria(cat, el) {
 
     document
