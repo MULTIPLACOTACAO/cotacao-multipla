@@ -3450,6 +3450,35 @@ function carregarCategorias() {
 }
 
 /* ── Abrir Categoria ── */
+ /* ── FOTO DO PRODUTO NO CATÁLOGO ── */
+
+function obterFotoProdutoCatalogo(produtoCatalogo) {
+
+    if (
+        typeof produtos === "undefined" ||
+        !Array.isArray(produtos)
+    ) {
+        return "";
+    }
+
+    const codigo =
+        String(produtoCatalogo)
+            .split(" - ")[0]
+            .trim();
+
+    const produto =
+        produtos.find(function(p) {
+
+            return (
+                String(p.codigo || "").trim() === codigo
+            );
+
+        });
+
+    return produto
+        ? (produto.foto || "")
+        : "";
+} 
 function abrirCategoria(cat, el) {
   document.querySelectorAll(".categoria").forEach(c => c.classList.remove("ativo"));
   if (el) el.classList.add("ativo");
