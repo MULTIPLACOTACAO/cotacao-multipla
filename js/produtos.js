@@ -857,7 +857,40 @@ function editarProduto(index){
     }
 
 }
+/* ==========================================
+   EXCLUIR PRODUTO
+========================================== */
 
+function excluirProduto(index){
+
+    if (
+        index < 0 ||
+        index >= produtos.length
+    ) {
+        return;
+    }
+
+    const produto = produtos[index];
+
+    if (
+        !confirm(
+            "Deseja realmente excluir o produto \"" +
+            (produto.nome || "") +
+            "\"?"
+        )
+    ) {
+        return;
+    }
+
+    produtos.splice(index, 1);
+
+    salvarProdutos();
+
+    sincronizarProdutosComCatalogo();
+
+    mostrarProdutos();
+
+}
 /* ==========================================
    DUPLICAR PRODUTO
 ========================================== */
