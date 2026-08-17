@@ -4034,150 +4034,248 @@ function filtrarProdutosOrcamento() {
 function gerarPDF() {
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+
   const logo = new Image();
+
+  logo.onload = function() {
+
+    const doc = new jsPDF();
+
+    let data = new Date();
+    let dataAtual =
+      data.toLocaleDateString("pt-BR");
+
+    let cliente = "SEM CLIENTE";
+
+    if (
+      usarClienteNoPDF &&
+      clienteSelecionado
+    ) {
+      cliente =
+        clienteSelecionado.nomeFantasia;
+    }
+
+    let total = 0;
+
+    /* ========= LOGO ========= */
+
+    doc.addImage(
+      logo,
+      "PNG",
+      150,
+      10,
+      40,
+      40
+    );
+
+    /* ========= CABEÇALHO ========= */
+
+    doc.setFontSize(22);
+
+    doc.setTextColor(
+      44,
+      62,
+      80
+    );
+
+    doc.text(
+      "MULTIPLA COTAÇÃO",
+      20,
+      20
+    );
+
+    doc.setFontSize(12);
+
+    doc.setTextColor(100);
+
+    doc.text(
+      "Data: " + dataAtual,
+      20,
+      35
+    );
+
+    doc.text(
+      "Cliente: " + cliente,
+      20,
+      43
+    );
+
+    doc.setDrawColor(200);
+
+    doc.line(
+      20,
+      48,
+      190,
+      48
+    );
+
+    let y = 60;
+
+    /* ========= PRODUTOS ========= */
+
+    orcamentoInterno.forEach(
+      function(item) {
+
+        doc.setFontSize(12);
+
+        doc.setTextColor(40);
+
+        doc.text(
+          String(
+            item.produto || ""
+          ).substring(0, 100),
+          20,
+          y
+        );
+
+        y += 8;
+
+        doc.text(
+          "Qtd: " + item.qtd,
+          20,
+          y
+        );
+
+        y += 6;
+
+        doc.text(
+          "Preço Unitário: R$ " +
+          item.preco.toFixed(2),
+          20,
+          y
+        );
+
+        y += 6;
+
+        doc.text(
+          "Total: R$ " +
+          item.total.toFixed(2),
+          20,
+          y
+        );
+
+        y += 12;
+
+        total += item.total;
+
+      }
+    );
+
+    /* ========= FRETE ========= */
+
+    let frete =
+      parseFloat(
+        document.getElementById(
+          "freteValor"
+        ).value
+      ) || 0;
+
+    total += frete;
+
+    doc.setFontSize(12);
+
+    doc.setTextColor(40);
+
+    y += 10;
+
+    doc.text(
+      "Frete: R$ " +
+      frete.toFixed(2),
+      20,
+      y
+    );
+
+    y += 8;
+
+    doc.setDrawColor(180);
+
+    doc.line(
+      20,
+      y,
+      190,
+      y
+    );
+
+    y += 12;
+
+    /* ========= TOTAL ========= */
+
+    doc.setFontSize(16);
+
+    doc.setTextColor(
+      39,
+      174,
+      96
+    );
+
+    if (y > 250) {
+
+      doc.addPage();
+
+      y = 30;
+
+    }
+
+    doc.text(
+      "TOTAL GERAL: R$ " +
+      total.toFixed(2),
+      20,
+      y
+    );
+
+    /* ========= SALVAR PEDIDO ========= */
+
+    if (
+      typeof pedidoAtualOrcamento !==
+      "undefined"
+    ) {
+
+      pedidosRecebidos[
+        pedidoAtualOrcamento
+      ].orcamento =
+        [...orcamentoInterno];
+
+      pedidosRecebidos[
+        pedidoAtualOrcamento
+      ].frete =
+        frete;
+
+      pedidosRecebidos[
+        pedidoAtualOrcamento
+      ].valorTotal =
+        total;
+
+      pedidosRecebidos[
+        pedidoAtualOrcamento
+      ].status =
+        "orcado";
+
+      localStorage.setItem(
+        "pedidosRecebidos",
+        JSON.stringify(
+          pedidosRecebidos
+        )
+      );
+
+    }
+
+    /* ========= GERAR PDF ========= */
+
+    doc.save(
+      "orcamento.pdf"
+    );
+
+  };
+
+  logo.onerror = function() {
+
+    alert(
+      "Não foi possível carregar a logo do orçamento."
+    );
+
+  };
+
   logo.src = "logo_512.png";
-  let data = new Date();
-  let dataAtual = data.toLocaleDateString("pt-BR");
-  let cliente = "SEM CLIENTE";
-  if (usarClienteNoPDF && clienteSelecionado) {
-    cliente = clienteSelecionado.nomeFantasia;
-  }
-  let total = 0;
- // doc.addImage(logo, "PNG", 150, 10, 40, 40);
-  doc.setFontSize(22);
-  doc.setTextColor(44, 62, 80);
-  doc.text("MULTIPLA COTAÇÃO", 20, 20);
-  doc.setFontSize(12);
-  doc.setTextColor(100);
-  doc.text("Data: " + dataAtual, 20, 35);
-  doc.text("Cliente: " + cliente, 20, 43);
-  doc.setDrawColor(200);
-  doc.line(20, 48, 190, 48);
-  let y = 60;
-;
-orcamentoInterno.forEach(item => {
-
-  doc.setFontSize(12);
-  doc.setTextColor(40);
-
-  doc.text(
-    String(item.produto || "").substring(0, 100),
-    20,
-    y
-  );
-
-  y += 8;
-
-  doc.text(
-    "Qtd: " + item.qtd,
-    20,
-    y
-  );
-
-  y += 6;
-
-  doc.text(
-    "Preço Unitário: R$ " +
-    item.preco.toFixed(2),
-    20,
-    y
-  );
-
-  y += 6;
-
-  doc.text(
-    "Total: R$ " +
-    item.total.toFixed(2),
-    20,
-    y
-  );
-
-  y += 12;
-
-total += item.total;
-
-});
-
-let frete =
-  parseFloat(
-    document.getElementById("freteValor").value
-  ) || 0;
-
-total += frete;
-
-doc.setFontSize(12);
-doc.setTextColor(40);
-
-y += 10;
-
-doc.text(
-  "Frete: R$ " + frete.toFixed(2),
-  20,
-  y
-);
-
-y += 8;
-
-doc.setDrawColor(180);
-
-doc.line(
-  20,
-  y,
-  190,
-  y
-);
-
-y += 12;
-
-doc.setFontSize(16);
-
-doc.setTextColor(
-  39,
-  174,
-  96
-);
-
-if (y > 250) {
-  doc.addPage();
-  y = 30;
-}
-
-doc.text(
-  "TOTAL GERAL: R$ " +
-  total.toFixed(2),
-  20,
-  y
-);
-if (
-  typeof pedidoAtualOrcamento !== "undefined"
-) {
-
-  pedidosRecebidos[pedidoAtualOrcamento].orcamento =
-    [...orcamentoInterno];
-
-  pedidosRecebidos[pedidoAtualOrcamento].frete =
-    frete;
-
-  pedidosRecebidos[pedidoAtualOrcamento].valorTotal =
-    total;
-
-  pedidosRecebidos[pedidoAtualOrcamento].status =
-    "orcado";
-
-localStorage.setItem(
-  "pedidosRecebidos",
-  JSON.stringify(pedidosRecebidos)
-);
-
-  mostrarPedidos();
-  mostrarOrcados();
-} 
-doc.save(
-  "orcamento_" +
-  Date.now() +
-  ".pdf"
-);
 
 }
 
