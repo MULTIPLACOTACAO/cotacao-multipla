@@ -592,23 +592,39 @@ function filtrarProdutosCadastro() {
     if (!campo || !lista) return;
 
     const busca =
-        campo.value.trim().toLowerCase();
+        campo.value
+            .trim()
+            .toLowerCase();
 
     const resultados =
         produtos.filter(function(produto) {
 
+            const nome =
+                String(produto.nome || "")
+                    .toLowerCase();
+
+            const codigo =
+                String(produto.codigo || "")
+                    .toLowerCase();
+
+            const categoria =
+                String(produto.categoria || "")
+                    .toLowerCase();
+
+            const unidade =
+                String(produto.unidade || "")
+                    .toLowerCase();
+
+            const descricao =
+                String(produto.descricao || "")
+                    .toLowerCase();
+
             return (
-                (produto.nome || "")
-                    .toLowerCase()
-                    .includes(busca) ||
-
-                (produto.codigo || "")
-                    .toLowerCase()
-                    .includes(busca) ||
-
-                (produto.categoria || "")
-                    .toLowerCase()
-                    .includes(busca)
+                nome.includes(busca) ||
+                codigo.includes(busca) ||
+                categoria.includes(busca) ||
+                unidade.includes(busca) ||
+                descricao.includes(busca)
             );
 
         });
@@ -617,8 +633,13 @@ function filtrarProdutosCadastro() {
 
         lista.innerHTML = `
             <div class="empty-state">
-                <span class="empty-state-icon">🔎</span>
+
+                <span class="empty-state-icon">
+                    🔎
+                </span>
+
                 Nenhum produto encontrado
+
             </div>
         `;
 
@@ -628,9 +649,15 @@ function filtrarProdutosCadastro() {
     lista.innerHTML = "";
 
     resultados
-        .sort((a, b) =>
-            a.nome.localeCompare(b.nome)
-        )
+        .sort(function(a, b) {
+
+            return String(
+                a.nome || ""
+            ).localeCompare(
+                String(b.nome || "")
+            );
+
+        })
         .forEach(function(produto) {
 
             const index =
@@ -643,43 +670,62 @@ function filtrarProdutosCadastro() {
                     <div class="cliente-header">
 
                         <strong>
-                            ${produto.nome}
+                            ${produto.nome || ""}
                         </strong>
 
                     </div>
 
                     <div>
+
                         <small>
                             Código:
                             ${produto.codigo || "-"}
                         </small>
+
                     </div>
 
                     <div>
+
                         <small>
                             Categoria:
                             ${produto.categoria || "-"}
                         </small>
+
+                    </div>
+
+                    <div>
+
+                        <small>
+                            Unidade:
+                            ${produto.unidade || "-"}
+                        </small>
+
                     </div>
 
                     <div style="margin-top:10px;">
 
                         <button
                             onclick="editarProduto(${index})">
+
                             ✏️ Editar
+
                         </button>
 
                         <button
                             onclick="excluirProduto(${index})">
+
                             🗑️ Excluir
+
                         </button>
 
                     </div>
 
                 </div>
+
             `;
 
         });
+
 }
 function mostrarProdutos() {
 
