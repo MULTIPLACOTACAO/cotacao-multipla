@@ -3452,20 +3452,142 @@ function carregarCategorias() {
 /* ── Abrir Categoria ── */
  /* ── FOTO DO PRODUTO NO CATÁLOGO ── */
 
-
 function abrirCategoria(cat, el) {
-  document.querySelectorAll(".categoria").forEach(c => c.classList.remove("ativo"));
-  if (el) el.classList.add("ativo");
-  let area = document.getElementById("produtos");
-  area.innerHTML = "";
-  catalogo[cat].forEach(p => {
-    area.innerHTML += `
-      <tr>
-        <td>${p}</td>
-        <td><input type="number" id="${p}" min="1" placeholder="0"></td>
-        <td><button class="btnAdd" onclick="add('${p}')">+ Adicionar</button></td>
-      </tr>`;
-  });
+
+    document
+        .querySelectorAll(".categoria")
+        .forEach(c => c.classList.remove("ativo"));
+
+    if (el) {
+        el.classList.add("ativo");
+    }
+
+    const area =
+        document.getElementById("produtos");
+
+    if (!area) return;
+
+    area.innerHTML = "";
+
+    const produtosSalvos =
+        JSON.parse(
+            localStorage.getItem("produtosCRM")
+        ) || [];
+
+    catalogo[cat].forEach(p => {
+
+        const partes =
+            String(p).split(" - ");
+
+        const codigo =
+            (partes[0] || "").trim();
+
+        const nome =
+            partes.slice(1).join(" - ").trim();
+
+        const produtoEncontrado =
+            produtosSalvos.find(function(produto) {
+
+                const codigoProduto =
+                    String(
+                        produto.codigo || ""
+                    ).trim();
+
+                const nomeProduto =
+                    String(
+                        produto.nome || ""
+                    ).trim();
+
+                return (
+                    codigoProduto === codigo ||
+                    nomeProduto === nome
+                );
+
+            });
+
+        const foto =
+            produtoEncontrado
+                ? (produtoEncontrado.foto || "")
+                : "";
+
+        area.innerHTML += `
+
+            <tr>
+
+                <td>
+
+                    <div style="
+                        width:160px;
+                        height:160px;
+                        overflow:hidden;
+                        border-radius:12px;
+                        background:#f5f5f5;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                    ">
+
+                        ${
+                            foto
+                            ? `
+                                <img
+                                    src="${foto}"
+                                    alt="${nome || p}"
+                                    style="
+                                        width:100%;
+                                        height:100%;
+                                        object-fit:cover;
+                                        display:block;
+                                    ">
+                              `
+                            : `
+                                <span style="
+                                    font-size:45px;
+                                ">
+                                    📦
+                                </span>
+                              `
+                        }
+
+                    </div>
+
+                    <div style="
+                        margin-top:8px;
+                        font-weight:600;
+                    ">
+                        ${p}
+                    </div>
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        id="${p}"
+                        min="1"
+                        placeholder="0">
+
+                </td>
+
+                <td>
+
+                    <button
+                        class="btnAdd"
+                        onclick="add('${p}')">
+
+                        + Adicionar
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
 }
 
 /* ── Buscar Produto ── */
