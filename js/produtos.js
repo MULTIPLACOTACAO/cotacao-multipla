@@ -925,20 +925,18 @@ function duplicarProduto(index){
 
 function sincronizarProdutosComCatalogo() {
 
-    // Verifica se o catálogo principal já existe
     if (typeof catalogo === "undefined") {
         return;
     }
 
-    // Recupera os produtos que este módulo adicionou
     const antigos =
         JSON.parse(
             localStorage.getItem("produtosCatalogoNexon")
         ) || [];
 
-    // Remove do catálogo os produtos que foram
-    // adicionados anteriormente pelo módulo
-    antigos.forEach(item => {
+    /* ========= REMOVER REGISTROS ANTIGOS ========= */
+
+    antigos.forEach(function(item) {
 
         if (!item.categoria || !item.produto) {
             return;
@@ -948,7 +946,9 @@ function sincronizarProdutosComCatalogo() {
 
             catalogo[item.categoria] =
                 catalogo[item.categoria].filter(
-                    p => p !== item.produto
+                    function(p) {
+                        return p !== item.produto;
+                    }
                 );
 
         }
@@ -957,58 +957,69 @@ function sincronizarProdutosComCatalogo() {
 
     const novos = [];
 
-    // Adiciona somente produtos ativos
-    produtos.forEach(produto => {
+    /* ========= ADICIONAR PRODUTOS ========= */
+
+    produtos.forEach(function(produto) {
 
         if (!produto.ativo) {
             return;
         }
 
         const categoria =
-            produto.categoria.trim() || "Outros";
+            String(produto.categoria || "")
+                .trim() || "Outros";
 
-        // Código interno
         const codigo =
-            produto.codigo.trim() ||
+            String(produto.codigo || "")
+                .trim() ||
             ("PRD" + String(produto.id).slice(-6));
 
-        // Formato compatível com o catálogo atual
         const nomeCatalogo =
             codigo + " - " + produto.nome;
 
-        // Cria a categoria se ainda não existir
         if (!catalogo[categoria]) {
             catalogo[categoria] = [];
         }
 
-        // Evita duplicação
-        if (!catalogo[categoria].includes(nomeCatalogo)) {
+        if (
+            !catalogo[categoria]
+                .includes(nomeCatalogo)
+        ) {
 
-            catalogo[categoria].push(nomeCatalogo);
+            catalogo[categoria]
+                .push(nomeCatalogo);
 
         }
 
+        /* ========= AGORA GUARDA A FOTO ========= */
+
         novos.push({
+
             categoria: categoria,
-            produto: nomeCatalogo
+
+            produto: nomeCatalogo,
+
+            codigo: codigo,
+
+            nome: produto.nome,
+
+            foto: produto.foto || ""
+
         });
 
     });
 
-    // Guarda somente o que foi acrescentado
     localStorage.setItem(
         "produtosCatalogoNexon",
         JSON.stringify(novos)
     );
 
-    // Atualiza a área de categorias do cliente
     if (
         typeof carregarCategorias === "function"
     ) {
         carregarCategorias();
     }
 
-    // Atualiza a área de orçamento
     if (
         typeof carregarProdutosOrcamento === "function"
     ) {
