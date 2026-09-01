@@ -2905,310 +2905,302 @@ if (
 }  
 function mostrarOrcados() {
 
-  const area =
-    document.getElementById("listaOrcados");
+  const area = document.getElementById("listaOrcados");
 
   if (!area) return;
 
   area.innerHTML = "";
 
+  if (!Array.isArray(pedidosRecebidos)) {
+    area.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-state-icon">📝</span>
+        Nenhum orçamento encontrado
+      </div>
+    `;
+    return;
+  }
+
   let encontrados = 0;
 
-  pedidosRecebidos.forEach(
-    function(pedido, index) {
+  pedidosRecebidos.forEach(function(pedido, index) {
 
-      if (pedido.status !== "orcado") {
-        return;
-      }
+    if (!pedido || pedido.status !== "orcado") {
+      return;
+    }
 
-      encontrados++;
+    encontrados++;
 
-      let itensHTML = "";
+    let itensHTML = "";
 
-      /* ========= PRODUTOS ========= */
+    /* =========================
+       PRODUTOS DO ORÇAMENTO
+    ========================= */
 
-      if (
-        pedido.orcamento &&
-        pedido.orcamento.length > 0
-      ) {
+    if (
+      Array.isArray(pedido.orcamento) &&
+      pedido.orcamento.length > 0
+    ) {
 
-        pedido.orcamento.forEach(
-          function(item) {
+      pedido.orcamento.forEach(function(item) {
 
-            const quantidade =
-              Number(item.qtd) || 0;
+        if (!item) return;
 
-            const preco =
-              Number(item.preco) || 0;
+        const quantidade = Number(item.qtd) || 0;
+        const preco = Number(item.preco) || 0;
 
-            const totalItem =
-              Number(item.total) ||
-              quantidade * preco;
+        const totalItem =
+          Number(item.total) ||
+          (quantidade * preco);
 
-            itensHTML += `
-
-              <div style="
-                padding:12px;
-                margin-bottom:8px;
-                background:var(--surface);
-                border:1px solid var(--border);
-                border-radius:10px;
-              ">
-
-                <strong>
-                  📦 ${item.produto || "-"}
-                </strong>
-
-                <div style="
-                  margin-top:6px;
-                  font-size:14px;
-                  line-height:1.7;
-                ">
-
-                  <div>
-                    🔢 Quantidade:
-                    <strong>${quantidade}</strong>
-                  </div>
-
-                  <div>
-                    💰 Valor unitário:
-                    <strong>
-                      R$ ${preco.toFixed(2)}
-                    </strong>
-                  </div>
-
-                  <div>
-                    💵 Total:
-                    <strong>
-                      R$ ${totalItem.toFixed(2)}
-                    </strong>
-                  </div>
-
-                </div>
-
-              </div>
-
-            `;
-          }
-        );
-
-      } else {
-
-        pedido.itens.forEach(
-          function(item) {
-
-            itensHTML += `
-
-              <div style="
-                padding:10px;
-                margin-bottom:6px;
-                background:var(--surface);
-                border:1px solid var(--border);
-                border-radius:8px;
-              ">
-
-                📦 ${item}
-
-              </div>
-
-            `;
-
-          }
-        );
-
-      }
-
-      /* ========= VALORES ========= */
-
-      const frete =
-        Number(pedido.frete) || 0;
-
-      const valorTotal =
-        Number(pedido.valorTotal) || 0;
-
-      /* ========= CARD ========= */
-
-      area.innerHTML += `
-
-        <div class="pedido-card"
-          style="
-            margin-bottom:16px;
-            padding:16px;
-            border-radius:14px;
-            border:1px solid var(--border);
-            background:var(--surface2);
-          ">
-
-          <!-- CABEÇALHO -->
-
+        itensHTML += `
           <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:10px;
-            margin-bottom:12px;
-          ">
-
-            <div>
-
-              <strong style="font-size:17px;">
-                📝 Pedido #${index + 1}
-              </strong>
-
-              <div style="
-                margin-top:4px;
-                color:#777;
-                font-size:13px;
-              ">
-
-                📅 ${pedido.data || "-"}
-
-              </div>
-
-            </div>
-
-            <span style="
-              background:#27ae60;
-              color:white;
-              padding:6px 10px;
-              border-radius:20px;
-              font-size:12px;
-              font-weight:bold;
-            ">
-
-              ORÇADO
-
-            </span>
-
-          </div>
-
-          <!-- PRODUTOS -->
-
-          <div style="margin-top:10px;">
-
-            <strong>
-              📦 Produtos
-            </strong>
-
-            <div style="margin-top:8px;">
-
-              ${itensHTML}
-
-            </div>
-
-          </div>
-
-          <!-- FRETE -->
-
-          <div style="
-            margin-top:12px;
-            padding:10px;
-            border-top:1px solid var(--border);
-          ">
-
-            🚚 Frete:
-
-            <strong>
-              R$ ${frete.toFixed(2)}
-            </strong>
-
-          </div>
-
-          <!-- TOTAL -->
-
-          <div style="
-            margin-top:8px;
-            padding:14px;
-            border-radius:10px;
+            padding:12px;
+            margin-bottom:8px;
             background:var(--surface);
-            text-align:right;
+            border:1px solid var(--border);
+            border-radius:10px;
           ">
 
-            <span style="
-              font-size:14px;
-              color:#777;
-            ">
-
-              TOTAL GERAL
-
-            </span>
+            <strong>
+              📦 ${item.produto || "-"}
+            </strong>
 
             <div style="
-              margin-top:3px;
-              font-size:22px;
-              font-weight:bold;
-              color:#27ae60;
+              margin-top:6px;
+              font-size:14px;
+              line-height:1.7;
             ">
 
-              R$ ${valorTotal.toFixed(2)}
+              <div>
+                🔢 Quantidade:
+                <strong>${quantidade}</strong>
+              </div>
+
+              <div>
+                💰 Valor unitário:
+                <strong>
+                  R$ ${preco.toFixed(2)}
+                </strong>
+              </div>
+
+              <div>
+                💵 Total:
+                <strong>
+                  R$ ${totalItem.toFixed(2)}
+                </strong>
+              </div>
 
             </div>
 
           </div>
+        `;
+      });
 
-          <!-- OBSERVAÇÃO -->
+    }
 
+    /* =========================
+       PEDIDO ANTIGO
+    ========================= */
+
+    else if (Array.isArray(pedido.itens)) {
+
+      pedido.itens.forEach(function(item) {
+
+        itensHTML += `
           <div style="
-            margin-top:12px;
             padding:10px;
-            border-top:1px solid var(--border);
-            font-size:14px;
+            margin-bottom:6px;
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:8px;
           ">
+            📦 ${item || "-"}
+          </div>
+        `;
 
-            <strong>
-              🗒️ Observação:
+      });
+
+    }
+
+    /* =========================
+       VALORES
+    ========================= */
+
+    const frete = Number(pedido.frete) || 0;
+    const valorTotal = Number(pedido.valorTotal) || 0;
+
+    /* =========================
+       CARD
+    ========================= */
+
+    area.innerHTML += `
+
+      <div class="pedido-card"
+        style="
+          margin-bottom:16px;
+          padding:16px;
+          border-radius:14px;
+          border:1px solid var(--border);
+          background:var(--surface2);
+        ">
+
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:10px;
+          margin-bottom:12px;
+        ">
+
+          <div>
+
+            <strong style="font-size:17px;">
+              📝 Pedido #${index + 1}
             </strong>
 
-            <div style="margin-top:5px;">
-
-              ${pedido.observacao || "-"}
-
+            <div style="
+              margin-top:4px;
+              color:#777;
+              font-size:13px;
+            ">
+              📅 ${pedido.data || "-"}
             </div>
 
           </div>
 
-          <!-- AÇÕES -->
-
-          <div style="
-            display:flex;
-            gap:8px;
-            flex-wrap:wrap;
-            margin-top:14px;
+          <span style="
+            background:#27ae60;
+            color:white;
+            padding:6px 10px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:bold;
           ">
+            ORÇADO
+          </span>
 
-            <button
-              onclick="orcamentarPedido(${index})"
-              class="btn-block btn-primary"
-              style="flex:1;">
+        </div>
 
-              ✏️ Revisar orçamento
+        <div style="margin-top:10px;">
 
-            </button>
+          <strong>
+            📦 Produtos
+          </strong>
 
-            <button
-              onclick="arquivarPedido(${index})"
-              class="btn-block btn-edit"
-              style="flex:1;">
-
-              📦 Arquivar
-
-            </button>
-
+          <div style="margin-top:8px;">
+            ${
+              itensHTML ||
+              `
+                <div style="
+                  padding:10px;
+                  color:var(--text-muted);
+                ">
+                  Nenhum produto informado.
+                </div>
+              `
+            }
           </div>
 
         </div>
 
-      `;
+        <div style="
+          margin-top:12px;
+          padding:10px;
+          border-top:1px solid var(--border);
+        ">
 
-    }
-  );
+          🚚 Frete:
 
-  /* ========= NENHUM RESULTADO ========= */
+          <strong>
+            R$ ${frete.toFixed(2)}
+          </strong>
+
+        </div>
+
+        <div style="
+          margin-top:8px;
+          padding:14px;
+          border-radius:10px;
+          background:var(--surface);
+          text-align:right;
+        ">
+
+          <span style="
+            font-size:14px;
+            color:#777;
+          ">
+            TOTAL GERAL
+          </span>
+
+          <div style="
+            margin-top:3px;
+            font-size:22px;
+            font-weight:bold;
+            color:#27ae60;
+          ">
+            R$ ${valorTotal.toFixed(2)}
+          </div>
+
+        </div>
+
+        <div style="
+          margin-top:12px;
+          padding:10px;
+          border-top:1px solid var(--border);
+          font-size:14px;
+        ">
+
+          <strong>
+            🗒️ Observação:
+          </strong>
+
+          <div style="margin-top:5px;">
+            ${pedido.observacao || "-"}
+          </div>
+
+        </div>
+
+        <div style="
+          display:flex;
+          gap:8px;
+          flex-wrap:wrap;
+          margin-top:14px;
+        ">
+
+          <button
+            onclick="orcamentarPedido(${index})"
+            class="btn-block btn-primary"
+            style="flex:1;">
+
+            ✏️ Revisar orçamento
+
+          </button>
+
+          <button
+            onclick="arquivarPedido(${index})"
+            class="btn-block btn-edit"
+            style="flex:1;">
+
+            📦 Arquivar
+
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+  /* =========================
+     NENHUM ORÇAMENTO
+  ========================= */
 
   if (encontrados === 0) {
 
     area.innerHTML = `
-
       <div class="empty-state">
 
         <span class="empty-state-icon">
@@ -3220,7 +3212,6 @@ function mostrarOrcados() {
         </div>
 
       </div>
-
     `;
 
   }
