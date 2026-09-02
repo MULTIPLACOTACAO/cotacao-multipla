@@ -2806,6 +2806,298 @@ function mostrarAuditoria() {
   });
 
 } 
+/* =========================================================
+   🔔 NOTIFICAÇÃO DE NOVO PEDIDO + SOM DE CAIXA
+   ========================================================= */
+
+let quantidadePedidosConhecida = null;
+let somCaixaLiberado = false;
+
+function liberarSomCaixa() {
+  somCaixaLiberado = true;
+}
+
+function tocarSomCaixa() {
+
+  if (!somCaixaLiberado) return;
+
+  try {
+
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if (!AudioContext) return;
+
+    const audioContext = new AudioContext();
+
+    const agora = audioContext.currentTime;
+
+    /* PRIMEIRO "CAIXA" */
+
+    const oscilador1 =
+      audioContext.createOscillator();
+
+    const ganho1 =
+      audioContext.createGain();
+
+    oscilador1.type = "sine";
+
+    oscilador1.frequency.setValueAtTime(
+      880,
+      agora
+    );
+
+    oscilador1.frequency.exponentialRampToValueAtTime(
+      1320,
+      agora + 0.08
+    );
+
+    ganho1.gain.setValueAtTime(
+      0.0001,
+      agora
+    );
+
+    ganho1.gain.exponentialRampToValueAtTime(
+      0.35,
+      agora + 0.01
+    );
+
+    ganho1.gain.exponentialRampToValueAtTime(
+      0.0001,
+      agora + 0.18
+    );
+
+    oscilador1.connect(ganho1);
+    ganho1.connect(audioContext.destination);
+
+    oscilador1.start(agora);
+    oscilador1.stop(agora + 0.2);
+
+
+    /* SEGUNDO "CAIXA" */
+
+    const oscilador2 =
+      audioContext.createOscillator();
+
+    const ganho2 =
+      audioContext.createGain();
+
+    oscilador2.type = "sine";
+
+    oscilador2.frequency.setValueAtTime(
+      660,
+      agora + 0.20
+    );
+
+    oscilador2.frequency.exponentialRampToValueAtTime(
+      990,
+      agora + 0.28
+    );
+
+    ganho2.gain.setValueAtTime(
+      0.0001,
+      agora + 0.20
+    );
+
+    ganho2.gain.exponentialRampToValueAtTime(
+      0.35,
+      agora + 0.21
+    );
+
+    ganho2.gain.exponentialRampToValueAtTime(
+      0.0001,
+      agora + 0.38
+    );
+
+    oscilador2.connect(ganho2);
+    ganho2.connect(audioContext.destination);
+
+    oscilador2.start(agora + 0.20);
+    oscilador2.stop(agora + 0.40);
+
+
+    setTimeout(function() {
+      audioContext.close();
+    }, 600);
+
+  } catch (erro) {
+
+    console.log(
+      "Não foi possível tocar o som:",
+      erro
+    );
+
+  }
+
+}
+
+
+function verificarNovosPedidos() {
+
+  const pedidosAtuais =
+    JSON.parse(
+      localStorage.getItem(
+        "pedidosRecebidos"
+      )
+    ) || [];
+
+  const pendentes =
+    pedidosAtuais.filter(function(pedido) {
+
+      return (
+        pedido &&
+        pedido.status !== "orcado" &&
+        pedido.status !== "arquivado"
+      );
+
+    });
+
+
+  /* PRIMEIRA LEITURA:
+     apenas registra a quantidade.
+     NÃO toca som. */
+
+  if (
+    quantidadePedidosConhecida === null
+  ) {
+
+    quantidadePedidosConhecida =
+      pendentes.length;
+
+    return;
+
+  }
+
+
+  /* NOVO PEDIDO */
+
+  if (
+    pendentes.length >
+    quantidadePedidosConhecida
+  ) {
+
+    quantidadePedidosConhecida =
+      pendentes.length;
+
+    pedidosRecebidos =
+      pedidosAtuais;
+
+    tocarSomCaixa();
+
+
+    /* ATUALIZA PEDIDOS RECEBIDOS */
+
+    if (
+      typeof mostrarPedidos ===
+      "function"
+    ) {
+
+      mostrarPedidos();
+
+    }
+
+
+    /* AVISO VISUAL */
+
+    const tabPedidos =
+      document.getElementById(
+        "tab-pedidos"
+      );
+
+    if (tabPedidos) {
+
+      const aviso =
+        document.createElement(
+          "div"
+        );
+
+      aviso.id =
+        "avisoNovoPedido";
+
+      aviso.innerHTML = `
+        🔔 <strong>NOVO PEDIDO RECEBIDO!</strong>
+      `;
+
+      aviso.style.cssText = `
+        position:fixed;
+        top:20px;
+        right:20px;
+        z-index:99999;
+        background:#27ae60;
+        color:white;
+        padding:16px 22px;
+        border-radius:12px;
+        box-shadow:0 8px 25px rgba(0,0,0,.25);
+        font-size:16px;
+        font-weight:bold;
+        animation:aparecerNovoPedido .3s ease;
+      `;
+
+      document.body.appendChild(
+        aviso
+      );
+
+
+      setTimeout(function() {
+
+        if (aviso) {
+          aviso.remove();
+        }
+
+      }, 5000);
+
+    }
+
+  }
+
+}
+
+
+/* LIBERA O ÁUDIO APÓS O PRIMEIRO CLIQUE
+   DO USUÁRIO */
+
+document.addEventListener(
+  "click",
+  function() {
+
+    liberarSomCaixa();
+
+  },
+  {
+    once: false,
+    passive: true
+  }
+);
+
+
+/* VERIFICA NOVOS PEDIDOS
+   A CADA 2 SEGUNDOS */
+
+setInterval(
+  verificarNovosPedidos,
+  2000
+);
+
+
+/* SE OUTRA ABA DO MESMO NAVEGADOR
+   RECEBER UM PEDIDO */
+
+window.addEventListener(
+  "storage",
+  function(evento) {
+
+    if (
+      evento.key !==
+      "pedidosRecebidos"
+    ) {
+      return;
+    }
+
+    verificarNovosPedidos();
+
+  }
+);  
 function mostrarPedidos() {
 
   let area =
