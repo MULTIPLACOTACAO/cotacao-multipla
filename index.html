@@ -2835,116 +2835,32 @@ function tocarSomCaixa() {
 
   try {
 
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
+    const audio =
+      new Audio("som-caixa.mp3");
 
-    if (!AudioContext) return;
+    audio.volume = 1.0;
 
-    const audioContext = new AudioContext();
+    audio.currentTime = 0;
 
-    const agora = audioContext.currentTime;
+    audio.play().catch(function(erro) {
 
-    /* PRIMEIRO "CAIXA" */
+      console.log(
+        "Não foi possível reproduzir o som da caixa:",
+        erro
+      );
 
-    const oscilador1 =
-      audioContext.createOscillator();
-
-    const ganho1 =
-      audioContext.createGain();
-
-    oscilador1.type = "sine";
-
-    oscilador1.frequency.setValueAtTime(
-      880,
-      agora
-    );
-
-    oscilador1.frequency.exponentialRampToValueAtTime(
-      1320,
-      agora + 0.08
-    );
-
-    ganho1.gain.setValueAtTime(
-      0.0001,
-      agora
-    );
-
-    ganho1.gain.exponentialRampToValueAtTime(
-      0.35,
-      agora + 0.01
-    );
-
-    ganho1.gain.exponentialRampToValueAtTime(
-      0.0001,
-      agora + 0.18
-    );
-
-    oscilador1.connect(ganho1);
-    ganho1.connect(audioContext.destination);
-
-    oscilador1.start(agora);
-    oscilador1.stop(agora + 0.2);
-
-
-    /* SEGUNDO "CAIXA" */
-
-    const oscilador2 =
-      audioContext.createOscillator();
-
-    const ganho2 =
-      audioContext.createGain();
-
-    oscilador2.type = "sine";
-
-    oscilador2.frequency.setValueAtTime(
-      660,
-      agora + 0.20
-    );
-
-    oscilador2.frequency.exponentialRampToValueAtTime(
-      990,
-      agora + 0.28
-    );
-
-    ganho2.gain.setValueAtTime(
-      0.0001,
-      agora + 0.20
-    );
-
-    ganho2.gain.exponentialRampToValueAtTime(
-      0.35,
-      agora + 0.21
-    );
-
-    ganho2.gain.exponentialRampToValueAtTime(
-      0.0001,
-      agora + 0.38
-    );
-
-    oscilador2.connect(ganho2);
-    ganho2.connect(audioContext.destination);
-
-    oscilador2.start(agora + 0.20);
-    oscilador2.stop(agora + 0.40);
-
-
-    setTimeout(function() {
-      audioContext.close();
-    }, 600);
+    });
 
   } catch (erro) {
 
     console.log(
-      "Não foi possível tocar o som:",
+      "Erro ao reproduzir som da caixa:",
       erro
     );
 
   }
 
 }
-
-
 function verificarNovosPedidos() {
 
   const pedidosAtuais =
