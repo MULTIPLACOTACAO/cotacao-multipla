@@ -2835,29 +2835,17 @@ function tocarSomCaixa() {
 
   try {
 
-    const audio =
-      new Audio("som-caixa.mp3");
+    const audio = new Audio("./som-caixa.mp3");
 
     audio.volume = 1.0;
-
     audio.currentTime = 0;
 
     audio.play().catch(function(erro) {
-
-      console.log(
-        "Não foi possível reproduzir o som da caixa:",
-        erro
-      );
-
+      console.log("Erro ao tocar som:", erro);
     });
 
   } catch (erro) {
-
-    console.log(
-      "Erro ao reproduzir som da caixa:",
-      erro
-    );
-
+    console.log("Erro ao reproduzir som:", erro);
   }
 
 }
