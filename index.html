@@ -3385,7 +3385,14 @@ function mostrarOrcados() {
             ✏️ Revisar orçamento
 
           </button>
+<button
+  onclick="gerarPDFOrcado(${index})"
+  class="btn-block btn-pdf"
+  style="flex:1;">
 
+  📄 Gerar PDF
+
+</button>
           <button
             onclick="arquivarPedido(${index})"
             class="btn-block btn-edit"
@@ -3426,6 +3433,49 @@ function mostrarOrcados() {
   }
 
 }
+function gerarPDFOrcado(index) {
+
+  const pedido = pedidosRecebidos[index];
+
+  if (!pedido) {
+    alert("Orçamento não encontrado.");
+    return;
+  }
+
+  if (!Array.isArray(pedido.orcamento) || pedido.orcamento.length === 0) {
+    alert("Este pedido ainda não possui um orçamento salvo.");
+    return;
+  }
+
+  pedidoAtualOrcamento = index;
+
+  orcamentoInterno = pedido.orcamento.map(function(item) {
+
+    return {
+      produto: item.produto || "",
+      qtd: Number(item.qtd) || 0,
+      preco: Number(item.preco) || 0,
+      total:
+        Number(item.total) ||
+        (
+          (Number(item.qtd) || 0) *
+          (Number(item.preco) || 0)
+        )
+    };
+
+  });
+
+  const frete = document.getElementById("freteValor");
+
+  if (frete) {
+    frete.value = Number(pedido.frete) || 0;
+  }
+
+  mostrarOrcamento();
+
+  gerarPDF();
+
+}  
 function mostrarArquivados() {
 
   let area =
