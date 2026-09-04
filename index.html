@@ -2416,42 +2416,271 @@ alert(
 );
 }
 /* ── Salvar Cliente ── */
+function normalizarCpfCnpj(valor) {
+
+  return String(valor || "")
+    .replace(/\D/g, "")
+    .trim();
+
+}
+
+
+/* ── Salvar Cliente com proteção contra duplicidade ── */
+
 function salvarCliente() {
-  let cliente = {
-    tipo: document.getElementById("tipoCliente").value,
-    nomeFantasia: document.getElementById("nomeFantasia").value,
-    razaoSocial: document.getElementById("razaoSocial").value,
-    cpfCnpj: document.getElementById("cpfCnpj").value,
-    inscricaoEstadual:
-  document.getElementById(
-    "inscricaoEstadual"
-  ).value,
-    comprador: document.getElementById("comprador").value,
-    telefone: document.getElementById("telefoneCliente").value,
-    email: document.getElementById("emailCliente").value,
-    estado: document.getElementById("estadoCliente").value,
-    endereco: document.getElementById("enderecoCliente").value,
-    bairro: document.getElementById("bairroCliente").value,
-    cep: document.getElementById("cepCliente").value,
-    cidade: document.getElementById("cidadeCliente").value,
-    grupo: document.getElementById("grupoCliente").value,
-    concorrentePrincipal: document.getElementById("concorrentePrincipal").value,
-    outrosConcorrentes: document.getElementById("outrosConcorrentes").value,
-    classificacao: document.getElementById("classificacao").value,
-    compraDesde: document.getElementById("compraDesde").value,
-    obs: document.getElementById("obsCliente").value
-  };
-  if (clienteEditando >= 0) {
-    clientes[clienteEditando] = cliente;
-    clienteEditando = -1;
-  } else {
-    clientes.push(cliente);
+
+  const nomeFantasia =
+    document.getElementById("nomeFantasia").value.trim();
+
+  const razaoSocial =
+    document.getElementById("razaoSocial").value.trim();
+
+  const cpfCnpj =
+    document.getElementById("cpfCnpj").value.trim();
+
+  const cpfCnpjNormalizado =
+    normalizarCpfCnpj(cpfCnpj);
+
+
+  /*
+    =====================================================
+    VALIDAÇÃO BÁSICA
+    =====================================================
+  */
+
+  if (!nomeFantasia) {
+
+    alert("Informe o Nome Fantasia do cliente.");
+
+    return;
+
   }
-  localStorage.setItem("clientesCRM", JSON.stringify(clientes));
+
+
+  /*
+    =====================================================
+    VERIFICA DUPLICIDADE DE CPF / CNPJ
+    =====================================================
+  */
+
+  if (cpfCnpjNormalizado) {
+
+    const clienteDuplicado =
+      clientes.findIndex(function(cliente, index) {
+
+        if (index === clienteEditando) {
+          return false;
+        }
+
+        const documentoExistente =
+          normalizarCpfCnpj(cliente.cpfCnpj);
+
+        return (
+          documentoExistente &&
+          documentoExistente === cpfCnpjNormalizado
+        );
+
+      });
+
+
+    if (clienteDuplicado !== -1) {
+
+      const clienteExistente =
+        clientes[clienteDuplicado];
+
+      const nomeExistente =
+        clienteExistente.nomeFantasia ||
+        clienteExistente.razaoSocial ||
+        "Cliente já cadastrado";
+
+
+      alert(
+        "⚠️ ESTE CLIENTE JÁ ESTÁ CADASTRADO!\n\n" +
+        "Cliente: " +
+        nomeExistente +
+        "\n\n" +
+        "CPF/CNPJ: " +
+        (
+          clienteExistente.cpfCnpj ||
+          cpfCnpj
+        ) +
+        "\n\n" +
+        "O sistema não criou outro cadastro."
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  /*
+    =====================================================
+    MONTA CLIENTE
+    =====================================================
+  */
+
+  let cliente = {
+
+    tipo:
+      document.getElementById("tipoCliente").value,
+
+    nomeFantasia:
+      nomeFantasia,
+
+    razaoSocial:
+      razaoSocial,
+
+    cpfCnpj:
+      cpfCnpj,
+
+    inscricaoEstadual:
+      document.getElementById(
+        "inscricaoEstadual"
+      ).value.trim(),
+
+    comprador:
+      document.getElementById(
+        "comprador"
+      ).value.trim(),
+
+    telefone:
+      document.getElementById(
+        "telefoneCliente"
+      ).value.trim(),
+
+    email:
+      document.getElementById(
+        "emailCliente"
+      ).value.trim(),
+
+    estado:
+      document.getElementById(
+        "estadoCliente"
+      ).value.trim(),
+
+    endereco:
+      document.getElementById(
+        "enderecoCliente"
+      ).value.trim(),
+
+    bairro:
+      document.getElementById(
+        "bairroCliente"
+      ).value.trim(),
+
+    cep:
+      document.getElementById(
+        "cepCliente"
+      ).value.trim(),
+
+    cidade:
+      document.getElementById(
+        "cidadeCliente"
+      ).value.trim(),
+
+    grupo:
+      document.getElementById(
+        "grupoCliente"
+      ).value.trim(),
+
+    concorrentePrincipal:
+      document.getElementById(
+        "concorrentePrincipal"
+      ).value.trim(),
+
+    outrosConcorrentes:
+      document.getElementById(
+        "outrosConcorrentes"
+      ).value.trim(),
+
+    classificacao:
+      document.getElementById(
+        "classificacao"
+      ).value,
+
+    compraDesde:
+      document.getElementById(
+        "compraDesde"
+      ).value.trim(),
+
+    obs:
+      document.getElementById(
+        "obsCliente"
+      ).value.trim()
+
+  };
+
+
+  /*
+    =====================================================
+    EDIÇÃO
+    =====================================================
+  */
+
+  if (clienteEditando >= 0) {
+
+    clientes[clienteEditando] = {
+
+      ...clientes[clienteEditando],
+
+      ...cliente
+
+    };
+
+    clienteEditando = -1;
+
+  }
+
+  /*
+    =====================================================
+    NOVO CLIENTE
+    =====================================================
+  */
+
+  else {
+
+    clientes.push(cliente);
+
+  }
+
+
+  /*
+    =====================================================
+    SALVA
+    =====================================================
+  */
+
+  localStorage.setItem(
+    "clientesCRM",
+    JSON.stringify(clientes)
+  );
+
+
   mostrarClientes();
+
   carregarClientesSelect();
+
   limparCampos();
-  document.getElementById("areaCadastroCliente").style.display = "none";
+
+
+  const area =
+    document.getElementById(
+      "areaCadastroCliente"
+    );
+
+  if (area) {
+
+    area.style.display = "none";
+
+  }
+
+
+  alert(
+    "✅ Cliente salvo com sucesso."
+  );
+
 }
 
 /* ── Mostrar Clientes ── */
