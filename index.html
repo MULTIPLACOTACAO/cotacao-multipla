@@ -1574,12 +1574,26 @@ overflow:hidden;
             + Cadastrar Novo Cliente
           </button>
 
-          <!-- Form Cadastro -->
-          <div id="areaCadastroCliente" style="display:none;">
+       <!-- Form Cadastro -->
+<div id="areaCadastroCliente" style="display:none;">
 
-            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px;">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px;">
 
-              <div class="section-label" style="margin-bottom:16px;">Dados Cadastrais</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;">
+
+      <div class="section-label" style="margin:0;">
+        Dados Cadastrais
+      </div>
+
+      <button
+        type="button"
+        onclick="toggleCadastroCliente()"
+        class="btn-secondary"
+        style="padding:8px 14px;white-space:nowrap;">
+        ↩️ Voltar
+      </button>
+
+    </div>
 
               <div class="form-grid single" style="margin-bottom:12px;">
                 <div class="form-group">
