@@ -2192,6 +2192,7 @@ let usuarios = JSON.parse(
   }
 ];
 /* ── Tabs CRM ── */
+/* ── Tabs CRM ── */
 function mostrarTab(tab, btn) {
 
   if (
@@ -2211,51 +2212,77 @@ function mostrarTab(tab, btn) {
 
   document.getElementById("tab-usuarios").style.display =
     tab === "usuarios" ? "block" : "none";
-document.getElementById("tab-pedidos").style.display =
-  tab === "pedidos" ? "block" : "none";
+
+  document.getElementById("tab-pedidos").style.display =
+    tab === "pedidos" ? "block" : "none";
+
   document.getElementById("tab-orcados").style.display =
-  tab === "orcados" ? "block" : "none";
+    tab === "orcados" ? "block" : "none";
+
   document.getElementById("tab-arquivados").style.display =
-  tab === "arquivados" ? "block" : "none";
+    tab === "arquivados" ? "block" : "none";
+
   document.getElementById("tab-auditoria").style.display =
     tab === "auditoria" ? "block" : "none";
-document.getElementById("tab-produtos").style.display =
+
+  document.getElementById("tab-produtos").style.display =
     tab === "produtos" ? "block" : "none";
+
   document.querySelectorAll(".crm-tab")
     .forEach(b => b.classList.remove("active"));
 
-  if (btn) btn.classList.add("active");
+  if (btn) {
+    btn.classList.add("active");
+  }
+
+  /* Ao entrar em CLIENTES, manter o cadastro fechado */
+  if (tab === "clientes") {
+
+    const areaCadastroCliente =
+      document.getElementById("areaCadastroCliente");
+
+    if (areaCadastroCliente) {
+      areaCadastroCliente.style.display = "none";
+    }
+
+    clienteEditando = -1;
+
+    mostrarClientes();
+  }
 
   if (tab === "orcamento") {
     carregarProdutosOrcamento();
     mostrarOrcamento();
   }
 
-if (tab === "usuarios") {
+  if (tab === "usuarios") {
 
-  document.getElementById(
-    "areaCadastroUsuario"
-  ).style.display = "none";
+    document.getElementById(
+      "areaCadastroUsuario"
+    ).style.display = "none";
 
-  mostrarUsuarios();
-
-}
+    mostrarUsuarios();
+  }
 
   if (tab === "auditoria") {
     mostrarAuditoria();
   }
+
   if (tab === "pedidos") {
-  mostrarPedidos();
-}
-if (tab === "orcados") {
-  mostrarOrcados();
-}
-if (tab === "arquivados") {
-  mostrarArquivados();
-} 
-if (tab === "produtos") {
+    mostrarPedidos();
+  }
+
+  if (tab === "orcados") {
+    mostrarOrcados();
+  }
+
+  if (tab === "arquivados") {
+    mostrarArquivados();
+  }
+
+  if (tab === "produtos") {
     mostrarProdutos();
-}  
+  }
 }
 /* ── Abrir CRM ── */
 function abrirCRM() {
