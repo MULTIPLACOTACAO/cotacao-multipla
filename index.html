@@ -1562,13 +1562,15 @@ overflow:hidden;
         <!-- ====== TAB CLIENTES ====== -->
         <div id="tab-clientes">
 
-          <div class="form-group" style="margin-bottom:12px;">
-            <label class="form-label">Pesquisar cliente</label>
-            <input class="input-premium"
-              id="pesquisaCliente"
-              placeholder="Buscar por nome, CNPJ, cidade..."
-              oninput="mostrarClientes()">
-          </div>
+     <div class="form-group" style="margin-bottom:12px;">
+  <label class="form-label">Pesquisar cliente</label>
+
+  <input
+    class="input-premium"
+    id="pesquisaCliente"
+    placeholder="Buscar por nome, CNPJ, telefone, e-mail, cidade, grupo..."
+    oninput="mostrarClientes()">
+</div> 
 
           <button onclick="toggleCadastroCliente()" class="btn-block btn-primary" style="margin-bottom:16px;">
             + Cadastrar Novo Cliente
