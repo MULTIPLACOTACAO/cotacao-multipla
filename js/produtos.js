@@ -714,16 +714,33 @@ function filtrarProdutosCadastro() {
 
                     </div>
 
-                    <div style="margin-top:6px;">
+         <div style="margin-top:6px;">
 
-                        <small>
-                            💰 Preço de Venda:
-                            <strong>
-                                ${precoFormatado}
-                            </strong>
-                        </small>
+    <small>
+        💰 Preço de Venda:
+        <strong>
+            ${precoFormatado}
+        </strong>
+    </small>
 
-                    </div>
+</div>
+
+<div style="margin-top:4px;">
+
+    <small>
+        🧾 Custo:
+        <strong>
+            ${Number(produto.custo || 0).toLocaleString(
+                "pt-BR",
+                {
+                    style: "currency",
+                    currency: "BRL"
+                }
+            )}
+        </strong>
+    </small>
+
+</div>
 
                     <div style="margin-top:10px;">
 
