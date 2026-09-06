@@ -742,6 +742,18 @@ function filtrarProdutosCadastro() {
 
 </div>
 
+<div style="margin-top:4px;">
+
+    <small>
+        ${produto.ativo !== false ? "🟢" : "🔴"}
+        Status:
+        <strong>
+            ${produto.ativo !== false ? "ATIVO" : "INATIVO"}
+        </strong>
+    </small>
+
+</div>
+
                     <div style="margin-top:10px;">
 
                         <button
