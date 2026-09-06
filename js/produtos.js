@@ -487,18 +487,38 @@ function salvarProduto() {
 
     /* ========= CÓDIGO DUPLICADO ========= */
 
-    if (produto.codigo !== "") {
+    const codigoNormalizado =
+        String(produto.codigo || "")
+            .trim()
+            .toLowerCase();
 
-        const existe = produtos.find((p, i) =>
+    if (codigoNormalizado !== "") {
 
-            p.codigo === produto.codigo &&
-            i !== produtoEditando
+        const existe = produtos.find(function(p, i) {
 
-        );
+            if (i === produtoEditando) {
+                return false;
+            }
+
+            const codigoExistente =
+                String(p.codigo || "")
+                    .trim()
+                    .toLowerCase();
+
+            return codigoExistente === codigoNormalizado;
+
+        });
 
         if (existe) {
 
-            alert("Já existe um produto com esse código.");
+            alert(
+                "⚠️ Já existe um produto com esse código.\n\n" +
+                "Produto: " +
+                (existe.nome || "Produto cadastrado") +
+                "\n" +
+                "Código: " +
+                (existe.codigo || produto.codigo)
+            );
 
             return;
 
@@ -543,8 +563,6 @@ function salvarProduto() {
     finalizarSalvamentoProduto(produto);
 
 }
-
-
 /* ==========================================
    FINALIZAR SALVAMENTO DO PRODUTO
 ========================================== */
