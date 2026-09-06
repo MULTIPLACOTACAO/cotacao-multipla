@@ -663,6 +663,18 @@ function filtrarProdutosCadastro() {
             const index =
                 produtos.indexOf(produto);
 
+            const preco =
+                Number(produto.preco || 0);
+
+            const precoFormatado =
+                preco.toLocaleString(
+                    "pt-BR",
+                    {
+                        style: "currency",
+                        currency: "BRL"
+                    }
+                );
+
             lista.innerHTML += `
 
                 <div class="cliente-card">
@@ -698,6 +710,17 @@ function filtrarProdutosCadastro() {
                         <small>
                             Unidade:
                             ${produto.unidade || "-"}
+                        </small>
+
+                    </div>
+
+                    <div style="margin-top:6px;">
+
+                        <small>
+                            💰 Preço de Venda:
+                            <strong>
+                                ${precoFormatado}
+                            </strong>
                         </small>
 
                     </div>
