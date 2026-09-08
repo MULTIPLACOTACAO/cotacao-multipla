@@ -5224,8 +5224,7 @@ function limparCarrinho() {
 }
 
 /* ── Enviar WhatsApp ── */ 
-function enviar() {
-
+async function enviar() {
 
   let obs =
     document.getElementById("obs").value;
@@ -5238,282 +5237,79 @@ function enviar() {
 
   msg += "%0AObservação:%0A" + obs;
 
-  pedidosRecebidos.push({
+  const pedido = {
     id: Date.now(),
     data: new Date().toLocaleString(),
     itens: [...carrinho],
     observacao: obs,
     status: "pendente"
-  });
+  };
+
+  /* =========================================
+     SALVA LOCALMENTE
+  ========================================= */
+
+  pedidosRecebidos.push(pedido);
 
   localStorage.setItem(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
   );
 
+  /* =========================================
+     SALVA NO SUPABASE
+  ========================================= */
+
+  try {
+
+    const { error } =
+      await window.supabaseClient
+        .from("pedidos")
+        .insert([{
+          data: pedido.data,
+          itens: pedido.itens,
+          observacao: pedido.observacao,
+          status: pedido.status
+        }]);
+
+    if (error) {
+
+      console.error(
+        "Erro ao salvar pedido no Supabase:",
+        error
+      );
+
+      alert(
+        "⚠️ O pedido foi salvo neste aparelho, " +
+        "mas não conseguiu ser enviado para o banco."
+      );
+
+      return;
+    }
+
+  } catch (erro) {
+
+    console.error(
+      "Erro inesperado ao enviar pedido:",
+      erro
+    );
+
+    alert(
+      "⚠️ Não foi possível enviar o pedido para o banco."
+    );
+
+    return;
+  }
+
+  /* =========================================
+     ABRE WHATSAPP
+  ========================================= */
+
   window.open(
     "https://wa.me/" + numero + "?text=" + msg
   );
 
 }
-let categoriaOrcamentoAtual = null;  
-function carregarProdutosOrcamento() {
-
-  const area =
-    document.getElementById("listaOrcamentoProdutos");
-
-  if (!area) return;
-
-  area.innerHTML = "";
-
-  /* =====================================================
-     TELA DE PRODUTOS DENTRO DA CATEGORIA
-  ===================================================== */
-
-  if (categoriaOrcamentoAtual) {
-
-    const categoria =
-      categoriaOrcamentoAtual;
-
-    const produtosCategoria =
-      catalogo[categoria] || [];
-
-    const registros =
-      JSON.parse(
-        localStorage.getItem("produtosCatalogoNexon")
-      ) || [];
-
-    area.innerHTML = `
-
-      <div style="
-        width:100%;
-        margin-bottom:18px;
-      ">
-
-        <button
-          type="button"
-          onclick="voltarCategoriasOrcamento()"
-          style="
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            border:1px solid rgba(255,255,255,.16);
-            background:rgba(255,255,255,.06);
-            color:#e8eefc;
-            border-radius:12px;
-            padding:10px 15px;
-            font-size:14px;
-            font-weight:600;
-            cursor:pointer;
-            box-shadow:0 4px 12px rgba(0,0,0,.15);
-            margin-bottom:14px;
-          ">
-
-          ← Voltar para categorias
-
-        </button>
-
-        <div style="
-          font-size:21px;
-          font-weight:800;
-          color:#e8eefc;
-          letter-spacing:.5px;
-          margin-bottom:14px;
-        ">
-
-          📦 ${categoria}
-
-        </div>
-
-        <div style="
-          display:grid;
-          grid-template-columns:repeat(
-            auto-fit,
-            minmax(145px, 1fr)
-          );
-          gap:14px;
-          width:100%;
-        ">
-
-          ${
-            produtosCategoria.length === 0
-
-            ? `
-              <div style="
-                grid-column:1/-1;
-                text-align:center;
-                padding:35px 15px;
-                color:#9aa6bd;
-              ">
-                Nenhum produto nesta categoria.
-              </div>
-            `
-
-            : produtosCategoria.map(function(produto) {
-
-                const registro =
-                  registros.find(function(item) {
-
-                    return (
-                      item.categoria === categoria &&
-                      item.produto === produto
-                    );
-
-                  });
-
-                const foto =
-                  registro
-                    ? (registro.foto || "")
-                    : "";
-
-                const partes =
-                  String(produto).split(" - ");
-
-                const codigo =
-                  partes[0] || "";
-
-                const nome =
-                  partes.slice(1).join(" - ") ||
-                  produto;
-
-                return `
-
-                  <div
-                    class="produto-card-orcamento"
-                    style="
-                      min-width:0;
-                      overflow:hidden;
-                      border-radius:16px;
-                      padding:10px;
-                      background:rgba(255,255,255,.045);
-                      border:1px solid rgba(255,255,255,.12);
-                      box-shadow:0 6px 18px rgba(0,0,0,.18);
-                      transition:transform .18s ease,
-                                 box-shadow .18s ease;
-                    "
-                    onmouseenter="
-                      this.style.transform='translateY(-2px)';
-                      this.style.boxShadow='0 10px 24px rgba(0,0,0,.25)';
-                    "
-                    onmouseleave="
-                      this.style.transform='translateY(0)';
-                      this.style.boxShadow='0 6px 18px rgba(0,0,0,.18)';
-                    "
-                  >
-
-                    <div style="
-                      width:100%;
-                      aspect-ratio:1/1;
-                      overflow:hidden;
-                      border-radius:12px;
-                      background:#f5f5f5;
-                      display:flex;
-                      align-items:center;
-                      justify-content:center;
-                      margin-bottom:9px;
-                    ">
-
-                      ${
-                        foto
-
-                        ? `
-                          <img
-                            src="${foto}"
-                            alt="${nome}"
-                            style="
-                              width:100%;
-                              height:100%;
-                              object-fit:cover;
-                              object-position:center;
-                              display:block;
-                            "
-                          >
-                        `
-
-                        : `
-                          <div style="
-                            width:100%;
-                            height:100%;
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                            font-size:42px;
-                            background:linear-gradient(
-                              145deg,
-                              #eef1f6,
-                              #dfe4ec
-                            );
-                          ">
-                            📦
-                          </div>
-                        `
-                      }
-
-                    </div>
-
-                    <div style="
-                      font-size:11px;
-                      color:#9aa6bd;
-                      margin-bottom:4px;
-                      font-weight:600;
-                    ">
-
-                      CÓD. ${codigo}
-
-                    </div>
-
-                    <div style="
-                      color:#eef3ff;
-                      font-size:14px;
-                      font-weight:700;
-                      line-height:1.25;
-                      min-height:36px;
-                      display:flex;
-                      align-items:flex-start;
-                    ">
-
-                      ${nome}
-
-                    </div>
-
-                    <button
-                      type="button"
-                      onclick="adicionarOrcamento('${String(produto).replace(/'/g, "\\'")}')"
-                      style="
-                        width:100%;
-                        margin-top:10px;
-                        border:none;
-                        border-radius:11px;
-                        padding:10px 8px;
-                        background:#3b82f6;
-                        color:white;
-                        font-weight:700;
-                        font-size:13px;
-                        cursor:pointer;
-                        box-shadow:0 4px 12px rgba(59,130,246,.22);
-                      ">
-
-                      + Adicionar
-
-                    </button>
-
-                  </div>
-
-                `;
-
-              }).join("")
-          }
-
-        </div>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
 
   /* =====================================================
      TELA PRINCIPAL DE CATEGORIAS
