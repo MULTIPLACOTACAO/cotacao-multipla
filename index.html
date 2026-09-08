@@ -2428,7 +2428,7 @@ async function fazerLogin() {
   try {
 
     const { data, error } =
-      await supabase.auth.signInWithPassword({
+    await window.supabaseClient.auth.signInWithPassword({ 
         email: email,
         password: senha
       });
