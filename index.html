@@ -2417,59 +2417,85 @@ function registrarAuditoria(acao) {
   );
 
 }
-function fazerLogin() {
+async function fazerLogin() {
 
-  let usuario =
+  const email =
     document.getElementById("loginUsuario").value.trim();
 
-  let senha =
+  const senha =
     document.getElementById("loginSenha").value.trim();
 
-  let encontrado = usuarios.find(u =>
-    u.usuario === usuario &&
-    u.senha === senha
-  );
-
-  if (!encontrado) {
-    alert("Usuário ou senha inválidos");
+  if (!email || !senha) {
+    alert("Informe o e-mail e a senha.");
     return;
   }
 
-  usuarioLogado = encontrado;
-const sessao = {
-  usuario: encontrado,
-  tempo: Date.now()
-};
+  try {
 
-sessionStorage.setItem("usuarioLogado", JSON.stringify(sessao));
- registrarAuditoria(
-  "Realizou login"
-); 
-  document.getElementById("loginCRM").style.display = "none";
+    const { data, error } =
+      await supabase.auth.signInWithPassword({
+        email: email,
+        password: senha
+      });
 
- document.getElementById("crmArea").style.display = "block";
+    if (error) {
+      console.error("Erro no login Supabase:", error);
+      alert("E-mail ou senha inválidos.");
+      return;
+    }
 
-carregarProdutosOrcamento();
-mostrarClientes();
+    const usuarioSupabase = data.user;
 
-atualizarDashboard();
-if (encontrado.perfil !== "admin") {
+    usuarioLogado = {
+      id: usuarioSupabase.id,
+      nome: usuarioSupabase.email,
+      usuario: usuarioSupabase.email,
+      perfil: "admin"
+    };
 
-  document.getElementById("btnUsuarios").style.display =
-    "none";
+    const sessao = {
+      usuario: usuarioLogado,
+      tempo: Date.now()
+    };
 
-} else {
+    sessionStorage.setItem(
+      "usuarioLogado",
+      JSON.stringify(sessao)
+    );
 
-  document.getElementById("btnUsuarios").style.display =
-    "block";
+    registrarAuditoria(
+      "Realizou login pelo Supabase"
+    );
 
-}
-alert(
-  "Bem-vindo, " +
-  encontrado.nome +
-  " | Perfil: " +
-  encontrado.perfil
-);
+    document.getElementById("loginCRM").style.display = "none";
+
+    document.getElementById("crmArea").style.display = "block";
+
+    carregarProdutosOrcamento();
+    mostrarClientes();
+    atualizarDashboard();
+
+    const btnUsuarios =
+      document.getElementById("btnUsuarios");
+
+    if (btnUsuarios) {
+      btnUsuarios.style.display = "block";
+    }
+
+    alert(
+      "Bem-vindo ao Múltipla Cotação!"
+    );
+
+  } catch (erro) {
+
+    console.error("Erro inesperado no login:", erro);
+
+    alert(
+      "Não foi possível realizar o login. Tente novamente."
+    );
+
+  }
+
 }
 /* ── Salvar Cliente ── */
 function normalizarCpfCnpj(valor) {
