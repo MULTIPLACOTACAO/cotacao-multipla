@@ -4,16 +4,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-  const SUPABASE_URL = "https://lclcqdujzcjahuvjbhlk.supabase.co";
-
-  const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_kdkUpusO1GhqXUwr-O9QBQ_PGLPAv-l";
-
-  const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+  window.supabaseClient = window.supabase.createClient(
+    "https://lclcqdujzcjahuvjbhlk.supabase.co",
+    "sb_publishable_kdkUpusO1GhqXUwr-O9QBQ_PGLPAv-l"
   );
-</script>  
+</script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 console.log("TESTE PDF:", typeof window.jspdf);
