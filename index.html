@@ -5223,8 +5223,8 @@ function limparCarrinho() {
   mostrarCarrinho();
 }
 
-/* ── Enviar WhatsApp ── */ 
-async function enviar() {
+/* ── Enviar WhatsApp ── */
+function enviar() {
 
   let obs =
     document.getElementById("obs").value;
@@ -5237,73 +5237,18 @@ async function enviar() {
 
   msg += "%0AObservação:%0A" + obs;
 
-  const pedido = {
+  pedidosRecebidos.push({
     id: Date.now(),
     data: new Date().toLocaleString(),
     itens: [...carrinho],
     observacao: obs,
     status: "pendente"
-  };
-
-  /* =========================================
-     SALVA LOCALMENTE
-  ========================================= */
-
-  pedidosRecebidos.push(pedido);
+  });
 
   localStorage.setItem(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
   );
-
-  /* =========================================
-     SALVA NO SUPABASE
-  ========================================= */
-
-  try {
-
-    const { error } =
-      await window.supabaseClient
-        .from("pedidos")
-        .insert([{
-          data: pedido.data,
-          itens: pedido.itens,
-          observacao: pedido.observacao,
-          status: pedido.status
-        }]);
-
-    if (error) {
-
-      console.error(
-        "Erro ao salvar pedido no Supabase:",
-        error
-      );
-
-      alert(
-        "⚠️ O pedido foi salvo neste aparelho, " +
-        "mas não conseguiu ser enviado para o banco."
-      );
-
-      return;
-    }
-
-  } catch (erro) {
-
-    console.error(
-      "Erro inesperado ao enviar pedido:",
-      erro
-    );
-
-    alert(
-      "⚠️ Não foi possível enviar o pedido para o banco."
-    );
-
-    return;
-  }
-
-  /* =========================================
-     ABRE WHATSAPP
-  ========================================= */
 
   window.open(
     "https://wa.me/" + numero + "?text=" + msg
@@ -5311,9 +5256,17 @@ async function enviar() {
 
 }
 
-  /* =====================================================
-     TELA PRINCIPAL DE CATEGORIAS
-  ===================================================== */
+
+/* =====================================================
+   TELA PRINCIPAL DE CATEGORIAS
+   ===================================================== */
+
+function carregarProdutosOrcamento() {
+
+  const area =
+    document.getElementById("produtos");
+
+  if (!area) return;
 
   const categorias =
     Object.keys(catalogo || {});
