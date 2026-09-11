@@ -5343,9 +5343,7 @@ async function enviar() {
             observacao: pedido.observacao,
             status: pedido.status
           }
-        ])
-           .select();
-
+              ]);
     if (error) {
       console.error(
         "Erro ao enviar pedido para o Supabase:",
