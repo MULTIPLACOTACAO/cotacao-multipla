@@ -815,12 +815,43 @@ carregarCategoriasProduto();
         return;
     }
 
-    lista.innerHTML = "";
+ lista.innerHTML = "";
 
-    produtos
-    .sort((a,b)=>a.nome.localeCompare(b.nome))
-    .forEach((produto,index)=>{
+const campoPesquisa =
+    document.getElementById("pesquisaProdutos");
 
+const filtro =
+    (campoPesquisa?.value || "")
+        .toLowerCase()
+        .trim();
+
+produtos
+    .map((produto, index) => ({
+        produto,
+        index
+    }))
+    .filter(({ produto }) => {
+
+        const texto = [
+            produto.nome,
+            produto.codigo,
+            produto.categoria,
+            produto.unidade,
+            produto.descricao
+        ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+        return texto.includes(filtro);
+
+    })
+    .sort((a, b) =>
+        a.produto.nome.localeCompare(
+            b.produto.nome
+        )
+    )
+    .forEach(({ produto, index }) => {
         lista.innerHTML += `
 
         <div class="cliente-card">
