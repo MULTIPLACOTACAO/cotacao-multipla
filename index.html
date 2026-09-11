@@ -5306,7 +5306,8 @@ function limparCarrinho() {
 }
 
 /* ── Enviar WhatsApp ── */
-async function enviar() {
+/* ── Enviar WhatsApp ── */
+function enviar() {
 
   let obs =
     document.getElementById("obs").value;
@@ -5319,79 +5320,18 @@ async function enviar() {
 
   msg += "%0AObservação:%0A" + obs;
 
-  const pedido = {
+  pedidosRecebidos.push({
     id: Date.now(),
     data: new Date().toLocaleString(),
     itens: [...carrinho],
     observacao: obs,
     status: "pendente"
-  };
-
-  /* =========================
-     SALVAR PEDIDO NO SUPABASE
-     ========================= */
-
-  try {
-
-    const { data, error } =
-      await window.supabaseClient
-        .from("pedidos")
-        .insert([
-          {
-            data: pedido.data,
-            itens: pedido.itens,
-            observacao: pedido.observacao,
-            status: pedido.status
-          }
-              ]);
-    if (error) {
-      console.error(
-        "Erro ao enviar pedido para o Supabase:",
-        error
-      );
-
-      alert(
-        "Não foi possível enviar o pedido para o sistema.\n\n" +
-        error.message
-      );
-
-      return;
-    }
-
-    console.log(
-      "PEDIDO ENVIADO PARA O SUPABASE:",
-      data
-    );
-
-  } catch (erro) {
-
-    console.error(
-      "Erro inesperado ao enviar pedido:",
-      erro
-    );
-
-    alert(
-      "Erro ao enviar o pedido para o sistema.\n\n" +
-      erro.message
-    );
-
-    return;
-  }
-
-  /* =========================
-     MANTER CÓPIA LOCAL
-     ========================= */
-
-  pedidosRecebidos.push(pedido);
+  });
 
   localStorage.setItem(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
   );
-
-  /* =========================
-     MANTER WHATSAPP
-     ========================= */
 
   window.open(
     "https://wa.me/" + numero + "?text=" + msg
