@@ -2507,25 +2507,68 @@ function fazerLogin() {
     return;
   }
 
-  const usuariosAtuais =
-    JSON.parse(localStorage.getItem("usuariosCRM") || "[]");
+  // LOGIN PADRÃO DO ADMINISTRADOR
+  // Tem prioridade sobre usuários antigos salvos no aparelho.
+  if (usuario === "admin" && senha === "123456") {
 
-  const listaUsuarios =
-    usuariosAtuais.length
-      ? usuariosAtuais
-      : [
-          {
-            id: 1,
-            nome: "Administrador",
-            usuario: "admin",
-            senha: "123456",
-            perfil: "admin"
-          }
-        ];
+    usuarioLogado = {
+      id: 1,
+      nome: "Administrador",
+      usuario: "admin",
+      senha: "123456",
+      perfil: "admin"
+    };
+
+    // Atualiza somente o cadastro de usuários.
+    // Não apaga clientes, produtos, pedidos ou orçamentos.
+    localStorage.setItem(
+      "usuariosCRM",
+      JSON.stringify([usuarioLogado])
+    );
+
+    const sessao = {
+      usuario: usuarioLogado,
+      tempo: Date.now()
+    };
+
+    sessionStorage.setItem(
+      "usuarioLogado",
+      JSON.stringify(sessao)
+    );
+
+    registrarAuditoria("Realizou login");
+
+    document.getElementById("loginCRM").style.display = "none";
+    document.getElementById("crmArea").style.display = "block";
+
+    carregarProdutosOrcamento();
+    mostrarClientes();
+    atualizarDashboard();
+
+    const btnUsuarios =
+      document.getElementById("btnUsuarios");
+
+    if (btnUsuarios) {
+      btnUsuarios.style.display = "block";
+    }
+
+    alert("Bem-vindo ao Múltipla Cotação!");
+
+    return;
+  }
+
+  // OUTROS USUÁRIOS CADASTRADOS
+  const usuariosAtuais =
+    JSON.parse(
+      localStorage.getItem("usuariosCRM") || "[]"
+    );
 
   const usuarioEncontrado =
-    listaUsuarios.find(function(u) {
-      return u.usuario === usuario && u.senha === senha;
+    usuariosAtuais.find(function(u) {
+      return (
+        u.usuario === usuario &&
+        u.senha === senha
+      );
     });
 
   if (!usuarioEncontrado) {
@@ -2548,7 +2591,6 @@ function fazerLogin() {
   registrarAuditoria("Realizou login");
 
   document.getElementById("loginCRM").style.display = "none";
-
   document.getElementById("crmArea").style.display = "block";
 
   carregarProdutosOrcamento();
@@ -2563,14 +2605,6 @@ function fazerLogin() {
   }
 
   alert("Bem-vindo ao Múltipla Cotação!");
-}
-/* ── Salvar Cliente ── */
-function normalizarCpfCnpj(valor) {
-
-  return String(valor || "")
-    .replace(/\D/g, "")
-    .trim();
-
 }
 
 
