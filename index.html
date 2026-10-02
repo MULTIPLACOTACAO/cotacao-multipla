@@ -2494,83 +2494,75 @@ function registrarAuditoria(acao) {
   );
 
 }
-async function fazerLogin() {
+function fazerLogin() {
 
-  const email =
+  const usuario =
     document.getElementById("loginUsuario").value.trim();
 
   const senha =
     document.getElementById("loginSenha").value.trim();
 
-  if (!email || !senha) {
-    alert("Informe o e-mail e a senha.");
+  if (!usuario || !senha) {
+    alert("Informe o usuário e a senha.");
     return;
   }
 
-  try {
+  const usuariosAtuais =
+    JSON.parse(localStorage.getItem("usuariosCRM") || "[]");
 
-    const { data, error } =
-    await window.supabaseClient.auth.signInWithPassword({ 
-        email: email,
-        password: senha
-      });
+  const listaUsuarios =
+    usuariosAtuais.length
+      ? usuariosAtuais
+      : [
+          {
+            id: 1,
+            nome: "Administrador",
+            usuario: "admin",
+            senha: "123456",
+            perfil: "admin"
+          }
+        ];
 
-    if (error) {
-      console.error("Erro no login Supabase:", error);
-      alert("E-mail ou senha inválidos.");
-      return;
-    }
+  const usuarioEncontrado =
+    listaUsuarios.find(function(u) {
+      return u.usuario === usuario && u.senha === senha;
+    });
 
-    const usuarioSupabase = data.user;
-alert("LOGIN SUPABASE FUNCIONOU!");
-    usuarioLogado = {
-      id: usuarioSupabase.id,
-      nome: usuarioSupabase.email,
-      usuario: usuarioSupabase.email,
-      perfil: "admin"
-    };
-
-    const sessao = {
-      usuario: usuarioLogado,
-      tempo: Date.now()
-    };
-
-    sessionStorage.setItem(
-      "usuarioLogado",
-      JSON.stringify(sessao)
-    );
-
-    registrarAuditoria(
-      "Realizou login pelo Supabase"
-    );
-
-    document.getElementById("loginCRM").style.display = "none";
-
-    document.getElementById("crmArea").style.display = "block";
-
-    carregarProdutosOrcamento();
-    mostrarClientes();
-    atualizarDashboard();
-
-    const btnUsuarios =
-      document.getElementById("btnUsuarios");
-
-    if (btnUsuarios) {
-      btnUsuarios.style.display = "block";
-    }
-
-    alert(
-      "Bem-vindo ao Múltipla Cotação!"
-    );
-
-  } catch (erro) {
-
-    console.error("Erro inesperado no login:", erro);
-
-  alert("ERRO REAL: " + erro.message); 
-
+  if (!usuarioEncontrado) {
+    alert("Usuário ou senha inválidos.");
+    return;
   }
 
+  usuarioLogado = usuarioEncontrado;
+
+  const sessao = {
+    usuario: usuarioLogado,
+    tempo: Date.now()
+  };
+
+  sessionStorage.setItem(
+    "usuarioLogado",
+    JSON.stringify(sessao)
+  );
+
+  registrarAuditoria("Realizou login");
+
+  document.getElementById("loginCRM").style.display = "none";
+
+  document.getElementById("crmArea").style.display = "block";
+
+  carregarProdutosOrcamento();
+  mostrarClientes();
+  atualizarDashboard();
+
+  const btnUsuarios =
+    document.getElementById("btnUsuarios");
+
+  if (btnUsuarios) {
+    btnUsuarios.style.display = "block";
+  }
+
+  alert("Bem-vindo ao Múltipla Cotação!");
 }
 /* ── Salvar Cliente ── */
 function normalizarCpfCnpj(valor) {
