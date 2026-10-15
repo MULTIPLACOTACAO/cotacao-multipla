@@ -2904,7 +2904,7 @@ function mostrarClientes() {
           ${cf.map((c, i) => `
             <tr>
               <td class="cliente-nome">
-                <strong>${c.nomeFantasia}</strong>
+                <strong style="cursor:pointer;text-decoration:underline;" onclick="editarCliente(${clientes.indexOf(c)})">${c.nomeFantasia}</strong>
                 <small>${c.razaoSocial || ''}</small>
                 <small style="color:var(--text-dim)">${c.cpfCnpj || ''}</small>
               </td>
