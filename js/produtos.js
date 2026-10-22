@@ -952,11 +952,16 @@ produtos
    EDITAR PRODUTO
 ========================================== */
 
-function editarProduto(index){
+
+function editarProduto(index) {
+    const produto = produtos[index];
+
+    if (!produto) {
+        console.error("Produto não encontrado para edição:", index);
+        return;
+    }
 
     produtoEditando = index;
-
-    const produto = produtos[index];
 
     document.getElementById("produtoNome").value =
         produto.nome || "";
@@ -984,36 +989,38 @@ function editarProduto(index){
     document.getElementById("produtoAtivo").checked =
         produto.ativo !== false;
 
-   const preview =
-    document.getElementById("previewProdutoFoto");
+    const preview =
+        document.getElementById("previewProdutoFoto");
 
-if (preview) {
-    if (produto.foto) {
-        preview.innerHTML = `
-            <img
-                src="${produto.foto}"
-                alt="Foto atual do produto"
-                style="
-                    max-width:180px;
-                    max-height:180px;
-                    object-fit:contain;
-                    border-radius:10px;
-                    margin-top:8px;
-                ">
-            <p style="font-size:12px;">
-                Foto atual — selecione outra para substituir
-            </p>
-        `;
-    } else {
-        preview.innerHTML = `
-            <p style="font-size:12px;">
-                Nenhuma foto cadastrada
-            </p>
-        `;
+    if (preview) {
+        if (produto.foto) {
+            preview.innerHTML = `
+                <img
+                    src="${produto.foto}"
+                    alt="Foto atual do produto"
+                    style="
+                        max-width: 180px;
+                        max-height: 180px;
+                        width: auto;
+                        height: auto;
+                        object-fit: contain;
+                        border-radius: 10px;
+                        margin-top: 8px;
+                    ">
+                <p style="font-size: 12px;">
+                    Foto atual — selecione outra para substituir
+                </p>
+            `;
+        } else {
+            preview.innerHTML = `
+                <p style="font-size: 12px;">
+                    Nenhuma foto cadastrada
+                </p>
+            `;
+        }
     }
 }
 
-}
 /* ==========================================
    EXCLUIR PRODUTO
 ========================================== */
