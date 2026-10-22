@@ -984,24 +984,34 @@ function editarProduto(index){
     document.getElementById("produtoAtivo").checked =
         produto.ativo !== false;
 
-    const preview =
-        document.getElementById("previewProdutoFoto");
+   const preview =
+    document.getElementById("previewProdutoFoto");
 
-    if (preview) {
-
-        if (produto.foto) {
-
-            preview.src = produto.foto;
-            preview.style.display = "block";
-
-        } else {
-
-            preview.src = "";
-            preview.style.display = "none";
-
-        }
-
+if (preview) {
+    if (produto.foto) {
+        preview.innerHTML = `
+            <img
+                src="${produto.foto}"
+                alt="Foto atual do produto"
+                style="
+                    max-width:180px;
+                    max-height:180px;
+                    object-fit:contain;
+                    border-radius:10px;
+                    margin-top:8px;
+                ">
+            <p style="font-size:12px;">
+                Foto atual — selecione outra para substituir
+            </p>
+        `;
+    } else {
+        preview.innerHTML = `
+            <p style="font-size:12px;">
+                Nenhuma foto cadastrada
+            </p>
+        `;
     }
+}
 
 }
 /* ==========================================
