@@ -962,7 +962,13 @@ function editarProduto(index) {
     }
 
     produtoEditando = index;
+const botaoProdutos = document.getElementById("btnProdutos");
+mostrarTab("produtos", botaoProdutos);
 
+document.getElementById("tab-produtos").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+});
     document.getElementById("produtoNome").value =
         produto.nome || "";
 
