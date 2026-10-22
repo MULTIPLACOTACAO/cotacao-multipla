@@ -980,7 +980,10 @@ console.log("Nome encontrado:", produto?.nome);
     // Preenche os campos com os dados já cadastrados
     document.getElementById("produtoNome").value =
         produto.nome || "";
-
+console.log(
+    "Nome após preencher o campo:",
+    document.getElementById("produtoNome").value
+);
     document.getElementById("produtoCategoria").value =
         produto.categoria || "";
 
