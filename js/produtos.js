@@ -962,7 +962,9 @@ produtos
 function editarProduto(index) {
 
     const produto = produtos[index];
-
+console.log("Índice selecionado:", index);
+console.log("Produto selecionado:", produto);
+console.log("Nome encontrado:", produto?.nome);
     if (!produto) {
         alert("Não foi possível localizar esse produto.");
         return;
