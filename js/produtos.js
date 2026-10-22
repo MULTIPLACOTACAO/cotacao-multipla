@@ -958,22 +958,24 @@ produtos
 ========================================== */
 
 
+
 function editarProduto(index) {
+
     const produto = produtos[index];
 
     if (!produto) {
-        console.error("Produto não encontrado para edição:", index);
+        alert("Não foi possível localizar esse produto.");
         return;
     }
 
+    // Mantém o índice do produto que está sendo editado
     produtoEditando = index;
-const botaoProdutos = document.getElementById("btnProdutos");
-mostrarTab("produtos", botaoProdutos);
 
-document.getElementById("tab-produtos").scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-});
+    // Abre a aba de produtos
+    const botaoProdutos = document.getElementById("btnProdutos");
+    mostrarTab("produtos", botaoProdutos);
+
+    // Preenche os campos com os dados já cadastrados
     document.getElementById("produtoNome").value =
         produto.nome || "";
 
@@ -984,10 +986,10 @@ document.getElementById("tab-produtos").scrollIntoView({
         produto.unidade || "";
 
     document.getElementById("produtoPreco").value =
-        produto.preco || "";
+        produto.preco ?? "";
 
     document.getElementById("produtoCusto").value =
-        produto.custo || "";
+        produto.custo ?? "";
 
     document.getElementById("produtoCodigo").value =
         produto.codigo || "";
@@ -995,42 +997,40 @@ document.getElementById("tab-produtos").scrollIntoView({
     document.getElementById("produtoDescricao").value =
         produto.descricao || "";
 
+    // Limpa apenas o campo de seleção de uma nova foto
     document.getElementById("produtoFoto").value = "";
 
     document.getElementById("produtoAtivo").checked =
         produto.ativo !== false;
 
-    const preview =
-        document.getElementById("previewProdutoFoto");
+    // Exibe a foto já cadastrada, se houver
+    const preview = document.getElementById("previewProdutoFoto");
 
     if (preview) {
+        preview.innerHTML = "";
+
         if (produto.foto) {
-            preview.innerHTML = `
-                <img
-                    src="${produto.foto}"
-                    alt="Foto atual do produto"
-                    style="
-                        max-width: 180px;
-                        max-height: 180px;
-                        width: auto;
-                        height: auto;
-                        object-fit: contain;
-                        border-radius: 10px;
-                        margin-top: 8px;
-                    ">
-                <p style="font-size: 12px;">
-                    Foto atual — selecione outra para substituir
-                </p>
-            `;
-        } else {
-            preview.innerHTML = `
-                <p style="font-size: 12px;">
-                    Nenhuma foto cadastrada
-                </p>
-            `;
+            const imagem = document.createElement("img");
+
+            imagem.src = produto.foto;
+            imagem.alt = "Foto atual do produto";
+            imagem.style.maxWidth = "180px";
+            imagem.style.maxHeight = "180px";
+            imagem.style.objectFit = "contain";
+            imagem.style.borderRadius = "10px";
+            imagem.style.marginTop = "8px";
+
+            preview.appendChild(imagem);
         }
     }
+
+    // Leva o formulário à tela
+    document.getElementById("tab-produtos").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
+
 
 /* ==========================================
    EXCLUIR PRODUTO
