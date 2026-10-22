@@ -477,13 +477,18 @@ function salvarProduto() {
 
     }
 
-    if (produto.preco <= 0) {
+ 
+if (
+    document.getElementById("produtoPreco").value.trim() !== "" &&
+    (
+        !Number.isFinite(Number(document.getElementById("produtoPreco").value)) ||
+        Number(document.getElementById("produtoPreco").value) < 0
+    )
+) {
+    alert("Informe um preço válido ou deixe o campo vazio.");
+    return;
+}
 
-        alert("Informe um preço válido.");
-
-        return;
-
-    }
 
     /* ========= CÓDIGO DUPLICADO ========= */
 
