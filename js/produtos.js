@@ -412,17 +412,21 @@ function mostrarPreviewProdutoFoto() {
 
     preview.appendChild(imagem);
 }
+
+
 /* ==========================================
    CADASTRAR / ATUALIZAR PRODUTO
 ========================================== */
 
 function salvarProduto() {
 
+    const indiceProdutoEmEdicao = produtoEditando;
+
     const produto = {
 
-        id: produtoEditando === -1
+        id: indiceProdutoEmEdicao === -1
             ? gerarIdProduto()
-            : produtos[produtoEditando].id,
+            : produtos[indiceProdutoEmEdicao].id,
 
         nome: document.getElementById("produtoNome").value.trim(),
 
@@ -442,10 +446,9 @@ function salvarProduto() {
 
         descricao: document.getElementById("produtoDescricao").value.trim(),
 
-        foto:
-            produtoEditando === -1
-                ? ""
-                : (produtos[produtoEditando].foto || ""),
+        foto: indiceProdutoEmEdicao === -1
+            ? ""
+            : (produtos[indiceProdutoEmEdicao].foto || ""),
 
         ativo: document.getElementById("produtoAtivo").checked
 
@@ -454,61 +457,51 @@ function salvarProduto() {
     /* ========= VALIDAÇÕES ========= */
 
     if (!produto.nome) {
-
         alert("Informe o nome do produto.");
-
         return;
-
     }
 
     if (!produto.categoria) {
-
         alert("Informe a categoria.");
-
         return;
-
     }
 
     if (!produto.unidade) {
-
         alert("Informe a unidade.");
-
         return;
-
     }
 
- 
-if (
-    document.getElementById("produtoPreco").value.trim() !== "" &&
-    (
-        !Number.isFinite(Number(document.getElementById("produtoPreco").value)) ||
-        Number(document.getElementById("produtoPreco").value) < 0
-    )
-) {
-    alert("Informe um preço válido ou deixe o campo vazio.");
-    return;
-}
+    const campoPreco = document.getElementById("produtoPreco");
+    const valorPreco = campoPreco.value.trim();
 
+    if (
+        valorPreco !== "" &&
+        (
+            !Number.isFinite(Number(valorPreco)) ||
+            Number(valorPreco) < 0
+        )
+    ) {
+        alert("Informe um preço válido ou deixe o campo vazio.");
+        return;
+    }
 
     /* ========= CÓDIGO DUPLICADO ========= */
 
-    const codigoNormalizado =
-        String(produto.codigo || "")
-            .trim()
-            .toLowerCase();
+    const codigoNormalizado = String(produto.codigo || "")
+        .trim()
+        .toLowerCase();
 
     if (codigoNormalizado !== "") {
 
         const existe = produtos.find(function(p, i) {
 
-            if (i === produtoEditando) {
+            if (i === indiceProdutoEmEdicao) {
                 return false;
             }
 
-            const codigoExistente =
-                String(p.codigo || "")
-                    .trim()
-                    .toLowerCase();
+            const codigoExistente = String(p.codigo || "")
+                .trim()
+                .toLowerCase();
 
             return codigoExistente === codigoNormalizado;
 
@@ -520,63 +513,131 @@ if (
                 "⚠️ Já existe um produto com esse código.\n\n" +
                 "Produto: " +
                 (existe.nome || "Produto cadastrado") +
-                "\n" +
-                "Código: " +
+                "\nCódigo: " +
                 (existe.codigo || produto.codigo)
             );
 
             return;
-
         }
-
     }
 
     /* ========= FOTO ========= */
 
-    const campoFoto =
-        document.getElementById("produtoFoto");
+    const campoFoto = document.getElementById("produtoFoto");
 
-    if (
-        campoFoto &&
-        campoFoto.files &&
-        campoFoto.files[0]
-    ) {
+    if (campoFoto && campoFoto.files && campoFoto.files[0]) {
 
-        const arquivo =
-            campoFoto.files[0];
+        const arquivo = campoFoto.files[0];
 
-        const leitor =
-            new FileReader();
+        if (!arquivo.type.startsWith("image/")) {
+            alert("Selecione um arquivo de imagem válido.");
+            return;
+        }
+
+        if (arquivo.size > 12 * 1024 * 1024) {
+            alert("A imagem deve ter no máximo 12 MB.");
+            return;
+        }
+
+        const leitor = new FileReader();
+
+        leitor.onerror = function() {
+            alert("Não foi possível ler a foto. Tente outra imagem.");
+        };
 
         leitor.onload = function(evento) {
 
-            produto.foto =
-                evento.target.result;
+            const imagem = new Image();
 
-            finalizarSalvamentoProduto(produto);
+            imagem.onerror = function() {
+                alert("Não foi possível processar a imagem selecionada.");
+            };
+
+            imagem.onload = function() {
+
+                const limite = 1000;
+
+                const proporcao = Math.min(
+                    1,
+                    limite / Math.max(imagem.width, imagem.height)
+                );
+
+                const canvas = document.createElement("canvas");
+
+                canvas.width = Math.max(
+                    1,
+                    Math.round(imagem.width * proporcao)
+                );
+
+                canvas.height = Math.max(
+                    1,
+                    Math.round(imagem.height * proporcao)
+                );
+
+                const contexto = canvas.getContext("2d");
+
+                if (!contexto) {
+                    alert("Não foi possível processar a foto.");
+                    return;
+                }
+
+                contexto.fillStyle = "#ffffff";
+                contexto.fillRect(0, 0, canvas.width, canvas.height);
+
+                contexto.drawImage(
+                    imagem,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                try {
+
+                    produto.foto = canvas.toDataURL("image/jpeg", 0.82);
+
+                    finalizarSalvamentoProduto(
+                        produto,
+                        indiceProdutoEmEdicao
+                    );
+
+                } catch (erro) {
+
+                    alert(
+                        "Não foi possível preparar a foto. " +
+                        "Tente uma imagem menor."
+                    );
+
+                }
+            };
+
+            imagem.src = evento.target.result;
 
         };
 
         leitor.readAsDataURL(arquivo);
 
         return;
-
     }
 
     /* ========= SEM NOVA FOTO ========= */
 
-    finalizarSalvamentoProduto(produto);
+    finalizarSalvamentoProduto(
+        produto,
+        indiceProdutoEmEdicao
+    );
 
 }
+
 /* ==========================================
    FINALIZAR SALVAMENTO DO PRODUTO
 ========================================== */
 
-function finalizarSalvamentoProduto(produto) {
+function finalizarSalvamentoProduto(produto, indiceProdutoEmEdicao) {
 
     /* ========= NOVO ========= */
 
-    if (produtoEditando === -1) {
+    if (indiceProdutoEmEdicao === -1) {
 
         produtos.push(produto);
 
@@ -586,8 +647,17 @@ function finalizarSalvamentoProduto(produto) {
 
     else {
 
-        produtos[produtoEditando] =
-            produto;
+        if (
+            typeof indiceProdutoEmEdicao !== "number" ||
+            indiceProdutoEmEdicao < 0 ||
+            indiceProdutoEmEdicao >= produtos.length ||
+            !produtos[indiceProdutoEmEdicao]
+        ) {
+            alert("Não foi possível localizar o produto para atualizar.");
+            return;
+        }
+
+        produtos[indiceProdutoEmEdicao] = produto;
 
     }
 
@@ -599,8 +669,8 @@ function finalizarSalvamentoProduto(produto) {
 
     mostrarProdutos();
 
-
 }
+
 /* ==========================================
    MOSTRAR PRODUTOS
 ========================================== */
