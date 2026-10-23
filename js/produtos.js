@@ -633,19 +633,16 @@ function salvarProduto() {
    FINALIZAR SALVAMENTO DO PRODUTO
 ========================================== */
 
+
 function finalizarSalvamentoProduto(produto, indiceProdutoEmEdicao) {
 
-    /* ========= NOVO ========= */
+    /* ========= VALIDAR E SALVAR ========= */
 
     if (indiceProdutoEmEdicao === -1) {
 
         produtos.push(produto);
 
-    }
-
-    /* ========= EDITAR ========= */
-
-    else {
+    } else {
 
         if (
             typeof indiceProdutoEmEdicao !== "number" ||
@@ -654,12 +651,13 @@ function finalizarSalvamentoProduto(produto, indiceProdutoEmEdicao) {
             !produtos[indiceProdutoEmEdicao]
         ) {
             alert("Não foi possível localizar o produto para atualizar.");
-            return;
+            return false;
         }
 
         produtos[indiceProdutoEmEdicao] = produto;
-
     }
+
+    /* ========= PERSISTIR E ATUALIZAR ========= */
 
     salvarProdutos();
 
@@ -669,7 +667,17 @@ function finalizarSalvamentoProduto(produto, indiceProdutoEmEdicao) {
 
     mostrarProdutos();
 
+    /* ========= CONFIRMAÇÃO ========= */
+
+    alert(
+        indiceProdutoEmEdicao === -1
+            ? "Produto cadastrado com sucesso!"
+            : "Produto atualizado com sucesso!"
+    );
+
+    return true;
 }
+
 
 /* ==========================================
    MOSTRAR PRODUTOS
