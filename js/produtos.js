@@ -417,216 +417,238 @@ function mostrarPreviewProdutoFoto() {
 /* ==========================================
    CADASTRAR / ATUALIZAR PRODUTO
 ========================================== */
+let salvamentoProdutoEmAndamento = false;
 
 function salvarProduto() {
 
-    const indiceProdutoEmEdicao = produtoEditando;
+    if (salvamentoProdutoEmAndamento) {
+        return;
+    }
 
-    const produto = {
+    salvamentoProdutoEmAndamento = true;
 
-        id: indiceProdutoEmEdicao === -1
-            ? gerarIdProduto()
-            : produtos[indiceProdutoEmEdicao].id,
-
-        nome: document.getElementById("produtoNome").value.trim(),
-
-        categoria: document.getElementById("produtoCategoria").value.trim(),
-
-        unidade: document.getElementById("produtoUnidade").value.trim(),
-
-        preco: Number(
-            document.getElementById("produtoPreco").value
-        ),
-
-        custo: Number(
-            document.getElementById("produtoCusto").value || 0
-        ),
-
-        codigo: document.getElementById("produtoCodigo").value.trim(),
-
-        descricao: document.getElementById("produtoDescricao").value.trim(),
-
-        foto: indiceProdutoEmEdicao === -1
-            ? ""
-            : (produtos[indiceProdutoEmEdicao].foto || ""),
-
-        ativo: document.getElementById("produtoAtivo").checked
-
+    const liberarSalvamento = function() {
+        salvamentoProdutoEmAndamento = false;
     };
 
-    /* ========= VALIDAÇÕES ========= */
+    try {
 
-    if (!produto.nome) {
-        alert("Informe o nome do produto.");
-        return;
-    }
+        const indiceProdutoEmEdicao = produtoEditando;
 
-    if (!produto.categoria) {
-        alert("Informe a categoria.");
-        return;
-    }
+        if (
+            indiceProdutoEmEdicao !== -1 &&
+            (
+                typeof indiceProdutoEmEdicao !== "number" ||
+                indiceProdutoEmEdicao < 0 ||
+                indiceProdutoEmEdicao >= produtos.length ||
+                !produtos[indiceProdutoEmEdicao]
+            )
+        ) {
+            alert("Não foi possível localizar o produto para atualizar.");
+            liberarSalvamento();
+            return;
+        }
 
-    if (!produto.unidade) {
-        alert("Informe a unidade.");
-        return;
-    }
+        const produto = {
+            id: indiceProdutoEmEdicao === -1
+                ? gerarIdProduto()
+                : produtos[indiceProdutoEmEdicao].id,
 
-    const campoPreco = document.getElementById("produtoPreco");
-    const valorPreco = campoPreco.value.trim();
+            nome: document.getElementById("produtoNome").value.trim(),
+            categoria: document.getElementById("produtoCategoria").value.trim(),
+            unidade: document.getElementById("produtoUnidade").value.trim(),
+            preco: Number(document.getElementById("produtoPreco").value),
+            custo: Number(document.getElementById("produtoCusto").value || 0),
+            codigo: document.getElementById("produtoCodigo").value.trim(),
+            descricao: document.getElementById("produtoDescricao").value.trim(),
 
-    if (
-        valorPreco !== "" &&
-        (
-            !Number.isFinite(Number(valorPreco)) ||
-            Number(valorPreco) < 0
-        )
-    ) {
-        alert("Informe um preço válido ou deixe o campo vazio.");
-        return;
-    }
+            foto: indiceProdutoEmEdicao === -1
+                ? ""
+                : (produtos[indiceProdutoEmEdicao].foto || ""),
 
-    /* ========= CÓDIGO DUPLICADO ========= */
+            ativo: document.getElementById("produtoAtivo").checked
+        };
 
-    const codigoNormalizado = String(produto.codigo || "")
-        .trim()
-        .toLowerCase();
+        if (!produto.nome) {
+            alert("Informe o nome do produto.");
+            liberarSalvamento();
+            return;
+        }
 
-    if (codigoNormalizado !== "") {
+        if (!produto.categoria) {
+            alert("Informe a categoria.");
+            liberarSalvamento();
+            return;
+        }
 
-        const existe = produtos.find(function(p, i) {
+        if (!produto.unidade) {
+            alert("Informe a unidade.");
+            liberarSalvamento();
+            return;
+        }
 
-            if (i === indiceProdutoEmEdicao) {
+        const campoPreco = document.getElementById("produtoPreco");
+        const valorPreco = campoPreco.value.trim();
+
+        if (
+            valorPreco !== "" &&
+            (
+                !Number.isFinite(Number(valorPreco)) ||
+                Number(valorPreco) < 0
+            )
+        ) {
+            alert("Informe um preço válido ou deixe o campo vazio.");
+            liberarSalvamento();
+            return;
+        }
+
+        const codigoNormalizado = String(produto.codigo || "")
+            .trim()
+            .toLowerCase();
+
+        if (codigoNormalizado !== "") {
+
+            const existe = produtos.find(function(p, i) {
+                if (i === indiceProdutoEmEdicao) {
+                    return false;
+                }
+
+                return String(p.codigo || "").trim().toLowerCase()
+                    === codigoNormalizado;
+            });
+
+            if (existe) {
+                alert(
+                    "Já existe um produto com esse código.\n\n" +
+                    "Produto: " + (existe.nome || "Produto cadastrado") +
+                    "\nCódigo: " + (existe.codigo || produto.codigo)
+                );
+
+                liberarSalvamento();
+                return;
+            }
+        }
+
+        const campoFoto = document.getElementById("produtoFoto");
+
+        const concluirSalvamento = function() {
+            try {
+                const resultado = finalizarSalvamentoProduto(
+                    produto,
+                    indiceProdutoEmEdicao
+                );
+
+                liberarSalvamento();
+
+                return resultado !== false;
+
+            } catch (erro) {
+                liberarSalvamento();
+                console.error("Erro ao salvar produto:", erro);
+                alert("Ocorreu um erro ao salvar o produto. Verifique os dados e tente novamente.");
                 return false;
             }
-
-            const codigoExistente = String(p.codigo || "")
-                .trim()
-                .toLowerCase();
-
-            return codigoExistente === codigoNormalizado;
-
-        });
-
-        if (existe) {
-
-            alert(
-                "⚠️ Já existe um produto com esse código.\n\n" +
-                "Produto: " +
-                (existe.nome || "Produto cadastrado") +
-                "\nCódigo: " +
-                (existe.codigo || produto.codigo)
-            );
-
-            return;
-        }
-    }
-
-    /* ========= FOTO ========= */
-
-    const campoFoto = document.getElementById("produtoFoto");
-
-    if (campoFoto && campoFoto.files && campoFoto.files[0]) {
-
-        const arquivo = campoFoto.files[0];
-
-        if (!arquivo.type.startsWith("image/")) {
-            alert("Selecione um arquivo de imagem válido.");
-            return;
-        }
-
-        if (arquivo.size > 12 * 1024 * 1024) {
-            alert("A imagem deve ter no máximo 12 MB.");
-            return;
-        }
-
-        const leitor = new FileReader();
-
-        leitor.onerror = function() {
-            alert("Não foi possível ler a foto. Tente outra imagem.");
         };
 
-        leitor.onload = function(evento) {
+        if (campoFoto && campoFoto.files && campoFoto.files[0]) {
 
-            const imagem = new Image();
+            const arquivo = campoFoto.files[0];
 
-            imagem.onerror = function() {
-                alert("Não foi possível processar a imagem selecionada.");
+            if (!arquivo.type.startsWith("image/")) {
+                alert("Selecione um arquivo de imagem válido.");
+                liberarSalvamento();
+                return;
+            }
+
+            if (arquivo.size > 12 * 1024 * 1024) {
+                alert("A imagem deve ter no máximo 12 MB.");
+                liberarSalvamento();
+                return;
+            }
+
+            const leitor = new FileReader();
+
+            leitor.onerror = function() {
+                alert("Não foi possível ler a foto. Tente outra imagem.");
+                liberarSalvamento();
             };
 
-            imagem.onload = function() {
+            leitor.onload = function(evento) {
 
-                const limite = 1000;
+                const imagem = new Image();
 
-                const proporcao = Math.min(
-                    1,
-                    limite / Math.max(imagem.width, imagem.height)
-                );
+                imagem.onerror = function() {
+                    alert("Não foi possível processar a imagem selecionada.");
+                    liberarSalvamento();
+                };
 
-                const canvas = document.createElement("canvas");
+                imagem.onload = function() {
 
-                canvas.width = Math.max(
-                    1,
-                    Math.round(imagem.width * proporcao)
-                );
+                    try {
 
-                canvas.height = Math.max(
-                    1,
-                    Math.round(imagem.height * proporcao)
-                );
+                        const limite = 1000;
 
-                const contexto = canvas.getContext("2d");
+                        const proporcao = Math.min(
+                            1,
+                            limite / Math.max(imagem.width, imagem.height)
+                        );
 
-                if (!contexto) {
-                    alert("Não foi possível processar a foto.");
-                    return;
-                }
+                        const canvas = document.createElement("canvas");
 
-                contexto.fillStyle = "#ffffff";
-                contexto.fillRect(0, 0, canvas.width, canvas.height);
+                        canvas.width = Math.max(
+                            1,
+                            Math.round(imagem.width * proporcao)
+                        );
 
-                contexto.drawImage(
-                    imagem,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
+                        canvas.height = Math.max(
+                            1,
+                            Math.round(imagem.height * proporcao)
+                        );
 
-                try {
+                        const contexto = canvas.getContext("2d");
 
-                    produto.foto = canvas.toDataURL("image/jpeg", 0.82);
+                        if (!contexto) {
+                            alert("Não foi possível processar a foto.");
+                            liberarSalvamento();
+                            return;
+                        }
 
-                    finalizarSalvamentoProduto(
-                        produto,
-                        indiceProdutoEmEdicao
-                    );
+                        contexto.fillStyle = "#ffffff";
+                        contexto.fillRect(0, 0, canvas.width, canvas.height);
 
-                } catch (erro) {
+                        contexto.drawImage(
+                            imagem,
+                            0,
+                            0,
+                            canvas.width,
+                            canvas.height
+                        );
 
-                    alert(
-                        "Não foi possível preparar a foto. " +
-                        "Tente uma imagem menor."
-                    );
+                        produto.foto = canvas.toDataURL("image/jpeg", 0.82);
 
-                }
+                        concluirSalvamento();
+
+                    } catch (erro) {
+                        console.error("Erro ao processar foto:", erro);
+                        alert("Não foi possível preparar a foto. Tente uma imagem menor.");
+                        liberarSalvamento();
+                    }
+                };
+
+                imagem.src = evento.target.result;
             };
 
-            imagem.src = evento.target.result;
+            leitor.readAsDataURL(arquivo);
+            return;
+        }
 
-        };
+        concluirSalvamento();
 
-        leitor.readAsDataURL(arquivo);
-
-        return;
+    } catch (erro) {
+        console.error("Erro ao iniciar salvamento:", erro);
+        alert("Não foi possível iniciar o salvamento do produto.");
+        liberarSalvamento();
     }
-
-    /* ========= SEM NOVA FOTO ========= */
-
-    finalizarSalvamentoProduto(
-        produto,
-        indiceProdutoEmEdicao
-    );
-
 }
 
 /* ==========================================
