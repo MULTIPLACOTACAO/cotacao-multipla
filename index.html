@@ -1392,6 +1392,41 @@ overflow:hidden;
   </div>
 
 </div>
+
+<div id="recuperarSenhaCRM" style="display:none;">
+  <div class="orcamento-section">
+    <div class="orcamento-section-title">
+      🔑 Criar nova senha
+    </div>
+
+    <div class="form-group" style="margin-bottom:12px;">
+      <label class="form-label">Nova senha</label>
+      <input
+        id="novaSenhaSupabase"
+        type="password"
+        class="input-premium"
+        autocomplete="new-password"
+        placeholder="Digite a nova senha">
+    </div>
+
+    <div class="form-group" style="margin-bottom:16px;">
+      <label class="form-label">Confirmar nova senha</label>
+      <input
+        id="confirmarSenhaSupabase"
+        type="password"
+        class="input-premium"
+        autocomplete="new-password"
+        placeholder="Repita a nova senha">
+    </div>
+
+    <button
+      onclick="confirmarNovaSenhaSupabase()"
+      class="btn-block btn-primary">
+      Salvar nova senha
+    </button>
+  </div>
+</div>
+    
   <div id="crmArea" style="display:none;">
 
       <div class="crm-header">
@@ -2408,6 +2443,14 @@ function abrirCRM() {
 
   mostrarClientes();
 }
+
+window.supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === "PASSWORD_RECOVERY" && session) {
+    document.getElementById("crmArea").style.display = "none";
+    document.getElementById("loginCRM").style.display = "none";
+    document.getElementById("recuperarSenhaCRM").style.display = "block";
+  }
+});
 function verificarSessao() {
 
   const sessao =
@@ -2449,7 +2492,7 @@ function protegerCRM() {
     document.getElementById("loginCRM").style.display = "block";
 
     alert("Sua sessão expirou. Faça login novamente.");
-    return false;
+    return false;  
   }
 
   usuarioLogado = dados.usuario;
@@ -2919,6 +2962,54 @@ registrarAuditoria(
   document.getElementById("areaAlterarSenha").style.display =
     "none";
 }  
+
+async function confirmarNovaSenhaSupabase() {
+  const nova = document.getElementById("novaSenhaSupabase").value;
+  const confirmar = document.getElementById("confirmarSenhaSupabase").value;
+
+  if (!nova || !confirmar) {
+    alert("Preencha os dois campos de senha.");
+    return;
+  }
+
+  if (nova.length < 6) {
+    alert("A senha deve ter pelo menos 6 caracteres.");
+    return;
+  }
+
+  if (nova !== confirmar) {
+    alert("As senhas não conferem.");
+    return;
+  }
+
+  try {
+    const { data, error } =
+      await window.supabaseClient.auth.updateUser({
+        password: nova
+      });
+
+    if (error) {
+      console.error("Erro ao atualizar senha:", error.message);
+      alert("Não foi possível alterar a senha. Solicite um novo link de recuperação e tente novamente.");
+      return;
+    }
+
+    document.getElementById("recuperarSenhaCRM").style.display = "none";
+    document.getElementById("loginCRM").style.display = "block";
+
+    document.getElementById("novaSenhaSupabase").value = "";
+    document.getElementById("confirmarSenhaSupabase").value = "";
+
+    alert("Senha do Supabase alterada com sucesso! Agora entre com seu e-mail e a nova senha.");
+
+    await window.supabaseClient.auth.signOut();
+
+  } catch (erro) {
+    console.error("Erro inesperado:", erro);
+    alert("Ocorreu um erro ao alterar a senha. Tente novamente.");
+  }
+}
+  
 function salvarUsuario() {
 
   let nome =
@@ -3167,11 +3258,12 @@ function verificarNovosPedidos() {
 
   }
 
-
+  
   /* NOVO PEDIDO */
 
   if (
     pendentes.length >
+    
     quantidadePedidosConhecida
   ) {
 
