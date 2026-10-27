@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+  
 <head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -8,8 +9,9 @@
     "https://lclcqdujzcjahuvjbhlk.supabase.co",
     "sb_publishable_kdkUpusO1GhqXUwr-O9QBQ_PGLPAv-l"
   );
-</script> 
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
 <script>
 console.log("TESTE PDF:", typeof window.jspdf);
 </script>  
@@ -2296,6 +2298,7 @@ let usuarios = JSON.parse(
     senha: "123456",
     perfil: "admin"
   }
+
 ];
 /* ── Tabs CRM ── */
 /* ── Tabs CRM ── */
@@ -2830,6 +2833,8 @@ function abrirAlterarSenha() {
 function salvarNovaSenha() {
 
   let atual =
+
+
     document.getElementById("senhaAtual").value;
 
   let nova =
@@ -2894,6 +2899,7 @@ function salvarUsuario() {
 
   let nome =
     document.getElementById("nomeUsuario").value.trim();
+
 
   let usuario =
     document.getElementById("usuarioCadastro").value.trim();
