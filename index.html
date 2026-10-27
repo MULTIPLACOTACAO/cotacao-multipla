@@ -2497,46 +2497,27 @@ function registrarAuditoria(acao) {
   );
 
 }
-function fazerLogin() {
 
-  const usuario =
-    document.getElementById("loginUsuario").value.trim();
-
-  const senha =
-    document.getElementById("loginSenha").value.trim();
+async function fazerLogin() {
+  const usuario = document.getElementById("loginUsuario").value.trim();
+  const senha = document.getElementById("loginSenha").value.trim();
 
   if (!usuario || !senha) {
-    alert("Informe o usuário e a senha.");
+    alert("Informe o usuário/e-mail e a senha.");
     return;
   }
 
-  // LOGIN PADRÃO DO ADMINISTRADOR
-  // Tem prioridade sobre usuários antigos salvos no aparelho.
-  if (usuario === "admin" && senha === "123456") {
-
-    usuarioLogado = {
-      id: 1,
-      nome: "Administrador",
-      usuario: "admin",
-      senha: "123456",
-      perfil: "admin"
-    };
-
-    // Atualiza somente o cadastro de usuários.
-    // Não apaga clientes, produtos, pedidos ou orçamentos.
-    localStorage.setItem(
-      "usuariosCRM",
-      JSON.stringify([usuarioLogado])
-    );
-
-    const sessao = {
-      usuario: usuarioLogado,
-      tempo: Date.now()
-    };
+  // Função comum para abrir o CRM após o login
+  function entrarNoCRM(dadosUsuario, autenticacaoSupabase = false) {
+    usuarioLogado = dadosUsuario;
 
     sessionStorage.setItem(
       "usuarioLogado",
-      JSON.stringify(sessao)
+      JSON.stringify({
+        usuario: dadosUsuario,
+        tempo: Date.now(),
+        autenticacaoSupabase
+      })
     );
 
     registrarAuditoria("Realizou login");
@@ -2548,67 +2529,110 @@ function fazerLogin() {
     mostrarClientes();
     atualizarDashboard();
 
-    const btnUsuarios =
-      document.getElementById("btnUsuarios");
-
+    const btnUsuarios = document.getElementById("btnUsuarios");
     if (btnUsuarios) {
       btnUsuarios.style.display = "block";
     }
 
     alert("Bem-vindo ao Múltipla Cotação!");
-
-    return;
   }
 
-  // OUTROS USUÁRIOS CADASTRADOS
-  const usuariosAtuais =
-    JSON.parse(
+  // LOGIN LOCAL TEMPORÁRIO DO ADMINISTRADOR
+  // Mantido para não bloquear o acesso durante os testes.
+  if (usuario === "admin" && senha === "123456") {
+    const usuariosAtuais = JSON.parse(
       localStorage.getItem("usuariosCRM") || "[]"
     );
 
-  const usuarioEncontrado =
-    usuariosAtuais.find(function(u) {
-      return (
-        u.usuario === usuario &&
-        u.senha === senha
+    let adminLocal = usuariosAtuais.find(
+      u => u.usuario === "admin"
+    );
+
+    if (!adminLocal) {
+      adminLocal = {
+        id: 1,
+        nome: "Administrador",
+        usuario: "admin",
+        senha: "123456",
+        perfil: "admin"
+      };
+
+      usuariosAtuais.push(adminLocal);
+      localStorage.setItem(
+        "usuariosCRM",
+        JSON.stringify(usuariosAtuais)
       );
-    });
+    }
+
+    entrarNoCRM(adminLocal, false);
+    return;
+  }
+
+  // LOGIN POR E-MAIL NO SUPABASE
+  if (usuario.includes("@")) {
+    try {
+      if (!window.supabaseClient?.auth) {
+        alert("O sistema de autenticação não carregou. Atualize a página e tente novamente.");
+        return;
+      }
+
+      const { data, error } =
+        await window.supabaseClient.auth.signInWithPassword({
+          email: usuario,
+          password: senha
+        });
+
+      if (error) {
+        console.error("Erro no login Supabase:", error.message);
+        alert("Não foi possível entrar. Confira o e-mail e a senha.");
+        return;
+      }
+
+      // Somente o e-mail administrativo autorizado entra como administrador.
+      const emailAutorizado = "demabra77@gmail.com";
+      const emailAutenticado = data.user?.email?.toLowerCase();
+
+      if (emailAutenticado !== emailAutorizado) {
+        await window.supabaseClient.auth.signOut();
+        alert("Este e-mail não está autorizado a acessar o painel administrativo.");
+        return;
+      }
+
+      const adminSupabase = {
+        id: data.user.id,
+        nome: "Administrador",
+        usuario: emailAutenticado,
+        perfil: "admin",
+        autenticacaoSupabase: true
+      };
+
+      entrarNoCRM(adminSupabase, true);
+      return;
+
+    } catch (erro) {
+      console.error("Erro inesperado no login:", erro);
+      alert("Ocorreu um erro ao entrar. Tente novamente.");
+      return;
+    }
+  }
+
+  // OUTROS USUÁRIOS LOCAIS
+  const usuariosAtuais = JSON.parse(
+    localStorage.getItem("usuariosCRM") || "[]"
+  );
+
+  const usuarioEncontrado = usuariosAtuais.find(function(u) {
+    return u.usuario === usuario && u.senha === senha;
+  });
 
   if (!usuarioEncontrado) {
     alert("Usuário ou senha inválidos.");
     return;
   }
 
-  usuarioLogado = usuarioEncontrado;
-
-  const sessao = {
-    usuario: usuarioLogado,
-    tempo: Date.now()
-  };
-
-  sessionStorage.setItem(
-    "usuarioLogado",
-    JSON.stringify(sessao)
-  );
-
-  registrarAuditoria("Realizou login");
-
-  document.getElementById("loginCRM").style.display = "none";
-  document.getElementById("crmArea").style.display = "block";
-
-  carregarProdutosOrcamento();
-  mostrarClientes();
-  atualizarDashboard();
-
-  const btnUsuarios =
-    document.getElementById("btnUsuarios");
-
-  if (btnUsuarios) {
-    btnUsuarios.style.display = "block";
-  }
-
-  alert("Bem-vindo ao Múltipla Cotação!");
+  entrarNoCRM(usuarioEncontrado, false);
 }
+
 
 
 /* ── Salvar Cliente com proteção contra duplicidade ── */
