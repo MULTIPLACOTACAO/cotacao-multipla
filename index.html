@@ -5653,60 +5653,95 @@ function removerOrcamento(index) {
 }
 
 /* ── Orçamento WhatsApp ── */
-function gerarOrcamentoWhats() {
 
+function gerarOrcamentoWhats() {
+  if (!Array.isArray(orcamentoInterno) || orcamentoInterno.length === 0) {
+    alert("Adicione pelo menos um produto ao orçamento.");
+    return;
+  }
 
   let msg = "ORÇAMENTO:%0A%0A";
-
-  orcamentoInterno.forEach(item => {
-    msg += item.produto + "%0A";
-    msg += "Qtd: " + item.qtd + "%0A";
-    msg += "Preço: R$ " + item.preco.toFixed(2) + "%0A";
-    msg += "Total: R$ " + item.total.toFixed(2) + "%0A%0A";
-  });
-
-  let frete =
-    parseFloat(
-      document.getElementById("freteValor").value
-    ) || 0;
-
   let total = 0;
 
-  orcamentoInterno.forEach(item => {
-    total += item.total;
+  const itens = orcamentoInterno.map(item => {
+    const qtd = Number(item.qtd) || 0;
+    const preco = Number(item.preco) || 0;
+    const totalItem = qtd * preco;
+
+    msg += encodeURIComponent(item.produto) + "%0A";
+    msg += "Qtd: " + qtd + "%0A";
+    msg += "Preço: R$ " + preco.toFixed(2) + "%0A";
+    msg += "Total: R$ " + totalItem.toFixed(2) + "%0A%0A";
+
+    total += totalItem;
+
+    return {
+      produto: item.produto,
+      qtd,
+      preco,
+      total: totalItem
+    };
   });
+
+  const frete =
+    parseFloat(document.getElementById("freteValor")?.value) || 0;
 
   total += frete;
 
-msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
-msg += "TOTAL GERAL: R$ " + total.toFixed(2);
+  msg += "Frete: R$ " + frete.toFixed(2) + "%0A";
+  msg += "TOTAL GERAL: R$ " + total.toFixed(2);
 
-/* SALVA O ORÇAMENTO NO PEDIDO */
-if (typeof pedidoAtualOrcamento !== "undefined") {
+  // Garante que a lista de pedidos esteja disponível.
+  if (!Array.isArray(pedidosRecebidos)) {
+    pedidosRecebidos = [];
+  }
 
-  pedidosRecebidos[pedidoAtualOrcamento].orcamento = [...orcamentoInterno];
+  // Se veio de um pedido recebido, atualiza esse pedido.
+  const indiceValido =
+    typeof pedidoAtualOrcamento !== "undefined" &&
+    Number.isInteger(pedidoAtualOrcamento) &&
+    pedidosRecebidos[pedidoAtualOrcamento];
 
-  pedidosRecebidos[pedidoAtualOrcamento].frete = frete;
+  if (indiceValido) {
+    const pedido = pedidosRecebidos[pedidoAtualOrcamento];
 
-  pedidosRecebidos[pedidoAtualOrcamento].valorTotal = total;
+    pedido.orcamento = itens;
+    pedido.frete = frete;
+    pedido.valorTotal = total;
+    pedido.status = "orcado";
+  } else {
+    // Se foi criado diretamente, cria um registro próprio.
+    pedidosRecebidos.push({
+      id: Date.now(),
+      data: new Date().toLocaleString("pt-BR"),
+      cliente: typeof clienteSelecionado !== "undefined" && clienteSelecionado
+        ? (clienteSelecionado.nomeFantasia || clienteSelecionado.nome || "")
+        : (document.getElementById("clienteOrcamento")?.value || ""),
+      itens: itens.map(item =>
+        `${item.produto} - ${item.qtd}`
+      ),
+      orcamento: itens,
+      frete,
+      valorTotal: total,
+      status: "orcado",
+      origem: "orcamento_direto"
+    });
+  }
 
-  pedidosRecebidos[pedidoAtualOrcamento].status = "orcado";
-
+  // Salva e atualiza a lista de orçamentos.
   localStorage.setItem(
     "pedidosRecebidos",
     JSON.stringify(pedidosRecebidos)
   );
 
-  mostrarPedidos();
-  mostrarOrcados();
+  if (typeof mostrarPedidos === "function") mostrarPedidos();
+  if (typeof mostrarOrcados === "function") mostrarOrcados();
+
+  window.open("https://wa.me/" + numero + "?text=" + msg);
+
+  limparOrcamento();
 }
 
-window.open(
-  "https://wa.me/" + numero + "?text=" + msg
-);
-
-limparOrcamento();
-}
 function limparOrcamento() {
 
   orcamentoInterno = [];
