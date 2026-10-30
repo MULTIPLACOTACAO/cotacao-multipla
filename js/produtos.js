@@ -1204,106 +1204,109 @@ function duplicarProduto(index){
 function sincronizarProdutosComCatalogo() {
 
     if (typeof catalogo === "undefined") {
-        return;
+        return false;
     }
 
-    const antigos =
-        JSON.parse(
-            localStorage.getItem("produtosCatalogoNexon")
-        ) || [];
+    try {
 
-    /* ========= REMOVER REGISTROS ANTIGOS ========= */
+        const antigos = JSON.parse(
+            localStorage.getItem("produtosCatalogoNexon") || "[]"
+        );
 
-    antigos.forEach(function(item) {
+        const novos = [];
 
-        if (!item.categoria || !item.produto) {
-            return;
-        }
+        // Remove somente os produtos que esta rotina gerenciava
+        antigos.forEach(function(item) {
 
-        if (catalogo[item.categoria]) {
+            if (!item.categoria || !item.produto) return;
 
-            catalogo[item.categoria] =
-                catalogo[item.categoria].filter(
-                    function(p) {
-                        return p !== item.produto;
-                    }
-                );
-
-        }
-
-    });
-
-    const novos = [];
-
-    /* ========= ADICIONAR PRODUTOS ========= */
-
-    produtos.forEach(function(produto) {
-
-        if (!produto.ativo) {
-            return;
-        }
-
-        const categoria =
-            String(produto.categoria || "")
-                .trim() || "Outros";
-
-        const codigo =
-            String(produto.codigo || "")
-                .trim() ||
-            ("PRD" + String(produto.id).slice(-6));
-
-        const nomeCatalogo =
-            codigo + " - " + produto.nome;
-
-        if (!catalogo[categoria]) {
-            catalogo[categoria] = [];
-        }
-
-        if (
-            !catalogo[categoria]
-                .includes(nomeCatalogo)
-        ) {
-
-            catalogo[categoria]
-                .push(nomeCatalogo);
-
-        }
-
-        /* ========= AGORA GUARDA A FOTO ========= */
-
-        novos.push({
-
-            categoria: categoria,
-
-            produto: nomeCatalogo,
-
-            codigo: codigo,
-
-            nome: produto.nome,
-
-            foto: produto.foto || ""
+            if (catalogo[item.categoria]) {
+                catalogo[item.categoria] =
+                    catalogo[item.categoria].filter(function(nome) {
+                        return nome !== item.produto;
+                    });
+            }
 
         });
 
-    });
+        produtos.forEach(function(produto) {
 
-    localStorage.setItem(
-        "produtosCatalogoNexon",
-        JSON.stringify(novos)
-    );
+            // Produto inativo não aparece no catálogo do cliente
+            if (produto.ativo === false) return;
 
-    if (
-        typeof carregarCategorias === "function"
-    ) {
-        carregarCategorias();
+            const categoria =
+                String(produto.categoria || "").trim() || "Outros";
+
+            const codigo =
+                String(produto.codigo || "").trim() ||
+                ("PRD" + String(produto.id).slice(-6));
+
+            const nomeCatalogo = codigo + " - " + produto.nome;
+
+            // Procura a foto que já estava no catálogo
+            const registroAntigo = antigos.find(function(item) {
+                return (
+                    item.produto === nomeCatalogo ||
+                    (
+                        item.codigo &&
+                        String(item.codigo) === String(codigo)
+                    )
+                );
+            });
+
+            // Nunca substitui uma foto existente por uma informação vazia
+            const fotoAtual = String(produto.foto || "").trim();
+            const fotoAntiga = registroAntigo
+                ? String(registroAntigo.foto || "").trim()
+                : "";
+
+            const fotoFinal = fotoAtual || fotoAntiga;
+
+            if (!catalogo[categoria]) {
+                catalogo[categoria] = [];
+            }
+
+            if (!catalogo[categoria].includes(nomeCatalogo)) {
+                catalogo[categoria].push(nomeCatalogo);
+            }
+
+            novos.push({
+                categoria: categoria,
+                produto: nomeCatalogo,
+                codigo: codigo,
+                nome: produto.nome,
+                foto: fotoFinal
+            });
+
+        });
+
+        // Grava a lista atualizada sem perder as fotos preservadas
+        localStorage.setItem(
+            "produtosCatalogoNexon",
+            JSON.stringify(novos)
+        );
+
+        if (typeof carregarCategorias === "function") {
+            carregarCategorias();
+        }
+
+        if (typeof carregarProdutosOrcamento === "function") {
+            carregarProdutosOrcamento();
+        }
+
+        return true;
+
+    } catch (erro) {
+
+        console.error("Erro ao sincronizar catálogo:", erro);
+
+        alert(
+            "Não foi possível atualizar o catálogo. " +
+            "Os dados anteriores foram mantidos no armazenamento."
+        );
+
+        return false;
     }
-
-    if (
-        typeof carregarProdutosOrcamento === "function"
-    ) {
-        carregarProdutosOrcamento();
-    }
-
 }
 /* ======================================================
    SINCRONIZAÇÃO AO ABRIR O SISTEMA
