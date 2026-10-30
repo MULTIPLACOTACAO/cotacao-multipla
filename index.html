@@ -5137,15 +5137,17 @@ function abrirCategoria(cat, el) {
 
     catalogo[cat].forEach(function(p) {
 
-        const registro =
-            registros.find(function(item) {
+const codigoProduto = String(p).split(" - ")[0].trim();
 
-                return (
-                    item.categoria === cat &&
-                    item.produto === p
-                );
-
-            });
+const registro = registros.find(function(item) {
+    return (
+        item.categoria === cat &&
+        (
+            String(item.codigo || "").trim() === codigoProduto ||
+            item.produto === p
+        )
+    );
+});
 
         const foto =
             registro
