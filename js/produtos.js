@@ -546,7 +546,12 @@ function salvarProduto() {
             } catch (erro) {
                 liberarSalvamento();
                 console.error("Erro ao salvar produto:", erro);
-                alert("Ocorreu um erro ao salvar o produto. Verifique os dados e tente novamente.");
+             alert(
+    "Erro ao salvar: " +
+    (erro.name || "Erro") +
+    "\nDetalhes: " +
+    (erro.message || erro)
+); 
                 return false;
             }
         };
