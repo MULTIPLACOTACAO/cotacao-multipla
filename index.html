@@ -5112,52 +5112,46 @@ function abrirCategoria(cat, el) {
     document
         .querySelectorAll(".categoria")
         .forEach(function(c) {
-
             c.classList.remove("ativo");
-
         });
 
     if (el) {
         el.classList.add("ativo");
     }
 
-    const area =
-        document.getElementById("produtos");
+    const area = document.getElementById("produtos");
 
     if (!area) return;
 
     area.innerHTML = "";
 
-    const registros =
-        JSON.parse(
-            localStorage.getItem(
-                "produtosCatalogoNexon"
-            )
-        ) || [];
+    const registros = JSON.parse(
+        localStorage.getItem("produtosCatalogoNexon") || "[]"
+    );
 
     catalogo[cat].forEach(function(p) {
 
-const codigoProduto = String(p).split(" - ")[0].trim();
+        const codigoProduto = String(p).split(" - ")[0].trim();
 
-const registro = registros.find(function(item) {
-    return (
-        item.categoria === cat &&
-        (
-            String(item.codigo || "").trim() === codigoProduto ||
-            item.produto === p
-        )
-    );
-});
+        const registro = registros.find(function(item) {
+            return (
+                String(item.codigo || "").trim() === codigoProduto &&
+                String(item.categoria || "").trim() === String(cat).trim()
+            );
+        }) || registros.find(function(item) {
+            return (
+                String(item.produto || "").trim() === String(p).trim() &&
+                String(item.categoria || "").trim() === String(cat).trim()
+            );
+        });
 
-        const foto =
-            registro
-                ? (registro.foto || "")
-                : "";
+        const foto = registro
+            ? (registro.foto || "")
+            : "";
 
         area.innerHTML += `
 
             <tr>
-
                 <td>
 
                     <div style="
@@ -5187,11 +5181,7 @@ const registro = registros.find(function(item) {
                                 >
                               `
                             : `
-                                <span style="
-                                    font-size:45px;
-                                ">
-                                    📦
-                                </span>
+                                <span style="font-size:45px;">📦</span>
                               `
                         }
 
@@ -5207,25 +5197,19 @@ const registro = registros.find(function(item) {
                 </td>
 
                 <td>
-
                     <input
                         type="number"
                         id="${p}"
                         min="1"
                         placeholder="0">
-
                 </td>
 
                 <td>
-
                     <button
                         class="btnAdd"
                         onclick="add('${p}')">
-
                         + Adicionar
-
                     </button>
-
                 </td>
 
             </tr>
