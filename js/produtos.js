@@ -1207,65 +1207,57 @@ function duplicarProduto(index){
 ====================================================== */
 
 function sincronizarProdutosComCatalogo() {
-
-    if (typeof catalogo === "undefined") {
-        return false;
-    }
+    if (typeof catalogo === "undefined") return false;
 
     try {
-
         const antigos = JSON.parse(
             localStorage.getItem("produtosCatalogoNexon") || "[]"
         );
 
         const novos = [];
 
-        // Remove somente os produtos que esta rotina gerenciava
+        // Remove do catálogo somente os registros administrados
         antigos.forEach(function(item) {
-
             if (!item.categoria || !item.produto) return;
 
             if (catalogo[item.categoria]) {
                 catalogo[item.categoria] =
-                    catalogo[item.categoria].filter(function(nome) {
-                        return nome !== item.produto;
-                    });
+                    catalogo[item.categoria].filter(
+                        nome => nome !== item.produto
+                    );
             }
-
         });
 
         produtos.forEach(function(produto) {
-
-            // Produto inativo não aparece no catálogo do cliente
             if (produto.ativo === false) return;
 
             const categoria =
                 String(produto.categoria || "").trim() || "Outros";
 
-            const codigo =
-                String(produto.codigo || "").trim() ||
+            const codigo = String(produto.codigo || "").trim() ||
                 ("PRD" + String(produto.id).slice(-6));
 
             const nomeCatalogo = codigo + " - " + produto.nome;
 
-            // Procura a foto que já estava no catálogo
+            // Primeiro procura pelo ID permanente do produto.
+            // Depois utiliza os dados antigos como alternativa.
             const registroAntigo = antigos.find(function(item) {
+                return item.idProduto != null &&
+                    String(item.idProduto) === String(produto.id);
+            }) || antigos.find(function(item) {
                 return (
-                    item.produto === nomeCatalogo ||
-                    (
-                        item.codigo &&
-                        String(item.codigo) === String(codigo)
-                    )
+                    String(item.codigo || "") === codigo &&
+                    String(item.categoria || "").trim() === categoria
+                );
+            }) || antigos.find(function(item) {
+                return (
+                    item.produto === nomeCatalogo &&
+                    String(item.categoria || "").trim() === categoria
                 );
             });
 
-            // Nunca substitui uma foto existente por uma informação vazia
-            const fotoAtual = String(produto.foto || "").trim();
-            const fotoAntiga = registroAntigo
-                ? String(registroAntigo.foto || "").trim()
-                : "";
-
-            const fotoFinal = fotoAtual || fotoAntiga;
+            const foto = String(produto.foto || "").trim() ||
+                String(registroAntigo?.foto || "").trim();
 
             if (!catalogo[categoria]) {
                 catalogo[categoria] = [];
@@ -1276,16 +1268,15 @@ function sincronizarProdutosComCatalogo() {
             }
 
             novos.push({
+                idProduto: produto.id,
                 categoria: categoria,
                 produto: nomeCatalogo,
                 codigo: codigo,
                 nome: produto.nome,
-                foto: fotoFinal
+                foto: foto
             });
-
         });
 
-        // Grava a lista atualizada sem perder as fotos preservadas
         localStorage.setItem(
             "produtosCatalogoNexon",
             JSON.stringify(novos)
@@ -1302,14 +1293,8 @@ function sincronizarProdutosComCatalogo() {
         return true;
 
     } catch (erro) {
-
         console.error("Erro ao sincronizar catálogo:", erro);
-
-        alert(
-            "Não foi possível atualizar o catálogo. " +
-            "Os dados anteriores foram mantidos no armazenamento."
-        );
-
+        alert("Erro ao atualizar o catálogo: " + erro.message);
         return false;
     }
 }
