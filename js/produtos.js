@@ -1216,7 +1216,6 @@ function sincronizarProdutosComCatalogo() {
 
         const novos = [];
 
-        // Remove do catálogo somente os registros administrados
         antigos.forEach(function(item) {
             if (!item.categoria || !item.produto) return;
 
@@ -1234,30 +1233,11 @@ function sincronizarProdutosComCatalogo() {
             const categoria =
                 String(produto.categoria || "").trim() || "Outros";
 
-            const codigo = String(produto.codigo || "").trim() ||
+            const codigo =
+                String(produto.codigo || "").trim() ||
                 ("PRD" + String(produto.id).slice(-6));
 
             const nomeCatalogo = codigo + " - " + produto.nome;
-
-            // Primeiro procura pelo ID permanente do produto.
-            // Depois utiliza os dados antigos como alternativa.
-            const registroAntigo = antigos.find(function(item) {
-                return item.idProduto != null &&
-                    String(item.idProduto) === String(produto.id);
-            }) || antigos.find(function(item) {
-                return (
-                    String(item.codigo || "") === codigo &&
-                    String(item.categoria || "").trim() === categoria
-                );
-            }) || antigos.find(function(item) {
-                return (
-                    item.produto === nomeCatalogo &&
-                    String(item.categoria || "").trim() === categoria
-                );
-            });
-
-            const foto = String(produto.foto || "").trim() ||
-                String(registroAntigo?.foto || "").trim();
 
             if (!catalogo[categoria]) {
                 catalogo[categoria] = [];
@@ -1267,13 +1247,13 @@ function sincronizarProdutosComCatalogo() {
                 catalogo[categoria].push(nomeCatalogo);
             }
 
+            // Guarda somente identificação, nunca a foto Base64
             novos.push({
                 idProduto: produto.id,
                 categoria: categoria,
                 produto: nomeCatalogo,
                 codigo: codigo,
-                nome: produto.nome,
-                foto: foto
+                nome: produto.nome
             });
         });
 
