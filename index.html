@@ -5386,13 +5386,23 @@ function carregarProdutosOrcamento() {
 
         ${produtosCategoria.map(function(produto) {
 
-          const registro = registros.find(function(item) {
-            return item.produto === produto;
-          });
+     const registro = registros.find(function(item) {
+    return item.produto === produto;
+});
 
-          const foto = registro
-            ? (registro.foto || "")
-            : "";
+const produtosSalvos = JSON.parse(
+    localStorage.getItem("produtosCRM") || "[]"
+);
+
+const produtoComFoto = registro
+    ? produtosSalvos.find(function(item) {
+        return String(item.id) === String(registro.idProduto);
+    })
+    : null;
+
+const foto = produtoComFoto
+    ? (produtoComFoto.foto || "")
+    : ""; 
 
           const partes = String(produto).split(" - ");
 
