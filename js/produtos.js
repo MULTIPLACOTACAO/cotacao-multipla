@@ -10,7 +10,86 @@ let produtoEditando = -1;
    SALVAR BANCO
 
 ========================================== */
+/* ==========================================
+   ARMAZENAMENTO DE FOTOS - INDEXEDDB
+========================================== */
 
+const BANCO_FOTOS = "MultiplaFotosDB";
+const TABELA_FOTOS = "fotosProdutos";
+
+function abrirBancoFotos() {
+    return new Promise(function(resolve, reject) {
+        const requisicao = indexedDB.open(BANCO_FOTOS, 1);
+
+        requisicao.onupgradeneeded = function(evento) {
+            const banco = evento.target.result;
+
+            if (!banco.objectStoreNames.contains(TABELA_FOTOS)) {
+                banco.createObjectStore(TABELA_FOTOS, {
+                    keyPath: "id"
+                });
+            }
+        };
+
+        requisicao.onsuccess = function(evento) {
+            resolve(evento.target.result);
+        };
+
+        requisicao.onerror = function() {
+            reject(requisicao.error);
+        };
+    });
+}
+
+async function salvarFotoProduto(id, foto) {
+    const banco = await abrirBancoFotos();
+
+    return new Promise(function(resolve, reject) {
+        const transacao = banco.transaction(
+            TABELA_FOTOS,
+            "readwrite"
+        );
+
+        transacao.objectStore(TABELA_FOTOS).put({
+            id: String(id),
+            foto: foto
+        });
+
+        transacao.oncomplete = function() {
+            banco.close();
+            resolve(true);
+        };
+
+        transacao.onerror = function() {
+            banco.close();
+            reject(transacao.error);
+        };
+    });
+}
+
+async function obterFotoProduto(id) {
+    const banco = await abrirBancoFotos();
+
+    return new Promise(function(resolve, reject) {
+        const transacao = banco.transaction(
+            TABELA_FOTOS,
+            "readonly"
+        );
+
+        const requisicao = transacao.objectStore(TABELA_FOTOS)
+            .get(String(id));
+
+        requisicao.onsuccess = function() {
+            banco.close();
+            resolve(requisicao.result ? requisicao.result.foto : "");
+        };
+
+        requisicao.onerror = function() {
+            banco.close();
+            reject(requisicao.error);
+        };
+    });
+}
 function salvarProdutos() {
     localStorage.setItem(
         "produtosCRM",
