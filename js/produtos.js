@@ -550,11 +550,10 @@ function mostrarPreviewProdutoFoto() {
 ========================================== */
 let salvamentoProdutoEmAndamento = false;
 
-function salvarProduto() {
 
-    if (salvamentoProdutoEmAndamento) {
-        return;
-    }
+async function salvarProduto() {
+
+    if (salvamentoProdutoEmAndamento) return;
 
     salvamentoProdutoEmAndamento = true;
 
@@ -564,59 +563,22 @@ function salvarProduto() {
 
     try {
 
-        const indiceProdutoEmEdicao = produtoEditando;
+        const indice = produtoEditando;
 
         if (
-            indiceProdutoEmEdicao !== -1 &&
+            indice !== -1 &&
             (
-                typeof indiceProdutoEmEdicao !== "number" ||
-                indiceProdutoEmEdicao < 0 ||
-                indiceProdutoEmEdicao >= produtos.length ||
-                !produtos[indiceProdutoEmEdicao]
+                typeof indice !== "number" ||
+                indice < 0 ||
+                indice >= produtos.length ||
+                !produtos[indice]
             )
         ) {
             alert("Não foi possível localizar o produto para atualizar.");
-            liberarSalvamento();
             return;
         }
 
-        const produto = {
-            id: indiceProdutoEmEdicao === -1
-                ? gerarIdProduto()
-                : produtos[indiceProdutoEmEdicao].id,
-
-            nome: document.getElementById("produtoNome").value.trim(),
-            categoria: document.getElementById("produtoCategoria").value.trim(),
-            unidade: document.getElementById("produtoUnidade").value.trim(),
-            preco: Number(document.getElementById("produtoPreco").value),
-            custo: Number(document.getElementById("produtoCusto").value || 0),
-            codigo: document.getElementById("produtoCodigo").value.trim(),
-            descricao: document.getElementById("produtoDescricao").value.trim(),
-
-            foto: indiceProdutoEmEdicao === -1
-                ? ""
-                : (produtos[indiceProdutoEmEdicao].foto || ""),
-
-            ativo: document.getElementById("produtoAtivo").checked
-        };
-
-        if (!produto.nome) {
-            alert("Informe o nome do produto.");
-            liberarSalvamento();
-            return;
-        }
-
-        if (!produto.categoria) {
-            alert("Informe a categoria.");
-            liberarSalvamento();
-            return;
-        }
-
-        if (!produto.unidade) {
-            alert("Informe a unidade.");
-            liberarSalvamento();
-            return;
-        }
+        const anterior = indice === -1 ? {} : produtos[indice];
 
         const campoPreco = document.getElementById("produtoPreco");
         const valorPreco = campoPreco.value.trim();
@@ -629,179 +591,187 @@ function salvarProduto() {
             )
         ) {
             alert("Informe um preço válido ou deixe o campo vazio.");
-            liberarSalvamento();
             return;
         }
 
-        const codigoNormalizado = String(produto.codigo || "")
-            .trim()
-            .toLowerCase();
+        const id = anterior.id || gerarIdProduto();
+
+        const produto = {
+            ...anterior,
+
+            id: id,
+
+            nome: document.getElementById("produtoNome").value.trim(),
+            categoria: document.getElementById("produtoCategoria").value.trim(),
+            unidade: document.getElementById("produtoUnidade").value.trim(),
+
+            preco: valorPreco === "" ? null : Number(valorPreco),
+
+            custo: document.getElementById("produtoCusto").value.trim() === ""
+                ? null
+                : Number(document.getElementById("produtoCusto").value),
+
+            codigo: document.getElementById("produtoCodigo").value.trim(),
+            descricao: document.getElementById("produtoDescricao").value.trim(),
+
+            ativo: document.getElementById("produtoAtivo").checked
+        };
+
+        delete produto.foto;
+
+        if (!produto.nome) {
+            alert("Informe o nome do produto.");
+            return;
+        }
+
+        if (!produto.categoria) {
+            alert("Informe a categoria.");
+            return;
+        }
+
+        if (!produto.unidade) {
+            alert("Informe a unidade.");
+            return;
+        }
+
+        const codigoNormalizado = produto.codigo.toLowerCase();
 
         if (codigoNormalizado !== "") {
 
             const existe = produtos.find(function(p, i) {
-                if (i === indiceProdutoEmEdicao) {
-                    return false;
-                }
-
-                return String(p.codigo || "").trim().toLowerCase()
-                    === codigoNormalizado;
+                return (
+                    i !== indice &&
+                    String(p.codigo || "").trim().toLowerCase() === codigoNormalizado
+                );
             });
 
             if (existe) {
                 alert(
                     "Já existe um produto com esse código.\n\n" +
-                    "Produto: " + (existe.nome || "Produto cadastrado") +
-                    "\nCódigo: " + (existe.codigo || produto.codigo)
+                    "Produto: " + existe.nome +
+                    "\nCódigo: " + existe.codigo
                 );
-
-                liberarSalvamento();
                 return;
             }
         }
 
         const campoFoto = document.getElementById("produtoFoto");
+        const arquivo = campoFoto?.files?.[0];
 
-        const concluirSalvamento = function() {
-            try {
-                const resultado = finalizarSalvamentoProduto(
-                    produto,
-                    indiceProdutoEmEdicao
-                );
-
-                liberarSalvamento();
-
-                return resultado !== false;
-
-            } catch (erro) {
-                liberarSalvamento();
-                console.error("Erro ao salvar produto:", erro);
-             alert(
-    "Erro ao salvar: " +
-    (erro.name || "Erro") +
-    "\nDetalhes: " +
-    (erro.message || erro)
-); 
-                return false;
-            }
-        };
-
-        if (campoFoto && campoFoto.files && campoFoto.files[0]) {
-
-            const arquivo = campoFoto.files[0];
+        if (arquivo) {
 
             if (!arquivo.type.startsWith("image/")) {
                 alert("Selecione um arquivo de imagem válido.");
-                liberarSalvamento();
                 return;
             }
 
             if (arquivo.size > 12 * 1024 * 1024) {
                 alert("A imagem deve ter no máximo 12 MB.");
-                liberarSalvamento();
                 return;
             }
 
-            const leitor = new FileReader();
+            const fotoBase64 = await new Promise(function(resolve, reject) {
 
-            leitor.onerror = function() {
-                alert("Não foi possível ler a foto. Tente outra imagem.");
-                liberarSalvamento();
-            };
+                const leitor = new FileReader();
 
-            leitor.onload = function(evento) {
-
-                const imagem = new Image();
-
-                imagem.onerror = function() {
-                    alert("Não foi possível processar a imagem selecionada.");
-                    liberarSalvamento();
+                leitor.onerror = function() {
+                    reject(new Error("Não foi possível ler a foto."));
                 };
 
-                imagem.onload = function() {
+                leitor.onload = function(evento) {
 
-                    try {
+                    const imagem = new Image();
 
-                        const limite = 1000;
+                    imagem.onerror = function() {
+                        reject(new Error("Não foi possível processar a imagem."));
+                    };
 
-                        const proporcao = Math.min(
-                            1,
-                            limite / Math.max(imagem.width, imagem.height)
-                        );
+                    imagem.onload = function() {
 
-                        const canvas = document.createElement("canvas");
+                        try {
 
-                        canvas.width = Math.max(
-                            1,
-                            Math.round(imagem.width * proporcao)
-                        );
+                            const limite = 1000;
 
-                        canvas.height = Math.max(
-                            1,
-                            Math.round(imagem.height * proporcao)
-                        );
+                            const proporcao = Math.min(
+                                1,
+                                limite / Math.max(imagem.width, imagem.height)
+                            );
 
-                        const contexto = canvas.getContext("2d");
+                            const canvas = document.createElement("canvas");
 
-                        if (!contexto) {
-                            alert("Não foi possível processar a foto.");
-                            liberarSalvamento();
-                            return;
+                            canvas.width = Math.max(1, Math.round(imagem.width * proporcao));
+                            canvas.height = Math.max(1, Math.round(imagem.height * proporcao));
+
+                            const contexto = canvas.getContext("2d");
+
+                            if (!contexto) {
+                                reject(new Error("Não foi possível processar a foto."));
+                                return;
+                            }
+
+                            contexto.fillStyle = "#ffffff";
+                            contexto.fillRect(0, 0, canvas.width, canvas.height);
+
+                            contexto.drawImage(
+                                imagem,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height
+                            );
+
+                            resolve(canvas.toDataURL("image/jpeg", 0.82));
+
+                        } catch (erro) {
+                            reject(erro);
                         }
+                    };
 
-                        contexto.fillStyle = "#ffffff";
-                        contexto.fillRect(0, 0, canvas.width, canvas.height);
-
-                        contexto.drawImage(
-                            imagem,
-                            0,
-                            0,
-                            canvas.width,
-                            canvas.height
-                        );
-
-                        produto.foto = canvas.toDataURL("image/jpeg", 0.82);
-
-                        concluirSalvamento();
-
-                    } catch (erro) {
-                        console.error("Erro ao processar foto:", erro);
-                        alert("Não foi possível preparar a foto. Tente uma imagem menor.");
-                        liberarSalvamento();
-                    }
+                    imagem.src = evento.target.result;
                 };
 
-                imagem.src = evento.target.result;
-            };
+                leitor.readAsDataURL(arquivo);
+            });
 
-            leitor.readAsDataURL(arquivo);
-            return;
+            await salvarFotoProduto(id, fotoBase64);
+
+        } else if (anterior.foto) {
+
+            // Migra uma foto antiga que ainda esteja no cadastro.
+            await salvarFotoProduto(id, anterior.foto);
         }
 
-        concluirSalvamento();
+        await finalizarSalvamentoProduto(produto, indice);
+
+        liberarSalvamento();
 
     } catch (erro) {
-        console.error("Erro ao iniciar salvamento:", erro);
-        alert("Não foi possível iniciar o salvamento do produto.");
+
+        console.error("Erro ao salvar produto:", erro);
+
+        alert(
+            "Erro ao salvar produto:\n" +
+            (erro.message || erro)
+        );
+
+    } finally {
+
         liberarSalvamento();
     }
 }
+
 
 /* ==========================================
    FINALIZAR SALVAMENTO DO PRODUTO
 ========================================== */
 
 
-function finalizarSalvamentoProduto(produto, indiceProdutoEmEdicao) {
 
-    /* ========= VALIDAR E SALVAR ========= */
+async function finalizarSalvamentoProduto(produto, indiceProdutoEmEdicao) {
 
     if (indiceProdutoEmEdicao === -1) {
-
         produtos.push(produto);
-
     } else {
-
         if (
             typeof indiceProdutoEmEdicao !== "number" ||
             indiceProdutoEmEdicao < 0 ||
@@ -815,17 +785,13 @@ function finalizarSalvamentoProduto(produto, indiceProdutoEmEdicao) {
         produtos[indiceProdutoEmEdicao] = produto;
     }
 
-    /* ========= PERSISTIR E ATUALIZAR ========= */
-
     salvarProdutos();
 
     sincronizarProdutosComCatalogo();
 
     limparProduto();
 
-    mostrarProdutos();
-
-    /* ========= CONFIRMAÇÃO ========= */
+    await mostrarProdutos();
 
     alert(
         indiceProdutoEmEdicao === -1
@@ -835,6 +801,7 @@ function finalizarSalvamentoProduto(produto, indiceProdutoEmEdicao) {
 
     return true;
 }
+
 
 
 /* ==========================================
@@ -1038,231 +1005,227 @@ function filtrarProdutosCadastro() {
         });
 
 }
-function mostrarProdutos() {
+
+async function mostrarProdutos() {
 
     const lista = document.getElementById("listaProdutos");
 
     if (!lista) return;
-carregarCategoriasProduto();
-    if (produtos.length === 0) {
 
+    carregarCategoriasProduto();
+
+    if (produtos.length === 0) {
         lista.innerHTML = `
             <div class="empty-state">
                 <span class="empty-state-icon">📦</span>
                 Nenhum produto cadastrado
             </div>
         `;
-
         return;
     }
 
- lista.innerHTML = "";
+    lista.innerHTML = "";
 
-const campoPesquisa =
-    document.getElementById("pesquisaProdutos");
+    const campoPesquisa = document.getElementById("pesquisaProdutos");
 
-const filtro =
-    (campoPesquisa?.value || "")
-        .toLowerCase()
-        .trim();
+    const filtro = (campoPesquisa?.value || "").toLowerCase().trim();
 
-produtos
-    .map((produto, index) => ({
-        produto,
-        index
-    }))
-    .filter(({ produto }) => {
+    const filtrados = produtos
+        .map((produto, index) => ({ produto, index }))
+        .filter(({ produto }) => {
 
-        const texto = [
-            produto.nome,
-            produto.codigo,
-            produto.categoria,
-            produto.unidade,
-            produto.descricao
-        ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
+            const texto = [
+                produto.nome,
+                produto.codigo,
+                produto.categoria,
+                produto.unidade,
+                produto.descricao
+            ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
 
-        return texto.includes(filtro);
+            return texto.includes(filtro);
+        })
+        .sort((a, b) =>
+            String(a.produto.nome || "").localeCompare(
+                String(b.produto.nome || "")
+            )
+        );
 
-    })
-    .sort((a, b) =>
-        a.produto.nome.localeCompare(
-            b.produto.nome
-        )
-    )
-    .forEach(({ produto, index }) => {
+    for (const { produto, index } of filtrados) {
+
+        let foto = null;
+
+        try {
+            if (produto.id) {
+                foto = await buscarFotoProduto(produto.id);
+            }
+        } catch (erro) {
+            console.error("Erro ao buscar foto:", produto.id, erro);
+        }
+
+        // Compatibilidade temporária com fotos antigas.
+        foto = foto || produto.foto || null;
+
+        const preco = produto.preco === null ||
+                      produto.preco === undefined ||
+                      produto.preco === ""
+            ? "Não informado"
+            : Number(produto.preco).toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
         lista.innerHTML += `
 
         <div class="cliente-card">
 
-          <div class="cliente-header">
+            <div class="cliente-header">
 
-    <div style="display:flex; align-items:center; gap:12px;">
+                <div style="display:flex; align-items:center; gap:12px;">
 
-        ${
-            produto.foto
-                ? `
-                    <img
-                        src="${produto.foto}"
-                        alt="${produto.nome}"
-                        style="
-                            width:70px;
-                            height:70px;
-                            object-fit:contain;
-                            border-radius:10px;
-                            border:1px solid #ddd;
-                            background:#fff;">
-                  `
-                : `
-                    <div
-                        style="
-                            width:70px;
-                            height:70px;
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                            border-radius:10px;
-                            border:1px solid #ddd;
-                            background:#f5f5f5;">
-                        📦
-                    </div>
-                  `
-        }
+                    ${
+                        foto
+                            ? `
+                                <img
+                                    src="${foto}"
+                                    alt="${produto.nome}"
+                                    style="
+                                        width:70px;
+                                        height:70px;
+                                        object-fit:contain;
+                                        border-radius:10px;
+                                        border:1px solid #ddd;
+                                        background:#fff;">
+                              `
+                            : `
+                                <div style="
+                                    width:70px;
+                                    height:70px;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    border-radius:10px;
+                                    border:1px solid #ddd;
+                                    background:#f5f5f5;">
+                                    📦
+                                </div>
+                              `
+                    }
 
-        <strong>${produto.nome}</strong>
+                    <strong>${produto.nome || ""}</strong>
 
-    </div>
+                </div>
 
-    <span>
-        R$ ${produto.preco.toFixed(2)}
-    </span>
-
-</div> 
-
-            <div class="cliente-info">
-
-                Categoria:
-                ${produto.categoria}
-
-                <br>
-
-                Unidade:
-                ${produto.unidade}
-
-                <br>
-
-                Código:
-                ${produto.codigo || "-"}
+                <span>R$ ${preco}</span>
 
             </div>
 
-            <div
-              style="
-                display:flex;
-                gap:8px;
-                margin-top:12px;">
+            <div class="cliente-info">
+
+                Categoria: ${produto.categoria || "-"}
+
+                <br>
+
+                Unidade: ${produto.unidade || "-"}
+
+                <br>
+
+                Código: ${produto.codigo || "-"}
+
+            </div>
+
+            <div style="display:flex; gap:8px; margin-top:12px;">
 
                 <button
-                  class="btn-edit"
-                  onclick="editarProduto(${index})">
-
+                    class="btn-edit"
+                    onclick="editarProduto(${index})">
                     ✏️ Editar
-
                 </button>
 
                 <button
-                  class="btn-del"
-                  onclick="excluirProduto(${index})">
-
+                    class="btn-del"
+                    onclick="excluirProduto(${index})">
                     🗑 Excluir
-
                 </button>
 
             </div>
 
         </div>
-
         `;
-
-    });
-
+    }
 }
+
 /* ==========================================
    EDITAR PRODUTO
 ========================================== */
 
 
 
-function editarProduto(index) {
+
+async function editarProduto(index) {
 
     const produto = produtos[index];
-console.log("Índice selecionado:", index);
-console.log("Produto selecionado:", produto);
-console.log("Nome encontrado:", produto?.nome);
+
     if (!produto) {
         alert("Não foi possível localizar esse produto.");
         return;
     }
 
-    // Mantém o índice do produto que está sendo editado
     produtoEditando = index;
 
-    // Abre a aba de produtos
     const botaoProdutos = document.getElementById("btnProdutos");
     mostrarTab("produtos", botaoProdutos);
 
-    // Preenche os campos com os dados já cadastrados
-    document.getElementById("produtoNome").value =
-        produto.nome || "";
+    document.getElementById("produtoNome").value = produto.nome || "";
+    document.getElementById("produtoCategoria").value = produto.categoria || "";
+    document.getElementById("produtoUnidade").value = produto.unidade || "";
+    document.getElementById("produtoPreco").value = produto.preco ?? "";
+    document.getElementById("produtoCusto").value = produto.custo ?? "";
+    document.getElementById("produtoCodigo").value = produto.codigo || "";
+    document.getElementById("produtoDescricao").value = produto.descricao || "";
 
-    document.getElementById("produtoCategoria").value =
-        produto.categoria || "";
-
-    document.getElementById("produtoUnidade").value =
-        produto.unidade || "";
-
-    document.getElementById("produtoPreco").value =
-        produto.preco ?? "";
-
-    document.getElementById("produtoCusto").value =
-        produto.custo ?? "";
-
-    document.getElementById("produtoCodigo").value =
-        produto.codigo || "";
-
-    document.getElementById("produtoDescricao").value =
-        produto.descricao || "";
-
-    // Limpa apenas o campo de seleção de uma nova foto
     document.getElementById("produtoFoto").value = "";
 
     document.getElementById("produtoAtivo").checked =
         produto.ativo !== false;
 
-    // Exibe a foto já cadastrada, se houver
     const preview = document.getElementById("previewProdutoFoto");
 
     if (preview) {
+
         preview.innerHTML = "";
 
-        if (produto.foto) {
-            const imagem = document.createElement("img");
+        try {
 
-            imagem.src = produto.foto;
-            imagem.alt = "Foto atual do produto";
-            imagem.style.maxWidth = "180px";
-            imagem.style.maxHeight = "180px";
-            imagem.style.objectFit = "contain";
-            imagem.style.borderRadius = "10px";
-            imagem.style.marginTop = "8px";
+            const foto = (
+                produto.id
+                    ? await buscarFotoProduto(produto.id)
+                    : null
+            ) || produto.foto || null;
 
-            preview.appendChild(imagem);
+            if (foto) {
+
+                const imagem = document.createElement("img");
+
+                imagem.src = foto;
+                imagem.alt = "Foto atual do produto";
+                imagem.style.maxWidth = "180px";
+                imagem.style.maxHeight = "180px";
+                imagem.style.objectFit = "contain";
+                imagem.style.borderRadius = "10px";
+                imagem.style.marginTop = "8px";
+
+                preview.appendChild(imagem);
+            }
+
+        } catch (erro) {
+            console.error("Erro ao recuperar foto para edição:", erro);
+            alert("Não foi possível carregar a foto atual.");
         }
     }
 
-    // Leva o formulário à tela
     document.getElementById("tab-produtos").scrollIntoView({
         behavior: "smooth",
         block: "start"
@@ -1274,36 +1237,44 @@ console.log("Nome encontrado:", produto?.nome);
    EXCLUIR PRODUTO
 ========================================== */
 
-function excluirProduto(index){
 
-    if (
-        index < 0 ||
-        index >= produtos.length
-    ) {
+async function excluirProduto(index) {
+
+    if (index < 0 || index >= produtos.length) {
         return;
     }
 
     const produto = produtos[index];
 
-    if (
-        !confirm(
-            "Deseja realmente excluir o produto \"" +
-            (produto.nome || "") +
-            "\"?"
-        )
-    ) {
+    if (!confirm(
+        'Deseja realmente excluir o produto "' +
+        (produto.nome || "") + '"?'
+    )) {
         return;
     }
 
-    produtos.splice(index, 1);
+    try {
 
-    salvarProdutos();
+        if (produto.id) {
+            await excluirFotoProduto(produto.id);
+        }
 
-    sincronizarProdutosComCatalogo();
+        produtos.splice(index, 1);
 
-    mostrarProdutos();
+        salvarProdutos();
 
+        sincronizarProdutosComCatalogo();
+
+        await mostrarProdutos();
+
+    } catch (erro) {
+
+        console.error("Erro ao excluir produto:", erro);
+
+        alert("Não foi possível excluir o produto.");
+    }
 }
+
 /* ==========================================
    DUPLICAR PRODUTO
 ========================================== */
