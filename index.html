@@ -5107,7 +5107,8 @@ function carregarCategorias() {
 /* ── Abrir Categoria ── */
  /* ── FOTO DO PRODUTO NO CATÁLOGO ── */
 
-function abrirCategoria(cat, el) {
+
+async function abrirCategoria(cat, el) {
 
     document
         .querySelectorAll(".categoria")
@@ -5124,111 +5125,186 @@ function abrirCategoria(cat, el) {
     if (!area) return;
 
     area.innerHTML = "";
+    area.dataset.categoriaAtual = String(cat);
 
     const registros = JSON.parse(
         localStorage.getItem("produtosCatalogoNexon") || "[]"
     );
 
-    catalogo[cat].forEach(function(p) {
-
-        const codigoProduto = String(p).split(" - ")[0].trim();
-
-const registro = registros.find(function(item) {
-    return (
-        String(item.codigo || "").trim() === codigoProduto &&
-        String(item.categoria || "").trim() === String(cat).trim()
+    const produtosSalvos = JSON.parse(
+        localStorage.getItem("produtosCRM") || "[]"
     );
-}) || registros.find(function(item) {
-    return (
-        String(item.produto || "").trim() === String(p).trim() &&
-        String(item.categoria || "").trim() === String(cat).trim()
+
+    const lista = Array.isArray(catalogo[cat])
+        ? catalogo[cat]
+        : [];
+
+    const linhas = await Promise.all(
+
+        lista.map(async function(p) {
+
+            const codigoProduto =
+                String(p).split(" - ")[0].trim();
+
+            const registro = registros.find(function(item) {
+                return (
+                    String(item.produto || "").trim() === String(p).trim() &&
+                    String(item.categoria || "").trim() === String(cat).trim()
+                );
+            }) || registros.find(function(item) {
+                return (
+                    String(item.codigo || "").trim() === codigoProduto &&
+                    String(item.categoria || "").trim() === String(cat).trim()
+                );
+            });
+
+            // Localiza o produto cadastrado no ADM
+            const produtoADM = produtosSalvos.find(function(item) {
+                return (
+                    registro &&
+                    String(item.id) === String(registro.idProduto)
+                );
+            }) || produtosSalvos.find(function(item) {
+                return (
+                    String(item.codigo || "").trim() === codigoProduto &&
+                    String(item.categoria || "").trim() === String(cat).trim()
+                );
+            }) || produtosSalvos.find(function(item) {
+                return (
+                    String(item.nome || "").trim() === String(p).trim() &&
+                    String(item.categoria || "").trim() === String(cat).trim()
+                );
+            });
+
+            // Busca a fotografia no IndexedDB
+            let foto = null;
+
+            const idFoto = produtoADM?.id || registro?.idProduto;
+
+            if (idFoto !== undefined && idFoto !== null) {
+                try {
+                    foto = await buscarFotoProduto(idFoto);
+                } catch (erro) {
+                    console.error(
+                        "Erro ao buscar foto do produto:",
+                        idFoto,
+                        erro
+                    );
+                }
+            }
+
+            // Compatibilidade com fotografias antigas
+            if (!foto && produtoADM) {
+                foto = produtoADM.foto || null;
+            }
+
+            return {
+                nome: p,
+                foto: foto
+            };
+
+        })
+
     );
-});
 
-const produtosSalvos = JSON.parse(
-    localStorage.getItem("produtosCRM") || "[]"
-);
+    // Evita mostrar produtos de uma categoria anterior
+    if (area.dataset.categoriaAtual !== String(cat)) {
+        return;
+    }
 
-const produtoComFoto = registro
-    ? produtosSalvos.find(function(item) {
-        return String(item.id) === String(registro.idProduto);
-    })
-    : null;
+    linhas.forEach(function(item) {
 
-const foto = produtoComFoto
-    ? (produtoComFoto.foto || "")
-    : "";
+        const tr = document.createElement("tr");
 
-        area.innerHTML += `
+        const tdProduto = document.createElement("td");
 
-            <tr>
-                <td>
+        const caixaFoto = document.createElement("div");
 
-                    <div style="
-                        width:160px;
-                        height:160px;
-                        overflow:hidden;
-                        border-radius:12px;
-                        background:#f5f5f5;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                    ">
-
-                        ${
-                            foto
-                            ? `
-                                <img
-                                    src="${foto}"
-                                    alt="${p}"
-                                    style="
-                                        width:100%;
-                                        height:100%;
-                                        object-fit:cover;
-                                        object-position:center;
-                                        display:block;
-                                    "
-                                >
-                              `
-                            : `
-                                <span style="font-size:45px;">📦</span>
-                              `
-                        }
-
-                    </div>
-
-                    <div style="
-                        margin-top:8px;
-                        font-weight:600;
-                    ">
-                        ${p}
-                    </div>
-
-                </td>
-
-                <td>
-                    <input
-                        type="number"
-                        id="${p}"
-                        min="1"
-                        placeholder="0">
-                </td>
-
-                <td>
-                    <button
-                        class="btnAdd"
-                        onclick="add('${p}')">
-                        + Adicionar
-                    </button>
-                </td>
-
-            </tr>
-
+        caixaFoto.style.cssText = `
+            width:160px;
+            height:160px;
+            overflow:hidden;
+            border-radius:12px;
+            background:#f5f5f5;
+            display:flex;
+            align-items:center;
+            justify-content:center;
         `;
+
+        if (item.foto) {
+
+            const img = document.createElement("img");
+
+            img.src = item.foto;
+            img.alt = item.nome;
+
+            img.style.cssText = `
+                width:100%;
+                height:100%;
+                object-fit:cover;
+                object-position:center;
+                display:block;
+            `;
+
+            caixaFoto.appendChild(img);
+
+        } else {
+
+            const icone = document.createElement("span");
+
+            icone.style.fontSize = "45px";
+            icone.textContent = "📦";
+
+            caixaFoto.appendChild(icone);
+
+        }
+
+        const nome = document.createElement("div");
+
+        nome.style.cssText = `
+            margin-top:8px;
+            font-weight:600;
+        `;
+
+        nome.textContent = item.nome;
+
+        tdProduto.appendChild(caixaFoto);
+        tdProduto.appendChild(nome);
+
+        const tdQuantidade = document.createElement("td");
+
+        const quantidade = document.createElement("input");
+
+        quantidade.type = "number";
+        quantidade.id = item.nome;
+        quantidade.min = "1";
+        quantidade.placeholder = "0";
+
+        tdQuantidade.appendChild(quantidade);
+
+        const tdBotao = document.createElement("td");
+
+        const botao = document.createElement("button");
+
+        botao.className = "btnAdd";
+        botao.textContent = "+ Adicionar";
+
+        botao.addEventListener("click", function() {
+            add(item.nome);
+        });
+
+        tdBotao.appendChild(botao);
+
+        tr.appendChild(tdProduto);
+        tr.appendChild(tdQuantidade);
+        tr.appendChild(tdBotao);
+
+        area.appendChild(tr);
 
     });
 
 }
+
 /* ── Buscar Produto ── */
 function buscarProduto() {
   let termo = document.getElementById("busca").value.toLowerCase();
