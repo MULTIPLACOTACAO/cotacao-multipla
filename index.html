@@ -5097,13 +5097,31 @@ function limparCampos() {
 
 /* ── Carregar Categorias ── */
 function carregarCategorias() {
-  let area = document.getElementById("categorias");
-  area.innerHTML = "";
-  for (let c in catalogo) {
-    area.innerHTML += `<div class="categoria" onclick="abrirCategoria('${c}', this)">${c}</div>`;
-  }
-}
 
+    const area = document.getElementById("categorias");
+
+    if (!area) return;
+
+    area.innerHTML = "";
+
+    if (typeof catalogo === "undefined" || !catalogo) {
+        return;
+    }
+
+    for (let c in catalogo) {
+
+        const categoria = document.createElement("div");
+
+        categoria.className = "categoria";
+        categoria.textContent = c;
+
+        categoria.addEventListener("click", function() {
+            abrirCategoria(c, categoria);
+        });
+
+        area.appendChild(categoria);
+    }
+}
 /* ── Abrir Categoria ── */
  /* ── FOTO DO PRODUTO NO CATÁLOGO ── */
 
