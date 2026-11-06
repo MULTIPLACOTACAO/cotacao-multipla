@@ -5332,205 +5332,224 @@ function enviar() {
 
 let categoriaOrcamentoAtual = null;
 
+
 function carregarProdutosOrcamento() {
-  const area = document.getElementById("listaOrcamentoProdutos");
+    const area = document.getElementById("listaOrcamentoProdutos");
 
-  if (!area) return;
+    if (!area) return;
 
-  area.innerHTML = "";
+    area.innerHTML = "";
 
-  // Se uma categoria foi selecionada, mostrar os produtos dela
-  if (categoriaOrcamentoAtual) {
+    // Se uma categoria foi selecionada, mostrar os produtos dela
+    if (categoriaOrcamentoAtual) {
 
-    const categoria = categoriaOrcamentoAtual;
+        const categoria = categoriaOrcamentoAtual;
 
-    const produtosCategoria = catalogo[categoria] || [];
+        const produtosCategoria = catalogo[categoria] || [];
 
-    const registros =
-      JSON.parse(localStorage.getItem("produtosCatalogoNexon")) || [];
+        const registros = JSON.parse(
+            localStorage.getItem("produtosCatalogoNexon") || "[]"
+        );
 
-    if (produtosCategoria.length === 0) {
-      area.innerHTML = `
-        <div style="padding:20px;text-align:center;">
-          Nenhum produto encontrado nesta categoria.
-        </div>
-      `;
-      return;
-    }
+        const produtosSalvos = JSON.parse(
+            localStorage.getItem("produtosCRM") || "[]"
+        );
 
-    area.innerHTML = `
-      <div style="margin-bottom:15px;">
-        <button
-          type="button"
-          onclick="voltarCategoriasOrcamento()"
-          style="
-            padding:10px 15px;
-            border:none;
-            border-radius:8px;
-            cursor:pointer;
-          "
-        >
-          ↩️ Voltar para categorias
-        </button>
-      </div>
+        if (produtosCategoria.length === 0) {
+            area.innerHTML = `
+                <div style="padding:20px;text-align:center;">
+                    Nenhum produto encontrado nesta categoria.
+                </div>
+            `;
+            return;
+        }
 
-      <h3>${categoria}</h3>
+        area.innerHTML = `
+            <div style="margin-bottom:15px;">
+                <button
+                    type="button"
+                    onclick="voltarCategoriasOrcamento()"
+                    style="
+                        padding:10px 15px;
+                        border:none;
+                        border-radius:8px;
+                        cursor:pointer;
+                    "
+                >
+                    ↩️ Voltar para categorias
+                </button>
+            </div>
 
-      <div
-        style="
-          display:grid;
-          grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-          gap:15px;
-        "
-      >
+            <h3>${categoria}</h3>
 
-        ${produtosCategoria.map(function(produto) {
-
-     const registro = registros.find(function(item) {
-    return item.produto === produto;
-});
-
-const produtosSalvos = JSON.parse(
-    localStorage.getItem("produtosCRM") || "[]"
-);
-
-const produtoComFoto = registro
-    ? produtosSalvos.find(function(item) {
-        return String(item.id) === String(registro.idProduto);
-    })
-    : null;
-
-const foto = produtoComFoto
-    ? (produtoComFoto.foto || "")
-    : ""; 
-
-          const partes = String(produto).split(" - ");
-
-          const codigo = partes[0] || "";
-
-          const nome =
-            partes.slice(1).join(" - ") || produto;
-
-          return `
             <div
-              style="
-                border:1px solid #ddd;
-                border-radius:12px;
-                padding:12px;
-                background:#fff;
-                box-shadow:0 2px 6px rgba(0,0,0,0.08);
-              "
+                style="
+                    display:grid;
+                    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+                    gap:15px;
+                "
             >
 
-              ${
-                foto
-                  ? `
-                    <img
-                      src="${foto}"
-                      style="
-                        width:100%;
-                        height:140px;
-                        object-fit:contain;
-                        border-radius:8px;
-                        margin-bottom:10px;
-                      "
-                    >
-                  `
-                  : `
-                    <div
-                      style="
-                        height:140px;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        background:#f5f5f5;
-                        border-radius:8px;
-                        margin-bottom:10px;
-                      "
-                    >
-                      📦
-                    </div>
-                  `
-              }
+                ${produtosCategoria.map(function(produto) {
 
-             <div style="
-  font-size:13px;
-  color:#b8c4d9;
-  font-weight:600;
-  margin-bottom:6px;
-">
-  Código: ${codigo}
-</div>
-              <div
-                style="
-                  font-weight:bold;
-                  margin:6px 0 12px;
-                "
-              >
-                ${nome}
-              </div>
+                    const partes = String(produto).split(" - ");
 
-              <button
-                type="button"
-                onclick="adicionarOrcamento('${String(produto).replace(/'/g, "\\'")}')"
-                style="
-                  width:100%;
-                  padding:10px;
-                  border:none;
-                  border-radius:8px;
-                  cursor:pointer;
-                "
-              >
-                + Adicionar
-              </button>
+                    const codigo = partes[0] || "";
+
+                    const nome =
+                        partes.slice(1).join(" - ") || produto;
+
+                    // Localiza o registro pelo código e categoria.
+                    // Se não encontrar, tenta pelo nome completo.
+                    const registro = registros.find(function(item) {
+                        return (
+                            String(item.codigo || "").trim() === codigo.trim() &&
+                            String(item.categoria || "").trim() === String(categoria).trim()
+                        );
+                    }) || registros.find(function(item) {
+                        return (
+                            String(item.produto || "").trim() === String(produto).trim() &&
+                            String(item.categoria || "").trim() === String(categoria).trim()
+                        );
+                    });
+
+                    // Busca a foto pelo ID permanente do produto.
+                    const produtoComFoto = registro
+                        ? produtosSalvos.find(function(item) {
+                            return (
+                                registro.idProduto != null &&
+                                String(item.id) === String(registro.idProduto)
+                            );
+                        })
+                        : null;
+
+                    const foto = produtoComFoto
+                        ? (produtoComFoto.foto || "")
+                        : "";
+
+                    return `
+                        <div
+                            style="
+                                border:1px solid #ddd;
+                                border-radius:12px;
+                                padding:12px;
+                                background:#fff;
+                                box-shadow:0 2px 6px rgba(0,0,0,0.08);
+                            "
+                        >
+
+                            ${
+                                foto
+                                    ? `
+                                        <img
+                                            src="${foto}"
+                                            alt="${nome}"
+                                            style="
+                                                width:100%;
+                                                height:140px;
+                                                object-fit:contain;
+                                                border-radius:8px;
+                                                margin-bottom:10px;
+                                            "
+                                        >
+                                    `
+                                    : `
+                                        <div
+                                            style="
+                                                height:140px;
+                                                display:flex;
+                                                align-items:center;
+                                                justify-content:center;
+                                                background:#f5f5f5;
+                                                border-radius:8px;
+                                                margin-bottom:10px;
+                                            "
+                                        >
+                                            📦
+                                        </div>
+                                    `
+                            }
+
+                            <div style="
+                                font-size:13px;
+                                color:#b8c4d9;
+                                font-weight:600;
+                                margin-bottom:6px;
+                            ">
+                                Código: ${codigo}
+                            </div>
+
+                            <div
+                                style="
+                                    font-weight:bold;
+                                    margin:6px 0 12px;
+                                "
+                            >
+                                ${nome}
+                            </div>
+
+                            <button
+                                type="button"
+                                onclick="adicionarOrcamento('${String(produto).replace(/'/g, "\\'")}')"
+                                style="
+                                    width:100%;
+                                    padding:10px;
+                                    border:none;
+                                    border-radius:8px;
+                                    cursor:pointer;
+                                "
+                            >
+                                + Adicionar
+                            </button>
+
+                        </div>
+                    `;
+
+                }).join("")}
 
             </div>
-          `;
+        `;
 
-        }).join("")}
+        return;
+    }
 
-      </div>
-    `;
+    // Mostrar categorias
+    const categorias = Object.keys(catalogo || {});
 
-    return;
-  }
+    if (categorias.length === 0) {
+        area.innerHTML = `
+            <div style="padding:20px;text-align:center;">
+                Nenhuma categoria encontrada.
+            </div>
+        `;
+        return;
+    }
 
-  // Mostrar categorias
-  const categorias = Object.keys(catalogo || {});
+    area.innerHTML = categorias.map(function(categoria) {
 
-  if (categorias.length === 0) {
-    area.innerHTML = `
-      <div style="padding:20px;text-align:center;">
-        Nenhuma categoria encontrada.
-      </div>
-    `;
-    return;
-  }
+        return `
+            <button
+                type="button"
+                onclick="abrirCategoriaOrcamento('${String(categoria).replace(/'/g, "\\'")}')"
+                style="
+                    display:block;
+                    width:100%;
+                    margin-bottom:10px;
+                    padding:14px;
+                    border:none;
+                    border-radius:10px;
+                    cursor:pointer;
+                    text-align:left;
+                    font-weight:bold;
+                "
+            >
+                📁 ${categoria}
+            </button>
+        `;
 
-  area.innerHTML = categorias.map(function(categoria) {
-
-    return `
-      <button
-        type="button"
-        onclick="abrirCategoriaOrcamento('${String(categoria).replace(/'/g, "\\'")}')"
-        style="
-          display:block;
-          width:100%;
-          margin-bottom:10px;
-          padding:14px;
-          border:none;
-          border-radius:10px;
-          cursor:pointer;
-          text-align:left;
-          font-weight:bold;
-        "
-      >
-        📁 ${categoria}
-      </button>
-    `;
-
-  }).join("");
+    }).join("");
 }
+
 function abrirCategoriaOrcamento(categoria) {
 
   categoriaOrcamentoAtual =
