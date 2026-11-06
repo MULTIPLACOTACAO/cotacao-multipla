@@ -5333,14 +5333,16 @@ function enviar() {
 let categoriaOrcamentoAtual = null;
 
 
-function carregarProdutosOrcamento() {
+
+async function carregarProdutosOrcamento() {
+
     const area = document.getElementById("listaOrcamentoProdutos");
 
     if (!area) return;
 
     area.innerHTML = "";
 
-    // Se uma categoria foi selecionada, mostrar os produtos dela
+    // Se uma categoria foi selecionada, mostrar seus produtos
     if (categoriaOrcamentoAtual) {
 
         const categoria = categoriaOrcamentoAtual;
@@ -5351,10 +5353,6 @@ function carregarProdutosOrcamento() {
             localStorage.getItem("produtosCatalogoNexon") || "[]"
         );
 
-        const produtosSalvos = JSON.parse(
-            localStorage.getItem("produtosCRM") || "[]"
-        );
-
         if (produtosCategoria.length === 0) {
             area.innerHTML = `
                 <div style="padding:20px;text-align:center;">
@@ -5363,6 +5361,129 @@ function carregarProdutosOrcamento() {
             `;
             return;
         }
+
+        // Monta os cartões e busca cada foto pelo ID no IndexedDB
+        const cartoes = await Promise.all(
+            produtosCategoria.map(async function(produto) {
+
+                const partes = String(produto).split(" - ");
+
+                const codigo = partes[0] || "";
+
+                const nome =
+                    partes.slice(1).join(" - ") || produto;
+
+                // Localiza o registro pelo código e categoria
+                const registro = registros.find(function(item) {
+                    return (
+                        String(item.codigo || "").trim() === codigo.trim() &&
+                        String(item.categoria || "").trim() ===
+                            String(categoria).trim()
+                    );
+                }) || registros.find(function(item) {
+                    return (
+                        String(item.produto || "").trim() ===
+                            String(produto).trim() &&
+                        String(item.categoria || "").trim() ===
+                            String(categoria).trim()
+                    );
+                });
+
+                // Busca a foto diretamente no IndexedDB
+                let foto = "";
+
+                if (registro && registro.idProduto != null) {
+                    try {
+                        foto = await buscarFotoProduto(registro.idProduto) || "";
+                    } catch (erro) {
+                        console.error(
+                            "Erro ao buscar foto do produto:",
+                            nome,
+                            erro
+                        );
+                    }
+                }
+
+                return `
+                    <div
+                        style="
+                            border:1px solid #ddd;
+                            border-radius:12px;
+                            padding:12px;
+                            background:#fff;
+                            box-shadow:0 2px 6px rgba(0,0,0,0.08);
+                        "
+                    >
+
+                        ${
+                            foto
+                                ? `
+                                    <img
+                                        src="${foto}"
+                                        alt="${nome}"
+                                        style="
+                                            width:100%;
+                                            height:140px;
+                                            object-fit:contain;
+                                            border-radius:8px;
+                                            margin-bottom:10px;
+                                        "
+                                    >
+                                `
+                                : `
+                                    <div
+                                        style="
+                                            height:140px;
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                            background:#f5f5f5;
+                                            border-radius:8px;
+                                            margin-bottom:10px;
+                                        "
+                                    >
+                                        📦
+                                    </div>
+                                `
+                        }
+
+                        <div style="
+                            font-size:13px;
+                            color:#b8c4d9;
+                            font-weight:600;
+                            margin-bottom:6px;
+                        ">
+                            Código: ${codigo}
+                        </div>
+
+                        <div
+                            style="
+                                font-weight:bold;
+                                margin:6px 0 12px;
+                            "
+                        >
+                            ${nome}
+                        </div>
+
+                        <button
+                            type="button"
+                            onclick="adicionarOrcamento('${String(produto).replace(/'/g, "\\'")}')"
+                            style="
+                                width:100%;
+                                padding:10px;
+                                border:none;
+                                border-radius:8px;
+                                cursor:pointer;
+                            "
+                        >
+                            + Adicionar
+                        </button>
+
+                    </div>
+                `;
+
+            })
+        );
 
         area.innerHTML = `
             <div style="margin-bottom:15px;">
@@ -5389,124 +5510,7 @@ function carregarProdutosOrcamento() {
                     gap:15px;
                 "
             >
-
-                ${produtosCategoria.map(function(produto) {
-
-                    const partes = String(produto).split(" - ");
-
-                    const codigo = partes[0] || "";
-
-                    const nome =
-                        partes.slice(1).join(" - ") || produto;
-
-                    // Localiza o registro pelo código e categoria.
-                    // Se não encontrar, tenta pelo nome completo.
-                    const registro = registros.find(function(item) {
-                        return (
-                            String(item.codigo || "").trim() === codigo.trim() &&
-                            String(item.categoria || "").trim() === String(categoria).trim()
-                        );
-                    }) || registros.find(function(item) {
-                        return (
-                            String(item.produto || "").trim() === String(produto).trim() &&
-                            String(item.categoria || "").trim() === String(categoria).trim()
-                        );
-                    });
-
-                    // Busca a foto pelo ID permanente do produto.
-                    const produtoComFoto = registro
-                        ? produtosSalvos.find(function(item) {
-                            return (
-                                registro.idProduto != null &&
-                                String(item.id) === String(registro.idProduto)
-                            );
-                        })
-                        : null;
-
-                    const foto = produtoComFoto
-                        ? (produtoComFoto.foto || "")
-                        : "";
-
-                    return `
-                        <div
-                            style="
-                                border:1px solid #ddd;
-                                border-radius:12px;
-                                padding:12px;
-                                background:#fff;
-                                box-shadow:0 2px 6px rgba(0,0,0,0.08);
-                            "
-                        >
-
-                            ${
-                                foto
-                                    ? `
-                                        <img
-                                            src="${foto}"
-                                            alt="${nome}"
-                                            style="
-                                                width:100%;
-                                                height:140px;
-                                                object-fit:contain;
-                                                border-radius:8px;
-                                                margin-bottom:10px;
-                                            "
-                                        >
-                                    `
-                                    : `
-                                        <div
-                                            style="
-                                                height:140px;
-                                                display:flex;
-                                                align-items:center;
-                                                justify-content:center;
-                                                background:#f5f5f5;
-                                                border-radius:8px;
-                                                margin-bottom:10px;
-                                            "
-                                        >
-                                            📦
-                                        </div>
-                                    `
-                            }
-
-                            <div style="
-                                font-size:13px;
-                                color:#b8c4d9;
-                                font-weight:600;
-                                margin-bottom:6px;
-                            ">
-                                Código: ${codigo}
-                            </div>
-
-                            <div
-                                style="
-                                    font-weight:bold;
-                                    margin:6px 0 12px;
-                                "
-                            >
-                                ${nome}
-                            </div>
-
-                            <button
-                                type="button"
-                                onclick="adicionarOrcamento('${String(produto).replace(/'/g, "\\'")}')"
-                                style="
-                                    width:100%;
-                                    padding:10px;
-                                    border:none;
-                                    border-radius:8px;
-                                    cursor:pointer;
-                                "
-                            >
-                                + Adicionar
-                            </button>
-
-                        </div>
-                    `;
-
-                }).join("")}
-
+                ${cartoes.join("")}
             </div>
         `;
 
