@@ -141,12 +141,21 @@ async function excluirFotoProduto(id) {
         };
     });
 }
+
 function salvarProdutos() {
+
     localStorage.setItem(
         "produtosCRM",
         JSON.stringify(produtos)
     );
+
+    // Atualiza o catálogo do cliente após salvar
+    if (typeof sincronizarProdutosComCatalogo === "function") {
+        sincronizarProdutosComCatalogo();
+    }
+
 }
+
 
 /* ==========================================
    GERAR ID
