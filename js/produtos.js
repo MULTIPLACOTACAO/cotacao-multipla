@@ -1312,7 +1312,12 @@ function duplicarProduto(index){
 
 function sincronizarProdutosComCatalogo() {
     if (typeof catalogo === "undefined") return false;
-
+if (!Array.isArray(produtos) || produtos.length === 0) {
+    console.warn(
+        "Sincronização cancelada: cadastro de produtos vazio."
+    );
+    return false;
+}
     try {
         const antigos = JSON.parse(
             localStorage.getItem("produtosCatalogoNexon") || "[]"
