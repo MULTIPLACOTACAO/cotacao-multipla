@@ -25,6 +25,7 @@ function abrirBancoFotos() {
             const banco = evento.target.result;
 
             if (!banco.objectStoreNames.contains(TABELA_FOTOS)) {
+               
                 banco.createObjectStore(TABELA_FOTOS, {
                     keyPath: "id"
                 });
@@ -87,6 +88,56 @@ async function obterFotoProduto(id) {
         requisicao.onerror = function() {
             banco.close();
             reject(requisicao.error);
+        };
+    });
+}
+
+async function buscarFotoProduto(id) {
+    const banco = await abrirBancoFotos();
+
+    return new Promise(function(resolve, reject) {
+        const transacao = banco.transaction(
+            TABELA_FOTOS,
+            "readonly"
+        );
+
+        const requisicao = transacao
+            .objectStore(TABELA_FOTOS)
+            .get(String(id));
+
+        requisicao.onsuccess = function() {
+            banco.close();
+
+            resolve(requisicao.result?.foto || null);
+        };
+
+        requisicao.onerror = function() {
+            banco.close();
+            reject(requisicao.error);
+        };
+    });
+}
+
+async function excluirFotoProduto(id) {
+    const banco = await abrirBancoFotos();
+
+    return new Promise(function(resolve, reject) {
+        const transacao = banco.transaction(
+            TABELA_FOTOS,
+            "readwrite"
+        );
+
+        transacao.objectStore(TABELA_FOTOS)
+            .delete(String(id));
+
+        transacao.oncomplete = function() {
+            banco.close();
+            resolve(true);
+        };
+
+        transacao.onerror = function() {
+            banco.close();
+            reject(transacao.error);
         };
     });
 }
