@@ -5130,7 +5130,114 @@ function carregarCategorias() {
 
 
 
-function abrirCategoria(cat, el) {
+
+/* =========================================================
+   BUSCAR FOTO DO PRODUTO NO CATÁLOGO DO CLIENTE
+   Busca primeiro no IndexedDB e mantém compatibilidade
+   com fotos antigas salvas no localStorage.
+   ========================================================= */
+
+async function buscarFotoProdutoCatalogo(registro) {
+
+    if (!registro) return "";
+
+    let produtosSalvos = [];
+
+    try {
+        produtosSalvos = JSON.parse(
+            localStorage.getItem("produtosCRM") || "[]"
+        );
+
+        if (!Array.isArray(produtosSalvos)) {
+            produtosSalvos = [];
+        }
+
+    } catch (erro) {
+        console.error("Erro ao ler produtos salvos:", erro);
+    }
+
+    let produtoOriginal = null;
+
+    const idProduto =
+        registro.idProduto != null
+            ? registro.idProduto
+            : registro.id;
+
+    // Localiza o produto original pelo ID.
+    if (idProduto != null) {
+
+        produtoOriginal = produtosSalvos.find(function(item) {
+            return String(item.id) === String(idProduto);
+        });
+
+    }
+
+    // Compatibilidade com registros antigos.
+    if (!produtoOriginal) {
+
+        produtoOriginal = produtosSalvos.find(function(item) {
+
+            const codigoOriginal = String(item.codigo || "").trim();
+            const codigoRegistro = String(registro.codigo || "").trim();
+
+            const nomeOriginal = String(item.nome || "").trim();
+            const nomeRegistro = String(registro.nome || "").trim();
+
+            return (
+                (codigoRegistro && codigoOriginal === codigoRegistro) ||
+                (nomeRegistro && nomeOriginal === nomeRegistro)
+            );
+
+        });
+
+    }
+
+    // Busca a foto no IndexedDB.
+    const idParaBuscar =
+        produtoOriginal?.id != null
+            ? produtoOriginal.id
+            : idProduto;
+
+    if (
+        idParaBuscar != null &&
+        typeof buscarFotoProduto === "function"
+    ) {
+
+        try {
+
+            const fotoIndexedDB = await buscarFotoProduto(
+                String(idParaBuscar)
+            );
+
+            if (fotoIndexedDB) {
+                return fotoIndexedDB;
+            }
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao buscar foto no IndexedDB:",
+                erro
+            );
+
+        }
+
+    }
+
+    // Última tentativa: fotos antigas no localStorage.
+    return (
+        produtoOriginal?.foto ||
+        registro.foto ||
+        ""
+    );
+}
+
+
+/* =========================================================
+   ABRIR CATEGORIA NA ÁREA DO CLIENTE
+   ========================================================= */
+
+async function abrirCategoria(cat, el) {
 
     document
         .querySelectorAll(".categoria")
@@ -5148,38 +5255,56 @@ function abrirCategoria(cat, el) {
 
     area.innerHTML = "";
 
-    const registros = JSON.parse(
-        localStorage.getItem("produtosCatalogoNexon") || "[]"
-    );
+    if (
+        typeof catalogo === "undefined" ||
+        !catalogo ||
+        !Array.isArray(catalogo[cat])
+    ) {
+        return;
+    }
 
-    catalogo[cat].forEach(function(p) {
+    let registros = [];
+
+    try {
+
+        registros = JSON.parse(
+            localStorage.getItem("produtosCatalogoNexon") || "[]"
+        );
+
+        if (!Array.isArray(registros)) {
+            registros = [];
+        }
+
+    } catch (erro) {
+
+        console.error("Erro ao carregar catálogo:", erro);
+        return;
+
+    }
+
+    for (const p of catalogo[cat]) {
 
         const codigoProduto = String(p).split(" - ")[0].trim();
 
         const registro = registros.find(function(item) {
+
             return (
                 String(item.codigo || "").trim() === codigoProduto &&
                 String(item.categoria || "").trim() === String(cat).trim()
             );
+
         }) || registros.find(function(item) {
+
             return (
                 String(item.produto || "").trim() === String(p).trim() &&
                 String(item.categoria || "").trim() === String(cat).trim()
             );
+
         });
 
-        const produtosSalvos = JSON.parse(
-            localStorage.getItem("produtosCRM") || "[]"
-        );
-
-        const produtoComFoto = registro
-            ? produtosSalvos.find(function(item) {
-                return String(item.id) === String(registro.idProduto);
-            })
-            : null;
-
-        const foto = produtoComFoto
-            ? (produtoComFoto.foto || "")
+        // Agora busca a foto no IndexedDB.
+        const foto = registro
+            ? await buscarFotoProdutoCatalogo(registro)
             : "";
 
         area.innerHTML += `
@@ -5241,8 +5366,9 @@ function abrirCategoria(cat, el) {
                 </td>
             </tr>
         `;
-    });
+    }
 }
+
 
 /* ── Buscar Produto ── */
 function buscarProduto() {
