@@ -5349,6 +5349,7 @@ let categoriaOrcamentoAtual = null;
 
 
 
+
 async function carregarProdutosOrcamento() {
 
     const area = document.getElementById("listaOrcamentoProdutos");
@@ -5388,28 +5389,28 @@ async function carregarProdutosOrcamento() {
                 const nome =
                     partes.slice(1).join(" - ") || produto;
 
-                // Localiza o registro pelo código e categoria
+                // Localiza primeiro pelo nome completo do produto
                 const registro = registros.find(function(item) {
+                    return (
+                        String(item.produto || "").trim() ===
+                        String(produto).trim()
+                    );
+                }) || registros.find(function(item) {
                     return (
                         String(item.codigo || "").trim() === codigo.trim() &&
                         String(item.categoria || "").trim() ===
                             String(categoria).trim()
                     );
-                }) || registros.find(function(item) {
-                    return (
-                        String(item.produto || "").trim() ===
-                            String(produto).trim() &&
-                        String(item.categoria || "").trim() ===
-                            String(categoria).trim()
-                    );
                 });
 
-                // Busca a foto diretamente no IndexedDB
+                // Busca a foto diretamente no IndexedDB pelo ID
                 let foto = "";
 
                 if (registro && registro.idProduto != null) {
                     try {
-                        foto = await buscarFotoProduto(registro.idProduto) || "";
+                        foto = await buscarFotoProduto(
+                            registro.idProduto
+                        ) || "";
                     } catch (erro) {
                         console.error(
                             "Erro ao buscar foto do produto:",
@@ -5568,6 +5569,7 @@ async function carregarProdutosOrcamento() {
 
     }).join("");
 }
+
 
 function abrirCategoriaOrcamento(categoria) {
 
