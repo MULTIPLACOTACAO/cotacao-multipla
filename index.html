@@ -5353,16 +5353,13 @@ let categoriaOrcamentoAtual = null;
 async function carregarProdutosOrcamento() {
 
     const area = document.getElementById("listaOrcamentoProdutos");
-
     if (!area) return;
 
     area.innerHTML = "";
 
-    // Se uma categoria foi selecionada, mostrar seus produtos
     if (categoriaOrcamentoAtual) {
 
         const categoria = categoriaOrcamentoAtual;
-
         const produtosCategoria = catalogo[categoria] || [];
 
         const registros = JSON.parse(
@@ -5378,23 +5375,16 @@ async function carregarProdutosOrcamento() {
             return;
         }
 
-        // Monta os cartões e busca cada foto pelo ID no IndexedDB
         const cartoes = await Promise.all(
             produtosCategoria.map(async function(produto) {
 
                 const partes = String(produto).split(" - ");
-
                 const codigo = partes[0] || "";
+                const nome = partes.slice(1).join(" - ") || produto;
 
-                const nome =
-                    partes.slice(1).join(" - ") || produto;
-
-                // Localiza primeiro pelo nome completo do produto
                 const registro = registros.find(function(item) {
-                    return (
-                        String(item.produto || "").trim() ===
-                        String(produto).trim()
-                    );
+                    return String(item.produto || "").trim() ===
+                        String(produto).trim();
                 }) || registros.find(function(item) {
                     return (
                         String(item.codigo || "").trim() === codigo.trim() &&
@@ -5403,64 +5393,44 @@ async function carregarProdutosOrcamento() {
                     );
                 });
 
-                // Busca a foto diretamente no IndexedDB pelo ID
                 let foto = "";
 
                 if (registro && registro.idProduto != null) {
                     try {
                         foto = await buscarFotoProduto(
-                            registro.idProduto
+                            String(registro.idProduto)
                         ) || "";
                     } catch (erro) {
-                        console.error(
-                            "Erro ao buscar foto do produto:",
-                            nome,
-                            erro
-                        );
+                        console.error("Falha ao carregar foto:", erro);
                     }
                 }
 
                 return `
-                    <div
-                        style="
-                            border:1px solid #ddd;
-                            border-radius:12px;
-                            padding:12px;
-                            background:#fff;
-                            box-shadow:0 2px 6px rgba(0,0,0,0.08);
-                        "
-                    >
-
+                    <div style="
+                        border:1px solid #ddd;
+                        border-radius:12px;
+                        padding:12px;
+                        background:#fff;
+                        box-shadow:0 2px 6px rgba(0,0,0,0.08);
+                    ">
                         ${
                             foto
-                                ? `
-                                    <img
-                                        src="${foto}"
-                                        alt="${nome}"
-                                        style="
-                                            width:100%;
-                                            height:140px;
-                                            object-fit:contain;
-                                            border-radius:8px;
-                                            margin-bottom:10px;
-                                        "
-                                    >
-                                `
-                                : `
-                                    <div
-                                        style="
-                                            height:140px;
-                                            display:flex;
-                                            align-items:center;
-                                            justify-content:center;
-                                            background:#f5f5f5;
-                                            border-radius:8px;
-                                            margin-bottom:10px;
-                                        "
-                                    >
-                                        📦
-                                    </div>
-                                `
+                            ? `<img src="${foto}" alt="${nome}" style="
+                                width:100%;
+                                height:140px;
+                                object-fit:contain;
+                                border-radius:8px;
+                                margin-bottom:10px;
+                            ">`
+                            : `<div style="
+                                height:140px;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                background:#f5f5f5;
+                                border-radius:8px;
+                                margin-bottom:10px;
+                            ">📦</div>`
                         }
 
                         <div style="
@@ -5472,12 +5442,7 @@ async function carregarProdutosOrcamento() {
                             Código: ${codigo}
                         </div>
 
-                        <div
-                            style="
-                                font-weight:bold;
-                                margin:6px 0 12px;
-                            "
-                        >
+                        <div style="font-weight:bold;margin:6px 0 12px;">
                             ${nome}
                         </div>
 
@@ -5494,10 +5459,8 @@ async function carregarProdutosOrcamento() {
                         >
                             + Adicionar
                         </button>
-
                     </div>
                 `;
-
             })
         );
 
@@ -5519,13 +5482,11 @@ async function carregarProdutosOrcamento() {
 
             <h3>${categoria}</h3>
 
-            <div
-                style="
-                    display:grid;
-                    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-                    gap:15px;
-                "
-            >
+            <div style="
+                display:grid;
+                grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+                gap:15px;
+            ">
                 ${cartoes.join("")}
             </div>
         `;
@@ -5533,7 +5494,6 @@ async function carregarProdutosOrcamento() {
         return;
     }
 
-    // Mostrar categorias
     const categorias = Object.keys(catalogo || {});
 
     if (categorias.length === 0) {
@@ -5546,7 +5506,6 @@ async function carregarProdutosOrcamento() {
     }
 
     area.innerHTML = categorias.map(function(categoria) {
-
         return `
             <button
                 type="button"
@@ -5566,9 +5525,9 @@ async function carregarProdutosOrcamento() {
                 📁 ${categoria}
             </button>
         `;
-
     }).join("");
 }
+
 
 
 function abrirCategoriaOrcamento(categoria) {
