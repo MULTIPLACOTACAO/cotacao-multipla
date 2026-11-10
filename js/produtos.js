@@ -1404,7 +1404,7 @@ window.addEventListener("load", function () {
 });
 /* ======================================================
    MIGRAR PRODUTOS ANTIGOS DO CATÁLOGO PARA O CADASTRO
-====================================================== *
+====================================================== */
 
 function migrarProdutosAntigos() {
 
